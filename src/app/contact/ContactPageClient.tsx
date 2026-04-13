@@ -13,7 +13,16 @@ const ContactPageClient = () => {
       label: "beccasknotique@gmail.com",
       href: "mailto:beccasknotique@gmail.com",
     },
-    { title: "Phone", label: "+234 802 908 6678", href: "tel:+2348029086678" },
+    {
+      title: "Whatsapp",
+      label: "Chat on whatsapp",
+      href: "https://wa.me/2348029086678",
+    },
+    {
+      title: "Phone",
+      label: "+234 902 428 4905",
+      href: "tel:+2349024284905",
+    },
     { title: "Location", label: "Nigeria", href: "#" },
   ];
 
@@ -32,7 +41,11 @@ const ContactPageClient = () => {
               {contact.map((c) => (
                 <div key={c.title} className="mb-5">
                   <p className="text-sm text-gray-500">{c.title}</p>
-                  <Link href={c.href} className="font-arial text-xl font-medium">
+                  <Link
+                    href={c.href}
+                    target="_blank"
+                    className="font-arial text-xl font-medium"
+                  >
                     {c.label}
                   </Link>
                 </div>
