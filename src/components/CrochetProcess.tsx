@@ -64,7 +64,7 @@ const CrochetProcess = () => {
             <img
               src="/becca-knitting.jpg"
               alt="Handmade crochet work in progress"
-              className="w-full cursor-pointer object-cover grayscale transition-all duration-700 ease-out group-hover:grayscale-0"
+              className="w-full cursor-pointer object-cover transition-all duration-700 ease-out"
             />
             <div
               className="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-t from-stone-900/25 via-transparent to-transparent opacity-80"
