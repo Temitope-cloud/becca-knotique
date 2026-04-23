@@ -4,6 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import NewCollection from "@/components/NewCollection";
 import OnePiece from "@/components/OnePiece";
 import OurStory from "@/components/OurStory";
+import PreFooterCta from "@/components/PreFooterCta";
 import { AnimatedTestimonial } from "@/components/Testimonial";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -33,6 +34,7 @@ export default function Home() {
       <CrochetProcess />
       {/* <AnimatedTestimonial /> */}
       <OnePiece />
+      <PreFooterCta />
       <Footer />
     </>
   );

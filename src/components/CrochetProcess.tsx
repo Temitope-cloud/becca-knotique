@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { CartIcon, CartIconHandle } from "./ui/cart";
+import { useRouter } from "next/navigation";
 
 const STEPS = [
   {
@@ -42,6 +43,8 @@ const STEPS = [
 ] as const;
 
 const CrochetProcess = () => {
+  const router = useRouter();
+
   const cartRef = useRef<CartIconHandle>(null);
 
   return (
@@ -105,9 +108,10 @@ const CrochetProcess = () => {
           <div className="mt-8 grid gap-2 md:grid-cols-2 md:gap-10">
             <Button
               size="lg"
-              className="h-11 gap-2 rounded-xl bg-stone-900 px-6 text-base shadow-lg shadow-stone-900/15 hover:bg-stone-800"
+              className="h-11 cursor-pointer gap-2 rounded-xl bg-stone-900 px-6 text-base shadow-lg shadow-stone-900/15 hover:bg-stone-800"
               onMouseEnter={() => cartRef.current?.startAnimation()}
               onMouseLeave={() => cartRef.current?.stopAnimation()}
+              onClick={() => router.push("/products")}
             >
               <CartIcon ref={cartRef} className="size-4" />
               Shop collection
@@ -115,7 +119,11 @@ const CrochetProcess = () => {
             <Button
               size="lg"
               variant="outline"
-              className="h-11 gap-2 rounded-xl border-stone-300 bg-white/80 px-6 text-base text-stone-800 backdrop-blur-sm hover:bg-stone-50"
+              className="h-11 cursor-pointer gap-2 rounded-xl border-stone-300 bg-white/80 px-6 text-base text-stone-800 backdrop-blur-sm hover:bg-stone-50"
+              onClick={() =>
+                window.open("https://wa.me/2348029086678", "_blank")
+              }
+              // open in another tab
             >
               <MessageCircle className="size-4 text-emerald-700" />
               Chat on WhatsApp

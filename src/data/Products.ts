@@ -30,10 +30,10 @@ export const newCollection = [
 
 export const onePiece = [
   {
-    name: "Floral White Dress",
-    currentPrice: "$129",
-    oldPrice: "$149",
-    stars: 3,
+    name: "Golden Hour",
+    currentPrice: "₦35,000",
+    oldPrice: "₦50,000",
+    stars: 5,
     description:
       "This Floral Fantasy dress features a flowy, lightweight polyester blend that’s wrinkle-resistant and perfect for adding a vibrant touch to any occasion.",
     btn: "Order Now",
@@ -52,10 +52,10 @@ export const onePiece = [
       },
     ],
     imgs: [
-      "/images/testimonials/amara.jpg",
-      "/images/testimonials/tolani.jpg",
-      "/images/testimonials/zainab.jpg",
-      "/images/becca.jpeg",
+      "/images/one-piece/one-piece-1.jpeg",
+      "/images/one-piece/one-piece-2.jpeg",
+      "/images/one-piece/one-piece-3.jpeg",
+      "/images/one-piece/one-piece-4.jpeg",
     ],
   },
 ];

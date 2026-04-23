@@ -12,16 +12,19 @@ const ContactPageClient = () => {
       title: "Email",
       label: "beccasknotique@gmail.com",
       href: "mailto:beccasknotique@gmail.com",
+      classname: "text-sm  font-semibold text-[#863d20]",
     },
     {
       title: "Whatsapp",
-      label: "Chat on whatsapp",
+      label: "chat on whatsapp",
       href: "https://wa.me/2348029086678",
+      classname: "text-sm  font-semibold text-[#863d20]",
     },
     {
       title: "Phone",
       label: "+234 902 428 4905",
       href: "tel:+2349024284905",
+      classname: "text-sm  font-semibold text-[#863d20]",
     },
     { title: "Location", label: "Nigeria", href: "#" },
   ];
@@ -44,7 +47,7 @@ const ContactPageClient = () => {
                   <Link
                     href={c.href}
                     target="_blank"
-                    className="font-arial text-xl font-medium"
+                    className={`font-arial font-space-grotesk text-xl font-medium ${c.classname}`}
                   >
                     {c.label}
                   </Link>

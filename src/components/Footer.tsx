@@ -7,15 +7,6 @@ import { Scissors, Sparkles } from "lucide-react";
 const Footer = () => {
   const footerMenus = [
     {
-      label: "COLLECTIONS",
-      links: [
-        { label: "New Arrivals", href: "new-arrivals" },
-        { label: "Best Sellers", href: "best-sellers" },
-        { label: "Custom Orders", href: "/contact" },
-        { label: "Ready to Wear", href: "ready-made" },
-      ],
-    },
-    {
       label: "EXPLORE",
       links: [
         { label: "Home", href: "/home" },
@@ -24,6 +15,16 @@ const Footer = () => {
         { label: "Contact", href: "/contact" },
       ],
     },
+    {
+      label: "COLLECTIONS",
+      links: [
+        { label: "New Arrivals", href: "new-arrivals" },
+        { label: "Best Sellers", href: "best-sellers" },
+        { label: "Custom Orders", href: "/contact" },
+        { label: "Ready to Wear", href: "ready-made" },
+      ],
+    },
+
     {
       label: "LEGAL",
       links: [

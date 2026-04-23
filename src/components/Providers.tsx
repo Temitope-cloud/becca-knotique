@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import PreFooterCta from "./PreFooterCta";
 
 interface providersProps {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ const Providers = ({ children }: providersProps) => {
       {}
       {!Homepage && <Header />}
       {children}
+      {!Homepage && <PreFooterCta />}
       {!Homepage && <Footer />}
     </>
   );

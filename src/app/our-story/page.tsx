@@ -79,7 +79,7 @@ const OurStoryPage = () => {
 
         <ParallaxReveal
           className="mt-8 h-72 w-full rounded-3xl bg-cover bg-center sm:h-96"
-          src="bg-[url('/images/about1.png')]"
+          src="bg-[url('/images/our-story.jpeg')]"
         />
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_1fr]">

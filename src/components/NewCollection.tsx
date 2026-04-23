@@ -8,49 +8,73 @@ const NewCollection = () => {
   return (
     <section
       id="collection"
-      className="w-full scroll-mt-24 px-4 py-12 sm:px-6 sm:py-14 md:py-16"
+      className="relative w-full scroll-mt-24 px-4 py-14 sm:px-6 sm:py-16 md:py-20"
     >
-      <div className="mx-auto max-w-7xl">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-6 z-0 mx-auto h-64 max-w-5xl rounded-full bg-amber-200/25 blur-3xl"
+        aria-hidden
+      />
+
+      <div className="relative z-10 mx-auto max-w-7xl">
         <div
           data-aos="zoom-in-down"
-          className="flex flex-col gap-5 border-b border-stone-200/90 pb-6 md:flex-row md:items-end md:justify-between md:pb-8"
+          className="relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white/85 p-6 shadow-[0_25px_70px_-35px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-8 md:p-10"
         >
-          <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-stone-500 uppercase">
-              New collection
-            </p>
-            <h2 className="font-bylast mt-2 text-4xl leading-[1.05] tracking-tight text-stone-900 sm:text-5xl md:text-6xl">
-              Crochet wears
-            </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-stone-600 sm:text-base">
-              Fresh drops, handmade details — pieces designed to feel as good as
-              they look.
-            </p>
-          </div>
-
-          <ButtonFill
-            href="shop"
-            btnName="See products"
-            icon={<ArrowRight className="size-4" />}
-            btnClassName="border-stone-900 px-8 py-2.5 sm:px-10"
-            spanClassName="bg-slate-800"
-            secSpanClassName="group-hover:text-white"
+          <div
+            className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-rose-200/35 blur-2xl"
+            aria-hidden
           />
+          <div
+            className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-amber-200/30 blur-2xl"
+            aria-hidden
+          />
+
+          <div className="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="inline-flex items-center rounded-full border border-stone-300/80 bg-stone-50/90 px-3 py-1 text-[11px] font-semibold tracking-[0.18em] text-stone-600 uppercase">
+                New collection
+              </span>
+              <h2 className="mt-4 max-w-2xl text-4xl font-semibold leading-[1.05] tracking-tight text-stone-900 sm:text-5xl md:text-6xl">
+                Handmade pieces
+                <span className="block text-stone-500">with modern elegance</span>
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-stone-600 sm:text-base">
+                Discover a curated edit of cozy textures, clean silhouettes, and
+                thoughtful handcrafted details made to elevate everyday looks.
+              </p>
+            </div>
+
+            <ButtonFill
+              href="shop"
+              btnName="Shop the collection"
+              icon={<ArrowRight className="size-4" />}
+              btnClassName="border-stone-900 px-8 py-2.5 sm:px-10"
+              spanClassName="bg-stone-900"
+              secSpanClassName="group-hover:text-white"
+            />
+          </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-7 lg:mt-12 lg:grid-cols-3 lg:gap-8">
+        <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {newCollection.map((item, idx) => (
             <article
               key={idx}
               data-aos="zoom-in-down"
-              data-aos-delay={idx * 80}
-              className="group/card flex flex-col"
+              data-aos-delay={idx * 90}
+              className="group/card relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_-28px_rgba(0,0,0,0.42)]"
             >
-              <div className="relative aspect-3/4 w-full overflow-hidden rounded-2xl bg-stone-200 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.18)] ring-1 ring-stone-900/10 transition-shadow duration-300 hover:shadow-[0_20px_50px_-20px_rgba(0,0,0,0.22)]">
+              <div
+                className="pointer-events-none absolute top-4 left-4 z-10 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-stone-700 uppercase shadow-sm"
+                aria-hidden
+              >
+                Just dropped
+              </div>
+
+              <div className="relative aspect-3/4 w-full overflow-hidden rounded-2xl bg-stone-100 ring-1 ring-stone-900/10">
                 <img
                   src={item.src}
                   alt={item.name}
-                  className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover/card:scale-[1.02]"
+                  className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
                 />
                 <img
                   src={item.hoverSrc}
@@ -59,23 +83,25 @@ const NewCollection = () => {
                   className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-700 ease-out group-hover/card:opacity-100"
                 />
                 <div
-                  className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/35 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover/card:opacity-80"
+                  className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/30 via-transparent to-transparent opacity-70 transition-opacity duration-500 group-hover/card:opacity-90"
                   aria-hidden
                 />
               </div>
 
-              <div className="mt-4 flex items-start justify-between gap-4">
+              <div className="mt-5 flex items-start justify-between gap-4 px-1 pb-1">
                 <div className="min-w-0">
-                  <h3 className="font-bylast text-xl tracking-tight text-stone-900 sm:text-2xl">
+                  <h3 className="text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl">
                     {item.name}
                   </h3>
-                  <p className="mt-1 text-sm text-stone-600">{item.subtitle}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-stone-600">
+                    {item.subtitle}
+                  </p>
                 </div>
                 <div className="shrink-0 text-right">
-                  <p className="font-arial text-lg font-semibold text-stone-900 sm:text-xl">
+                  <p className="text-lg font-semibold text-stone-900 sm:text-xl">
                     {item.newPrice}
                   </p>
-                  <p className="text-sm text-stone-400 line-through decoration-stone-300">
+                  <p className="text-sm text-stone-400 line-through decoration-stone-300 decoration-1">
                     {item.oldPrice}
                   </p>
                 </div>
