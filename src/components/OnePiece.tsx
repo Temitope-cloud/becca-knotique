@@ -1,13 +1,14 @@
 "use client";
-import { onePiece } from "@/data/Products";
+import { getProductsByCategory } from "@/data/Products";
 import React, { useState } from "react";
 import { Clock3, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import StarRating from "./StarRating";
 import DiscountTimer from "./ui/DiscountTimer";
 
 const OnePiece = () => {
-  const product = onePiece[0];
-  const images = product.imgs;
+  const onePieceProducts = getProductsByCategory("one-piece");
+  const product = onePieceProducts[0];
+  const images = product?.images || [];
   const [activeImage, setActiveImage] = useState(images[0]);
   return (
     <>
@@ -65,7 +66,7 @@ const OnePiece = () => {
               </p>
             </div>
 
-            {onePiece.map((piece, idx) => (
+            {onePieceProducts.map((piece, idx) => (
               <div
                 key={`${piece.name}-${idx}`}
                 className="mt-7 rounded-3xl border border-stone-200/90 bg-linear-to-br from-stone-50/95 via-white to-amber-50/30 p-6 shadow-[0_1px_0_rgba(0,0,0,0.04),0_18px_55px_-18px_rgba(0,0,0,0.18)] ring-1 ring-black/3 sm:p-8"
@@ -104,10 +105,10 @@ const OnePiece = () => {
 
                 <div className="mt-5 flex flex-wrap items-baseline gap-x-4 gap-y-2">
                   <p className="text-4xl font-semibold tracking-tight text-neutral-900">
-                    {piece.currentPrice}
+                    ₦{piece.price}
                   </p>
                   <p className="text-lg text-stone-600 line-through decoration-stone-300">
-                    {piece.oldPrice}
+                    ₦{piece.oldPrice}
                   </p>
                   <span className="rounded-full bg-emerald-700/10 px-3 py-1 text-xs font-semibold tracking-widest text-emerald-900 uppercase">
                     Save 30%
@@ -116,7 +117,7 @@ const OnePiece = () => {
 
                 <div className="mt-6 flex flex-wrap items-center gap-3 border-b border-stone-200/80 pb-6">
                   <div className="flex items-center gap-2 rounded-full bg-amber-50/90 px-3 py-1.5 ring-1 ring-amber-200/60">
-                    <StarRating rating={piece.stars} />
+                    <StarRating rating={piece.stars ?? 0} />
                   </div>
                   <p className="text-sm text-stone-600">
                     <span className="font-semibold text-stone-800">12</span>{" "}
@@ -129,8 +130,8 @@ const OnePiece = () => {
                 </div>
 
                 <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {piece.infos.map((info, infoIdx) => {
-                    const Icon = info.icon;
+                  {piece.infos?.map((info, infoIdx) => {
+                    const Icon = info.icon ?? Sparkles;
                     return (
                       <div
                         key={infoIdx}

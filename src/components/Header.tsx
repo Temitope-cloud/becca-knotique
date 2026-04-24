@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 const MENUS = [
   { label: "Home", href: "/" },
-  { label: "Products", href: "/#collection" },
+  { label: "Products", href: "/products" },
   { label: "Featured", href: "/#featured" },
   { label: "About", href: "/about" },
   {
