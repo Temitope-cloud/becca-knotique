@@ -200,7 +200,7 @@ export const products: Product[] = [
     name: "Beanie",
     slug: "beanie",
 
-    category: "one-piece",
+    category: "",
 
     price: 35000,
     oldPrice: 50000,
