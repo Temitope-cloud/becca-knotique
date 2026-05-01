@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const MENUS = [
   { label: "Home", href: "/" },
@@ -80,13 +81,21 @@ const Header = () => {
         className={`relative z-50 flex items-center border-b border-b-gray-100/60 ${!Homepage && "bg-amber-950/70"} px-2 pt-5 pb-2 sm:px-4`}
       >
         <div className="z-60 w-full">
-          <Link
+          {/* <Link
             href="/"
             onClick={closeMenu}
             className="font-akira inline-block cursor-pointer font-bold tracking-wider text-white"
           >
             Becca&apos;s Knotique
-          </Link>
+
+          
+          </Link> */}
+
+          <img
+            src="/light-logo.png"
+            alt="Becca's Knotique"
+            className="h-15 w-15"
+          />
         </div>
 
         <div className="hidden w-full justify-between lg:flex">

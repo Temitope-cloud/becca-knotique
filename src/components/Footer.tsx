@@ -59,7 +59,7 @@ const Footer = () => {
             <Image
               width={250}
               height={100}
-              src="/light-logo.png"
+              src="/logo.png"
               alt=""
               className=""
             />
