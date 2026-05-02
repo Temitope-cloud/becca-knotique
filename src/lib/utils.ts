@@ -18,6 +18,7 @@ function buildWhatsAppMessage(product: any) {
 
  Product: ${product.name}
  Price: ₦${product.price.toLocaleString()}
+ Product Image: https://beccasknotique.vercel.app${product.images?.[0]}
 
 Please I’d like to know more about it.`;
 }

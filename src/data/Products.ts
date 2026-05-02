@@ -7,6 +7,7 @@ export type Product = {
   subtitle?: string;
 
   category: "one-piece" | "new-collection" | "accessories" | "bags" | "";
+  madefor: "women" | "men" | "unisex";
 
   price: number;
   oldPrice?: number;
@@ -46,6 +47,7 @@ export const products: Product[] = [
     id: "golden-hour",
     name: "Golden Hour Dress",
     category: "one-piece",
+    madefor: "women",
     stars: 5,
     price: 35000,
     oldPrice: 50000,
@@ -84,6 +86,7 @@ export const products: Product[] = [
 
     subtitle: "Statement Two-Piece Set",
     category: "new-collection",
+    madefor: "women",
 
     price: 125000,
     oldPrice: 140000,
@@ -123,6 +126,7 @@ export const products: Product[] = [
 
     subtitle: "Layering Essential",
     category: "new-collection",
+    madefor: "women",
 
     price: 60000,
     oldPrice: 75000,
@@ -162,6 +166,7 @@ export const products: Product[] = [
 
     subtitle: "Signature Accessories",
     category: "new-collection",
+    madefor: "women",
 
     price: 90000,
     oldPrice: 100000,
@@ -201,6 +206,7 @@ export const products: Product[] = [
     slug: "beanie",
 
     category: "",
+    madefor: "men",
 
     price: 35000,
     oldPrice: 50000,
@@ -219,6 +225,84 @@ export const products: Product[] = [
     ],
 
     hoverImage: "/images/products/beanie/beanie-2.jpeg",
+
+    inStock: true,
+    stockCount: 5,
+
+    tags: ["featured", "new"],
+
+    infos: [
+      { label: "Safe Payment" },
+      { label: "Free Shipping" },
+      { label: "Delivery in 2–5 days" },
+    ],
+
+    createdAt: "2026-01-01",
+  },
+  {
+    id: "lingerie",
+    name: "lingerie",
+    slug: "lingerie",
+
+    category: "",
+    madefor: "women",
+
+    price: 35000,
+    oldPrice: 50000,
+    currency: "NGN",
+
+    description:
+      "A cozy handcrafted crochet beanie designed for everyday warmth with a clean, stylish finish.",
+
+    longDescription:
+      "This crochet beanie is handmade with premium, breathable yarn for all-day comfort and reliable warmth. Its soft texture, flexible fit, and timeless silhouette make it an easy choice for casual outfits, travel days, and cooler evenings.",
+
+    images: [
+      "/images/products/lingerie/lingerie-2.jpeg",
+      "/images/products/lingerie/lingerie-3.jpeg",
+      "/images/products/lingerie/lingerie-1.jpeg",
+    ],
+
+    hoverImage: "/images/products/lingerie/lingerie-1.jpeg",
+
+    inStock: true,
+    stockCount: 5,
+
+    tags: ["featured", "new"],
+
+    infos: [
+      { label: "Safe Payment" },
+      { label: "Free Shipping" },
+      { label: "Delivery in 2–5 days" },
+    ],
+
+    createdAt: "2026-01-01",
+  },
+  {
+    id: "cool",
+    name: "cool",
+    slug: "cool",
+
+    category: "",
+    madefor: "women",
+
+    price: 35000,
+    oldPrice: 50000,
+    currency: "NGN",
+
+    description:
+      "A cozy handcrafted crochet beanie designed for everyday warmth with a clean, stylish finish.",
+
+    longDescription:
+      "This crochet beanie is handmade with premium, breathable yarn for all-day comfort and reliable warmth. Its soft texture, flexible fit, and timeless silhouette make it an easy choice for casual outfits, travel days, and cooler evenings.",
+
+    images: [
+      "/images/products/cool/cool-2.jpeg",
+      "/images/products/cool/cool-3.jpeg",
+      "/images/products/cool/cool-1.jpeg",
+    ],
+
+    hoverImage: "/images/products/cool/cool-1.jpeg",
 
     inStock: true,
     stockCount: 5,
