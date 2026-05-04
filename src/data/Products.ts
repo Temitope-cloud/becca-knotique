@@ -263,7 +263,7 @@ export const products: Product[] = [
       "/images/products/lingerie/crochet-bikini-set-1.jpeg",
     ],
 
-    hoverImage: "/images/products/lingerie/lingerie-1.jpeg",
+    hoverImage: "/images/products/lingerie/handmade-crochet-bikini-set-1.jpeg",
 
     inStock: true,
     stockCount: 5,
@@ -302,7 +302,7 @@ export const products: Product[] = [
       "/images/products/cool/luxe-crochet-ruffle-mini-dress-3.jpeg",
     ],
 
-    hoverImage: "/images/products/cool/cool-1.jpeg",
+    hoverImage: "/images/products/cool/luxe-crochet-ruffle-mini-dress-1.jpeg",
 
     inStock: true,
     stockCount: 5,
