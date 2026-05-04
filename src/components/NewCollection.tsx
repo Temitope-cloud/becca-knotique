@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import React from "react";
 import ButtonFill from "./ui/ButtonFill";
 import { getProductsByCategory } from "@/data/Products";
+import Link from "next/link";
 
 const NewCollection = () => {
   const newCollection = getProductsByCategory("new-collection");
@@ -64,61 +65,66 @@ const NewCollection = () => {
             const hoverImage = item.hoverImage ?? item.images?.[1];
 
             return (
-            <article
-              key={item.slug || idx}
-              data-aos="zoom-in-down"
-              data-aos-delay={idx * 90}
-              className="group/card relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_-28px_rgba(0,0,0,0.42)]"
-            >
-              <div
-                className="pointer-events-none absolute top-4 left-4 z-10 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-stone-700 uppercase shadow-sm"
-                aria-hidden
-              >
-                Just dropped
-              </div>
+              <>
+                <Link href={`/products/${item.slug}`}>
+                  <article
+                    key={item.slug || idx}
+                    data-aos="zoom-in-down"
+                    data-aos-delay={idx * 90}
+                    className="group/card relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_-28px_rgba(0,0,0,0.42)]"
+                  >
+                    <div
+                      className="pointer-events-none absolute top-4 left-4 z-10 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-stone-700 uppercase shadow-sm"
+                      aria-hidden
+                    >
+                      Just dropped
+                    </div>
 
-              <div className="relative aspect-3/4 w-full overflow-hidden rounded-2xl bg-stone-100 ring-1 ring-stone-900/10">
-                {primaryImage ? (
-                  <img
-                    src={primaryImage}
-                    alt={item.name}
-                    className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
-                  />
-                ) : null}
-                {hoverImage ? (
-                  <img
-                    src={hoverImage}
-                    alt=""
-                    aria-hidden
-                    className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-700 ease-out group-hover/card:opacity-100"
-                  />
-                ) : null}
-                <div
-                  className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/30 via-transparent to-transparent opacity-70 transition-opacity duration-500 group-hover/card:opacity-90"
-                  aria-hidden
-                />
-              </div>
+                    <div className="relative aspect-3/4 w-full overflow-hidden rounded-2xl bg-stone-100 ring-1 ring-stone-900/10">
+                      {primaryImage ? (
+                        <img
+                          src={primaryImage}
+                          alt={item.name}
+                          className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover/card:scale-[1.03]"
+                        />
+                      ) : null}
+                      {hoverImage ? (
+                        <img
+                          src={hoverImage}
+                          alt=""
+                          aria-hidden
+                          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-700 ease-out group-hover/card:opacity-100"
+                        />
+                      ) : null}
+                      <div
+                        className="pointer-events-none absolute inset-0 bg-linear-to-t from-stone-900/30 via-transparent to-transparent opacity-70 transition-opacity duration-500 group-hover/card:opacity-90"
+                        aria-hidden
+                      />
+                    </div>
 
-              <div className="mt-5 flex items-start justify-between gap-4 px-1 pb-1">
-                <div className="min-w-0">
-                  <h3 className="text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl">
-                    {item.name}
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-stone-600">
-                    {item.subtitle}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right">
-                  <p className="text-lg font-semibold text-stone-900 sm:text-xl">
-                    {item.price}
-                  </p>
-                  <p className="text-sm text-stone-400 line-through decoration-stone-300 decoration-1">
-                    {item.oldPrice}
-                  </p>
-                </div>
-              </div>
-            </article>
-          )})}
+                    <div className="mt-5 flex items-start justify-between gap-4 px-1 pb-1">
+                      <div className="min-w-0">
+                        <h3 className="text-xl font-semibold tracking-tight text-stone-900">
+                          {item.name}
+                        </h3>
+                        <p className="mt-1 text-sm leading-relaxed text-stone-600">
+                          {item.subtitle}
+                        </p>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <p className="text-lg font-semibold text-stone-900 sm:text-xl">
+                          {item.price}
+                        </p>
+                        <p className="text-sm text-stone-400 line-through decoration-stone-300 decoration-1">
+                          {item.oldPrice}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              </>
+            );
+          })}
         </div>
       </div>
     </section>
