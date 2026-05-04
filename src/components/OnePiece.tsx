@@ -172,7 +172,7 @@ const OnePiece = () => {
                     Handmade quality
                   </div>
                 </div>
-
+                {/* 
                 <div className="mt-10 rounded-xl border border-stone-100 bg-white/70 p-5 sm:p-6">
                   <p className="text-base font-semibold tracking-[0.12em] text-neutral-800 uppercase sm:text-lg">
                     Description
@@ -180,7 +180,7 @@ const OnePiece = () => {
                   <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
                     {piece.description}
                   </p>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>

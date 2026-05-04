@@ -19,7 +19,7 @@ const Footer = () => {
       label: "COLLECTIONS",
       links: [
         { label: "New Arrivals", href: "new-arrivals" },
-        { label: "Best Sellers", href: "best-sellers" },
+        { label: "Best Sellers", href: "/products" },
         { label: "Custom Orders", href: "/contact" },
         { label: "Ready to Wear", href: "/products" },
       ],
