@@ -202,14 +202,14 @@ export const products: Product[] = [
   // All products
   {
     id: "beanie",
-    name: "Beanie",
+    name: "Classic Ribbed Knit Beanie",
     slug: "beanie",
 
     category: "",
     madefor: "men",
 
-    price: 35000,
-    oldPrice: 50000,
+    price: 15000,
+    oldPrice: 20000,
     currency: "NGN",
 
     description:
@@ -241,26 +241,26 @@ export const products: Product[] = [
   },
   {
     id: "lingerie",
-    name: "lingerie",
-    slug: "lingerie",
+    name: "Handmade Crochet Bikini Set",
+    slug: "handmade-crochet-bikini-set",
 
     category: "",
     madefor: "women",
 
-    price: 35000,
-    oldPrice: 50000,
+    price: 45000,
+    oldPrice: 60000,
     currency: "NGN",
 
     description:
-      "A cozy handcrafted crochet beanie designed for everyday warmth with a clean, stylish finish.",
+      "A stylish handmade crochet bikini set designed for confident, breathable comfort and standout beachwear looks.",
 
     longDescription:
-      "This crochet beanie is handmade with premium, breathable yarn for all-day comfort and reliable warmth. Its soft texture, flexible fit, and timeless silhouette make it an easy choice for casual outfits, travel days, and cooler evenings.",
+      "This handcrafted crochet bikini set is made with high-quality yarn, offering a soft feel and secure fit. Designed for both comfort and style, it’s perfect for beach outings, vacations, and fashion-forward summer moments. Its breathable weave and flattering cut make it a must-have statement piece.",
 
     images: [
-      "/images/products/lingerie/lingerie-2.jpeg",
-      "/images/products/lingerie/lingerie-3.jpeg",
-      "/images/products/lingerie/lingerie-1.jpeg",
+      "/images/products/lingerie/crochet-bikini-set-2.jpeg",
+      "/images/products/lingerie/crochet-bikini-set-3.jpeg",
+      "/images/products/lingerie/crochet-bikini-set-1.jpeg",
     ],
 
     hoverImage: "/images/products/lingerie/lingerie-1.jpeg",
@@ -279,27 +279,27 @@ export const products: Product[] = [
     createdAt: "2026-01-01",
   },
   {
-    id: "cool",
-    name: "cool",
-    slug: "cool",
+    id: "luxe-crochet-ruffle-mini-dress",
+    name: "Luxe Crochet Ruffle Mini Dress",
+    slug: "luxe-crochet-ruffle-mini-dress",
 
     category: "",
     madefor: "women",
 
-    price: 35000,
-    oldPrice: 50000,
+    price: 65000,
+    oldPrice: 80000,
     currency: "NGN",
 
     description:
-      "A cozy handcrafted crochet beanie designed for everyday warmth with a clean, stylish finish.",
+      "A bold handcrafted crochet mini dress featuring layered ruffles and a sculpted silhouette for standout styling.",
 
     longDescription:
-      "This crochet beanie is handmade with premium, breathable yarn for all-day comfort and reliable warmth. Its soft texture, flexible fit, and timeless silhouette make it an easy choice for casual outfits, travel days, and cooler evenings.",
+      "This luxe crochet ruffle mini dress is carefully handmade to deliver a striking, feminine silhouette. With detailed stitching, breathable fabric, and layered ruffle accents, it’s designed for special occasions, photoshoots, and confident everyday fashion. It combines elegance with playful texture for a truly eye-catching look.",
 
     images: [
-      "/images/products/cool/cool-2.jpeg",
-      "/images/products/cool/cool-3.jpeg",
-      "/images/products/cool/cool-1.jpeg",
+      "/images/products/cool/luxe-crochet-ruffle-mini-dress-1.jpeg",
+      "/images/products/cool/luxe-crochet-ruffle-mini-dress-2.jpeg",
+      "/images/products/cool/luxe-crochet-ruffle-mini-dress-3.jpeg",
     ],
 
     hoverImage: "/images/products/cool/cool-1.jpeg",

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import TextPressure from "./ui/TextPressure";
-import { Scissors, Sparkles } from "lucide-react";
+import { Heart, Scissors, Sparkles } from "lucide-react";
 
 const Footer = () => {
   const footerMenus = [
@@ -21,7 +21,7 @@ const Footer = () => {
         { label: "New Arrivals", href: "new-arrivals" },
         { label: "Best Sellers", href: "best-sellers" },
         { label: "Custom Orders", href: "/contact" },
-        { label: "Ready to Wear", href: "ready-made" },
+        { label: "Ready to Wear", href: "/products" },
       ],
     },
 
@@ -40,15 +40,15 @@ const Footer = () => {
   const socials = [
     {
       label: "Instagram",
-      href: "/",
+      href: "https://www.instagram.com/beccasknotique/",
     },
     {
       label: "TikTok",
-      href: "/",
+      href: "https://www.tiktok.com/@beccas_knotique/",
     },
     {
       label: "Whatsapp",
-      href: "/",
+      href: "https://wa.me/2348029086678",
     },
   ];
   return (
@@ -102,13 +102,20 @@ const Footer = () => {
           ))}
         </div>
 
-        <div className="flex flex-col-reverse items-center justify-center gap-2 text-sm text-white/70 md:flex-row md:justify-between md:gap-0">
+        <div className="mb-10 flex flex-col items-center justify-center gap-2 text-sm text-white/70 md:flex-row md:justify-between md:gap-0">
           <p className="text-center">
             © {year} {""} Becca&apos;s Knotique. All rights reserved.
           </p>{" "}
-          <div className="flex items-center gap-2">
-            <Scissors className="h-5 w-5" />
-            <p className="text-center">Handmade Crocheting</p>{" "}
+          <div className="flex items-center gap-2 text-[#e3948e]">
+            {/* <Scissors className="h-5 w-5" /> */}
+            <Heart className="h-5 w-5" />
+            <Link
+              className="text-center"
+              href="https://temistudio.vercel.app/"
+              target="_blank"
+            >
+              Designed by Temi Studio
+            </Link>
           </div>
         </div>
         <div>
