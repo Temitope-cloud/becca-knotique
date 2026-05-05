@@ -1,9 +1,10 @@
 "use client";
 import { getProductsByCategory } from "@/data/Products";
 import React, { useState } from "react";
-import { Clock3, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, Clock3, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import StarRating from "./StarRating";
 import DiscountTimer from "./ui/DiscountTimer";
+import { getWhatsAppLink } from "@/lib/utils";
 
 const OnePiece = () => {
   const onePieceProducts = getProductsByCategory("one-piece");
@@ -148,12 +149,21 @@ const OnePiece = () => {
                   })}
                 </div>
 
-                <button
+                <a
+                  href={getWhatsAppLink(product)}
+                  target="_blank"
+                  className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-green-950 px-6 py-4 text-sm font-semibold tracking-[0.14em] text-white uppercase transition hover:bg-green-700"
+                >
+                  Secure yours now
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+
+                {/* <button
                   type="button"
                   className="mt-6 w-full cursor-pointer rounded-xl bg-neutral-900 px-8 py-4 text-base font-semibold tracking-[0.2em] text-white uppercase shadow-lg shadow-neutral-900/25 transition hover:bg-neutral-800 hover:shadow-xl active:scale-[0.99]"
                 >
                   Secure yours now
-                </button>
+                </button> */}
                 <p className="mt-3 text-center text-xs tracking-[0.08em] text-stone-500 uppercase">
                   Checkout in under 1 minute
                 </p>
