@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
@@ -8,7 +9,7 @@ import {
   Sparkles,
   Truck,
 } from "lucide-react";
-import { products } from "@/data/Products";
+import { products, type Product } from "@/data/Products";
 import ProductGallery from "@/components/ProductGallery";
 import { getWhatsAppLink } from "@/lib/utils";
 
@@ -16,22 +17,101 @@ type ProductDetailsProps = {
   params: Promise<{ slug: string }>;
 };
 
+const SITE_URL = "https://www.beccasknotique.com";
+
 const formatPrice = (value: number) => `₦${value.toLocaleString()}`;
+
+function getValidProducts() {
+  return products.filter((item) => item.slug && item.name);
+}
+
+function truncateMeta(text: string, max = 158): string {
+  const trimmed = text.trim().replace(/\s+/g, " ");
+  if (trimmed.length <= max) return trimmed;
+  const cut = trimmed.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  const base =
+    lastSpace > 72 ? cut.slice(0, lastSpace) : cut.slice(0, max - 1);
+  return `${base.trimEnd()}…`;
+}
+
+function galleryImages(product: Product): string[] {
+  if (product.images?.length) return product.images;
+  if (product.image) return [product.image];
+  return [];
+}
+
+function absoluteUrl(path: string): string {
+  if (path.startsWith("http")) return path;
+  return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export async function generateStaticParams() {
+  return getValidProducts().map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: ProductDetailsProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = getValidProducts().find((item) => item.slug === slug);
+  if (!product) return { title: "Product not found" };
+
+  const plainDescription =
+    product.longDescription ?? product.description ?? product.name;
+  const metaDescription = truncateMeta(plainDescription);
+  const canonicalPath = `/products/${product.slug}`;
+  const imgs = galleryImages(product);
+  const ogImages =
+    imgs.length > 0
+      ? imgs.map((src, i) => ({
+          url: src,
+          alt: `${product.name}${i > 0 ? ` — photo ${i + 1}` : ""}`,
+          width: 1200,
+          height: 1200,
+        }))
+      : [{ url: "/images/about1.png", width: 1200, height: 630, alt: product.name }];
+
+  const keywordParts = [
+    product.category?.replace("-", " "),
+    "handmade crochet",
+    "Becca's Knotique",
+    ...(product.tags ?? []),
+  ].filter(Boolean) as string[];
+
+  return {
+    title: product.name,
+    description: metaDescription,
+    keywords: Array.from(new Set(keywordParts.map((k) => k.toLowerCase()))),
+    openGraph: {
+      title: product.name,
+      description: metaDescription,
+      url: canonicalPath,
+      type: "website",
+      images: ogImages,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: metaDescription,
+      images: ogImages.map((img) => img.url),
+    },
+    alternates: {
+      canonical: canonicalPath,
+    },
+  };
+}
 
 export default async function ProductDetails({ params }: ProductDetailsProps) {
   const { slug } = await params;
-  const validProducts = products.filter((item) => item.slug && item.name);
+  const validProducts = getValidProducts();
   const product = validProducts.find((item) => item.slug === slug);
 
   if (!product) {
     notFound();
   }
 
-  const gallery = product.images?.length
-    ? product.images
-    : product.image
-      ? [product.image]
-      : [];
+  const gallery = galleryImages(product);
   const discount =
     typeof product.oldPrice === "number" && product.oldPrice > product.price
       ? Math.round(
@@ -46,8 +126,42 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
     )
     .slice(0, 3);
 
+  const inStock = product.inStock !== false;
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${SITE_URL}/products/${product.slug}#product`,
+    url: `${SITE_URL}/products/${product.slug}`,
+    name: product.name,
+    description: truncateMeta(product.longDescription ?? product.description, 480),
+    image: gallery.length
+      ? gallery.map(absoluteUrl)
+      : [absoluteUrl("/images/about1.png")],
+    category: product.category?.replace("-", " "),
+    brand: {
+      "@type": "Brand",
+      name: "Becca's Knotique",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${SITE_URL}/products/${product.slug}`,
+      priceCurrency: product.currency ?? "NGN",
+      price: product.price.toString(),
+      availability: inStock
+        ? ("https://schema.org/InStock" as const)
+        : ("https://schema.org/OutOfStock" as const),
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
+
   return (
-    <main className="relative min-h-screen w-full bg-stone-50 pb-16">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <main className="relative min-h-screen w-full bg-stone-50 pb-16">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-amber-100/55 via-rose-50/35 to-transparent"
         aria-hidden
@@ -204,5 +318,6 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
         </section>
       ) : null}
     </main>
+    </>
   );
 }

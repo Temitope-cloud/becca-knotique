@@ -1,8 +1,21 @@
 import type { MetadataRoute } from "next";
+import { products } from "@/data/Products";
 
 const baseUrl = "https://www.beccasknotique.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const validProducts = products.filter((p) => p.slug && p.name);
+  const productEntries: MetadataRoute.Sitemap = validProducts.map(
+    (product) => ({
+      url: `${baseUrl}/products/${product.slug}`,
+      lastModified: product.createdAt
+        ? new Date(product.createdAt)
+        : new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    }),
+  );
+
   return [
     {
       url: `${baseUrl}/`,
@@ -10,6 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: `${baseUrl}/products`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    ...productEntries,
     {
       url: `${baseUrl}/about`,
       lastModified: new Date(),

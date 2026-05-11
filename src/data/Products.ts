@@ -198,6 +198,91 @@ export const products: Product[] = [
     ],
     createdAt: "2026-02-10",
   },
+  {
+    id: "camel-crochet-three-piece-set",
+    name: "Camel Crochet Three-Piece Set",
+    slug: "camel-crochet-three-piece-set",
+
+    subtitle: "Blazer, Bandeau & Pleated Skirt",
+    category: "new-collection",
+    madefor: "women",
+
+    price: 125000,
+    oldPrice: 142000,
+    currency: "NGN",
+    stars: 5,
+    rating: 4.9,
+    sizes: ["S", "M", "L"],
+    colors: ["Camel & Ivory"],
+
+    description:
+      "A refined handmade crochet three-piece set pairing a textured cropped blazer, soft ivory bandeau, and pleated mini skirt in warm camel neutrals.",
+
+    longDescription:
+      "Designed as a coordinated editorial look, this set combines structured lapels and long sleeves with a crisp ivory crochet bandeau and a high-waisted pleated mini skirt. Each piece is crafted with dense artisan stitches that read beautifully on camera and in daylight—ideal for events, shoots, and confident everyday statement styling.",
+
+    images: [
+      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-1.jpeg",
+      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-2.jpeg",
+      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-3.jpeg",
+    ],
+
+    hoverImage:
+      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-2.jpeg",
+
+    inStock: true,
+    stockCount: 4,
+    tags: ["new", "featured"],
+    infos: [
+      { label: "Safe Payment", icon: Lock },
+      { label: "Free Shipping", icon: Truck },
+      { label: "Delivery in 2-5 days", icon: Package },
+    ],
+    createdAt: "2026-05-11",
+  },
+  {
+    id: "sunset-stripe-bell-sleeve-crochet-mini-dress",
+    name: "Sunset Stripe Bell-Sleeve Crochet Mini Dress",
+    slug: "sunset-stripe-bell-sleeve-crochet-mini-dress",
+
+    subtitle: "Granny Stitch & Earth-Tone Stripes",
+    category: "new-collection",
+    madefor: "women",
+
+    price: 78000,
+    oldPrice: 92000,
+    currency: "NGN",
+    stars: 5,
+    rating: 4.9,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Chocolate, Rust & Sunset Orange"],
+
+    description:
+      "A handmade crochet mini dress with horizontal earth-tone stripes, airy granny-stitch texture, and dramatic bell sleeves for elevated boho styling.",
+
+    longDescription:
+      "Designed around artisan texture and movement, this dress combines classic cluster stitches with bold flare sleeves and a clean boat neckline. The warm stripe rhythm reads beautifully outdoors and indoors alike—perfect for events, creative shoots, and statement casual dressing with breathable handmade comfort.",
+
+    images: [
+      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-4.png",
+      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-3.png",
+      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-2.png",
+      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-1.png",
+    ],
+
+    hoverImage:
+      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-3.png",
+
+    inStock: true,
+    stockCount: 5,
+    tags: ["new", "featured"],
+    infos: [
+      { label: "Safe Payment", icon: Lock },
+      { label: "Free Shipping", icon: Truck },
+      { label: "Delivery in 2-5 days", icon: Package },
+    ],
+    createdAt: "2026-05-11",
+  },
 
   // All products
   {
