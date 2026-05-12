@@ -3,6 +3,7 @@ import Header from "./Header";
 import Noise from "./ui/Noise";
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const HeroSection = () => {
   return (
@@ -54,10 +55,13 @@ const HeroSection = () => {
                 We bring fashion that transcends time, a blends of classic
                 aesthetics with modern materials.
               </p>
-              <button className="bg-primary/90 hover:bg-primary mt-2 flex w-full cursor-pointer items-center justify-center rounded-sm py-3 text-white transition-all duration-300">
+              <Link
+                href="/products"
+                className="bg-primary/90 hover:bg-primary mt-2 flex w-full cursor-pointer items-center justify-center rounded-sm py-3 text-white transition-all duration-300"
+              >
                 Shop Now
                 <ArrowRight />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

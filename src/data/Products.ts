@@ -49,8 +49,8 @@ export const products: Product[] = [
     category: "one-piece",
     madefor: "women",
     stars: 5,
-    price: 35000,
-    oldPrice: 50000,
+    price: 100000,
+    oldPrice: 120000,
     slug: "golden-hour",
     currency: "NGN",
     infos: [
@@ -74,7 +74,7 @@ export const products: Product[] = [
       "/images/products/golden-hour/golden-hour-4.jpeg",
     ],
     description:
-      "This Floral Fantasy dress features a flowy, lightweight polyester blend that’s wrinkle-resistant and perfect for adding a vibrant touch to any occasion.",
+      "A handmade crochet mini dress with sheer openwork panels, delicate straps, and a long fringe hem for standout resort-ready styling.",
     rating: 5,
     tags: ["new", "featured"],
   },
@@ -88,8 +88,8 @@ export const products: Product[] = [
     category: "new-collection",
     madefor: "women",
 
-    price: 125000,
-    oldPrice: 140000,
+    price: 150000,
+    oldPrice: 170000,
     currency: "NGN",
     stars: 5,
     rating: 4.9,
@@ -129,8 +129,8 @@ export const products: Product[] = [
     category: "new-collection",
     madefor: "women",
 
-    price: 60000,
-    oldPrice: 75000,
+    price: 72000,
+    oldPrice: 88000,
     currency: "NGN",
     stars: 5,
     rating: 4.8,
@@ -169,8 +169,8 @@ export const products: Product[] = [
     category: "new-collection",
     madefor: "women",
 
-    price: 90000,
-    oldPrice: 100000,
+    price: 114000,
+    oldPrice: 134000,
     currency: "NGN",
     stars: 5,
     rating: 4.9,
@@ -208,8 +208,8 @@ export const products: Product[] = [
     category: "new-collection",
     madefor: "women",
 
-    price: 125000,
-    oldPrice: 142000,
+    price: 168000,
+    oldPrice: 196000,
     currency: "NGN",
     stars: 5,
     rating: 4.9,
@@ -250,8 +250,8 @@ export const products: Product[] = [
     category: "new-collection",
     madefor: "women",
 
-    price: 78000,
-    oldPrice: 92000,
+    price: 135000,
+    oldPrice: 155000,
     currency: "NGN",
     stars: 5,
     rating: 4.9,
@@ -293,8 +293,8 @@ export const products: Product[] = [
     category: "new-collection",
     madefor: "women",
 
-    price: 72000,
-    oldPrice: 86000,
+    price: 86000,
+    oldPrice: 103000,
     currency: "NGN",
     stars: 5,
     rating: 4.9,
@@ -308,13 +308,14 @@ export const products: Product[] = [
       "Designed for warm-light moments and confident movement, this dress pairs delicate openwork crochet with a sculpted halter neckline and bold fringe finish. The tonal pink layout highlights artisan stitching while staying breathable—ideal for vacations, outdoor gatherings, and editorial-ready weekend styling.",
 
     images: [
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-3.png",
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
       "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-3.png",
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-4.png",
     ],
 
     hoverImage:
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
 
     inStock: true,
     stockCount: 5,
@@ -336,8 +337,8 @@ export const products: Product[] = [
     category: "",
     madefor: "men",
 
-    price: 15000,
-    oldPrice: 20000,
+    price: 18000,
+    oldPrice: 24000,
     currency: "NGN",
 
     description:
@@ -376,8 +377,8 @@ export const products: Product[] = [
     category: "",
     madefor: "women",
 
-    price: 45000,
-    oldPrice: 60000,
+    price: 30000,
+    oldPrice: 36000,
     currency: "NGN",
 
     description:
@@ -416,8 +417,8 @@ export const products: Product[] = [
     category: "",
     madefor: "women",
 
-    price: 65000,
-    oldPrice: 80000,
+    price: 99000,
+    oldPrice: 119000,
     currency: "NGN",
 
     description:

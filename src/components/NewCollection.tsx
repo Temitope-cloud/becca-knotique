@@ -49,7 +49,7 @@ const NewCollection = () => {
             </div>
 
             <ButtonFill
-              href="shop"
+              href="/products"
               btnName="Shop the collection"
               icon={<ArrowRight className="size-4" />}
               btnClassName="border-stone-900 px-8 py-2.5 sm:px-10"
