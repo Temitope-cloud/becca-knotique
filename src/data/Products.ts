@@ -68,10 +68,10 @@ export const products: Product[] = [
       },
     ],
     images: [
-      "/images/products/one-piece/one-piece-1.jpeg",
-      "/images/products/one-piece/one-piece-2.jpeg",
-      "/images/products/one-piece/one-piece-3.jpeg",
-      "/images/products/one-piece/one-piece-4.jpeg",
+      "/images/products/golden-hour/golden-hour-1.jpeg",
+      "/images/products/golden-hour/golden-hour-2.jpeg",
+      "/images/products/golden-hour/golden-hour-3.jpeg",
+      "/images/products/golden-hour/golden-hour-4.jpeg",
     ],
     description:
       "This Floral Fantasy dress features a flowy, lightweight polyester blend that’s wrinkle-resistant and perfect for adding a vibrant touch to any occasion.",
@@ -103,11 +103,12 @@ export const products: Product[] = [
       "This coordinated top-and-skirt set is handmade with premium yarn using classic granny-square techniques. It delivers a flattering silhouette, breathable comfort, and a confident fashion-forward look for events, photoshoots, and standout everyday wear.",
 
     images: [
-      "/images/products/new-collection/new1.jpg",
-      "/images/products/new-collection/new1-hover.jpg",
+      "/images/products/granny-squares-top-skirt/granny-squares-top-skirt-1.jpg",
+      "/images/products/granny-squares-top-skirt/granny-squares-top-skirt-2.jpg",
     ],
 
-    hoverImage: "/images/products/new-collection/new1-hover.jpg",
+    hoverImage:
+      "/images/products/granny-squares-top-skirt/granny-squares-top-skirt-2.jpg",
 
     inStock: true,
     stockCount: 4,
@@ -143,11 +144,11 @@ export const products: Product[] = [
       "Designed as a versatile layering piece, this vest combines retro crochet craftsmanship with contemporary styling. Its breathable weave and durable yarn make it perfect over shirts, dresses, or tees for effortless day-to-night looks.",
 
     images: [
-      "/images/products/new-collection/new2.jpg",
-      "/images/products/new-collection/new2-hover.jpg",
+      "/images/products/granny-square-vest/granny-square-vest-1.jpg",
+      "/images/products/granny-square-vest/granny-square-vest-2.jpg",
     ],
 
-    hoverImage: "/images/products/new-collection/new2-hover.jpg",
+    hoverImage: "/images/products/granny-square-vest/granny-square-vest-2.jpg",
 
     inStock: true,
     stockCount: 6,
@@ -182,11 +183,11 @@ export const products: Product[] = [
       "Made for both style and practicality, this bag set pairs traditional crochet artistry with modern structure. Each piece is carefully handmade with durable yarn to hold essentials while elevating casual and occasion outfits.",
 
     images: [
-      "/images/products/new-collection/new3.jpg",
-      "/images/products/new-collection/new3-hover.jpg",
+      "/images/products/granny-squares-set/granny-squares-set-1.jpg",
+      "/images/products/granny-squares-set/granny-squares-set-2.jpg",
     ],
 
-    hoverImage: "/images/products/new-collection/new3-hover.jpg",
+    hoverImage: "/images/products/granny-squares-set/granny-squares-set-2.jpg",
 
     inStock: true,
     stockCount: 3,
@@ -271,7 +272,49 @@ export const products: Product[] = [
     ],
 
     hoverImage:
-      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-3.png",
+      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-1.png",
+
+    inStock: true,
+    stockCount: 5,
+    tags: ["new", "featured"],
+    infos: [
+      { label: "Safe Payment", icon: Lock },
+      { label: "Free Shipping", icon: Truck },
+      { label: "Delivery in 2-5 days", icon: Package },
+    ],
+    createdAt: "2026-05-11",
+  },
+  {
+    id: "fuchsia-fringe-halter-crochet-mini-dress",
+    name: "Fuchsia Fringe Halter Crochet Mini Dress",
+    slug: "fuchsia-fringe-halter-crochet-mini-dress",
+
+    subtitle: "Granny Stitch & Tassel Hem",
+    category: "new-collection",
+    madefor: "women",
+
+    price: 72000,
+    oldPrice: 86000,
+    currency: "NGN",
+    stars: 5,
+    rating: 4.9,
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Magenta, Blush & Cream"],
+
+    description:
+      "A handmade halter crochet mini dress with an airy granny-stitch body, pink-to-fuchsia gradient rhythm, and swingy yarn fringe at the hem.",
+
+    longDescription:
+      "Designed for warm-light moments and confident movement, this dress pairs delicate openwork crochet with a sculpted halter neckline and bold fringe finish. The tonal pink layout highlights artisan stitching while staying breathable—ideal for vacations, outdoor gatherings, and editorial-ready weekend styling.",
+
+    images: [
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-3.png",
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",
+    ],
+
+    hoverImage:
+      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",
 
     inStock: true,
     stockCount: 5,
@@ -304,12 +347,13 @@ export const products: Product[] = [
       "This crochet beanie is handmade with premium, breathable yarn for all-day comfort and reliable warmth. Its soft texture, flexible fit, and timeless silhouette make it an easy choice for casual outfits, travel days, and cooler evenings.",
 
     images: [
-      "/images/products/beanie/beanie-1.jpeg",
-      "/images/products/beanie/beanie-2.jpeg",
-      "/images/products/beanie/beanie-3.jpeg",
+      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-1.jpeg",
+      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-2.jpeg",
+      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-3.jpeg",
     ],
 
-    hoverImage: "/images/products/beanie/beanie-2.jpeg",
+    hoverImage:
+      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-2.jpeg",
 
     inStock: true,
     stockCount: 5,
@@ -343,12 +387,13 @@ export const products: Product[] = [
       "This handcrafted crochet bikini set is made with high-quality yarn, offering a soft feel and secure fit. Designed for both comfort and style, it’s perfect for beach outings, vacations, and fashion-forward summer moments. Its breathable weave and flattering cut make it a must-have statement piece.",
 
     images: [
-      "/images/products/lingerie/crochet-bikini-set-2.jpeg",
-      "/images/products/lingerie/crochet-bikini-set-3.jpeg",
-      "/images/products/lingerie/crochet-bikini-set-1.jpeg",
+      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-2.jpeg",
+      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-3.jpeg",
+      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-1.jpeg",
     ],
 
-    hoverImage: "/images/products/lingerie/crochet-bikini-set-1.jpeg",
+    hoverImage:
+      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-1.jpeg",
 
     inStock: true,
     stockCount: 5,
@@ -382,12 +427,13 @@ export const products: Product[] = [
       "This luxe crochet ruffle mini dress is carefully handmade to deliver a striking, feminine silhouette. With detailed stitching, breathable fabric, and layered ruffle accents, it’s designed for special occasions, photoshoots, and confident everyday fashion. It combines elegance with playful texture for a truly eye-catching look.",
 
     images: [
-      "/images/products/cool/luxe-crochet-ruffle-mini-dress-1.jpeg",
-      "/images/products/cool/luxe-crochet-ruffle-mini-dress-2.jpeg",
-      "/images/products/cool/luxe-crochet-ruffle-mini-dress-3.jpeg",
+      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-1.jpeg",
+      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-2.jpeg",
+      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-3.jpeg",
     ],
 
-    hoverImage: "/images/products/cool/luxe-crochet-ruffle-mini-dress-2.jpeg",
+    hoverImage:
+      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-2.jpeg",
 
     inStock: true,
     stockCount: 5,

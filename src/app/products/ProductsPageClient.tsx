@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { products } from "@/data/Products";
-import { ArrowRight, ShieldCheck, Sparkles, Truck } from "lucide-react";
+import { ArrowRight, BarChart3, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const formatPrice = (value: number) => `₦${value.toLocaleString()}`;
@@ -42,6 +42,13 @@ export default function ProductsPageClient() {
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Link
+              href="/products/chart"
+              className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-stone-100/80 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-stone-800 uppercase transition hover:border-stone-400 hover:bg-stone-200/60"
+            >
+              <BarChart3 className="h-3.5 w-3.5" />
+              Most viewed
+            </Link>
             {categories.map((category) => (
               <span
                 key={category}

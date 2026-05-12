@@ -10,7 +10,10 @@ import {
   Truck,
 } from "lucide-react";
 import { products, type Product } from "@/data/Products";
+import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
+import ProductRevisitNudge from "@/components/ProductRevisitNudge";
+import ProductViewTracker from "@/components/ProductViewTracker";
 import { getWhatsAppLink } from "@/lib/utils";
 
 type ProductDetailsProps = {
@@ -161,6 +164,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
+      <ProductViewTracker slug={product.slug} />
       <main className="relative min-h-screen w-full bg-stone-50 pb-16">
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-amber-100/55 via-rose-50/35 to-transparent"
@@ -177,7 +181,10 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
         </Link>
 
         <div className="mt-6 grid grid-cols-1 gap-7 rounded-3xl border border-stone-200/80 bg-white/90 p-4 shadow-[0_25px_80px_-42px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-6 lg:grid-cols-2 lg:gap-10 lg:p-8">
-          <ProductGallery images={gallery} name={product.name} />
+          <div className="flex min-w-0 flex-col lg:sticky lg:top-24 lg:self-start">
+            <ProductGallery images={gallery} name={product.name} />
+            <GalleryChartLink />
+          </div>
 
           <div className="flex flex-col">
             <p className="inline-flex w-fit items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-rose-700 uppercase">
@@ -222,6 +229,8 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
                 Premium finish
               </div>
             </div>
+
+            <ProductRevisitNudge slug={product.slug} />
 
             {/* <button
               type="button"

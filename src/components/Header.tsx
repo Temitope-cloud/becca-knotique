@@ -9,6 +9,7 @@ import Image from "next/image";
 const MENUS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
+  { label: "Chart", href: "/products/chart" },
   { label: "Featured", href: "/#featured" },
   { label: "About", href: "/about" },
   {
@@ -75,12 +76,15 @@ const Header = () => {
   const linkClass =
     "block border-b border-white/10 py-4 text-2xl font-light tracking-wide text-white transition-colors hover:text-amber-100 sm:text-3xl";
 
+  const navLinkClass =
+    "whitespace-nowrap text-[15px] font-light tracking-wide text-white transition-colors hover:text-white/90";
+
   return (
     <>
       <header
-        className={`relative z-50 flex items-center border-b border-b-gray-100/60 ${!Homepage && "bg-amber-950/70"} px-2 pt-5 pb-2 sm:px-4`}
+        className={`relative z-50 flex items-center justify-between gap-6 border-b border-b-gray-100/60 ${!Homepage && "bg-amber-950/70"} px-4 py-4 sm:px-6 lg:gap-8 lg:px-8`}
       >
-        <div className="z-60 w-full">
+        <div className="z-60 shrink-0">
           <Link
             href="/"
             onClick={closeMenu}
@@ -94,39 +98,44 @@ const Header = () => {
           </Link>
         </div>
 
-        <div className="hidden w-full justify-between lg:flex">
-          {MENUS.map((menu, idx) =>
-            menu.href.startsWith("mailto:") ? (
-              <a
-                key={idx}
-                href={menu.href}
-                className="relative top-0 cursor-pointer font-light text-white before:absolute before:bottom-0 before:h-0.5 before:w-0 before:bg-white before:transition-all before:duration-300 hover:text-gray-100 hover:before:w-full"
-              >
-                {menu.label}
-              </a>
-            ) : (
-              <Link
-                key={idx}
-                href={menu.href}
-                className="relative top-0 cursor-pointer font-light text-white before:absolute before:bottom-0 before:h-0.5 before:w-0 before:bg-white before:transition-all before:duration-300 hover:text-gray-100 hover:before:w-full"
-              >
-                {menu.label}
-              </Link>
-            ),
-          )}
-        </div>
+        <nav
+          className="hidden min-w-0 flex-1 items-center justify-center lg:flex"
+          aria-label="Primary"
+        >
+          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 xl:gap-x-10">
+            {MENUS.map((menu, idx) => (
+              <li key={idx}>
+                {menu.href.startsWith("mailto:") ? (
+                  <a
+                    href={menu.href}
+                    className={`${navLinkClass} relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-white/80 after:transition-all after:duration-300 hover:after:w-full`}
+                  >
+                    {menu.label}
+                  </a>
+                ) : (
+                  <Link
+                    href={menu.href}
+                    className={`${navLinkClass} relative after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-white/80 after:transition-all after:duration-300 hover:after:w-full`}
+                  >
+                    {menu.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        <div className="hidden w-full justify-end lg:flex">
+        <div className="hidden shrink-0 lg:block">
           <Link
             href="/our-story"
-            className="bg-muted/90 hover:bg-muted cursor-pointer rounded border border-black/50 px-10 py-2 font-semibold transition-all duration-300"
+            className="rounded-md border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-white/15"
           >
             Our Story
           </Link>
         </div>
 
         <div
-          className={`group z-60 flex cursor-pointer flex-col items-end md:hidden ${menuClicked ? "gap-0" : "gap-2"}`}
+          className={`group z-60 flex cursor-pointer flex-col items-end lg:hidden ${menuClicked ? "gap-0" : "gap-2"}`}
           onClick={handleMenuClick}
           role="button"
           tabIndex={0}
