@@ -10,6 +10,7 @@ const Footer = () => {
       label: "EXPLORE",
       links: [
         { label: "Home", href: "/home" },
+        { label: "Chart", href: "/products/chart" },
         { label: "Process", href: "/process" },
         { label: "Our Story", href: "/our-story" },
         { label: "Contact", href: "/contact" },
@@ -59,8 +60,8 @@ const Footer = () => {
             <Image
               width={250}
               height={100}
-              src="/logo.png"
-              alt=""
+              src="/footer-logo.png"
+              alt="Becca's Knotique"
               className=""
             />
           </div>

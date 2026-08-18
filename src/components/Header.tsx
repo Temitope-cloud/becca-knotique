@@ -1,15 +1,16 @@
 "use client";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import CartIcon from "./cart/CartIcon";
 
 const MENUS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
-  { label: "Chart", href: "/products/chart" },
   { label: "Featured", href: "/#featured" },
   { label: "About", href: "/about" },
   {
@@ -23,6 +24,7 @@ const Header = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const Homepage = pathname === "/";
+  const { data: session } = useSession();
 
   const closeMenu = () => setMenuClicked(false);
 
@@ -125,13 +127,26 @@ const Header = () => {
           </ul>
         </nav>
 
-        <div className="hidden shrink-0 lg:block">
+        <div className="hidden shrink-0 items-center gap-5 lg:flex">
+          <CartIcon className="text-white transition hover:text-white/80" />
+          <Link
+            href={session?.user ? "/account" : "/login"}
+            aria-label={session?.user ? "My account" : "Sign in"}
+            className="inline-flex items-center gap-2 text-sm font-medium text-white transition hover:text-white/80"
+          >
+            <User className="h-5 w-5" />
+            <span>{session?.user ? "Account" : "Sign in"}</span>
+          </Link>
           <Link
             href="/our-story"
             className="rounded-md border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-white/15"
           >
             Our Story
           </Link>
+        </div>
+
+        <div className="flex items-center gap-4 lg:hidden">
+          <CartIcon className="text-white" />
         </div>
 
         <div
@@ -207,7 +222,24 @@ const Header = () => {
               </ul>
             </nav>
 
-            <div className="mt-auto space-y-4 border-t border-white/10 pt-8">
+            <div className="mt-auto space-y-3 border-t border-white/10 pt-8">
+              <div className="grid grid-cols-2 gap-3">
+                <Link
+                  href="/cart"
+                  onClick={closeMenu}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-white/20"
+                >
+                  Cart
+                </Link>
+                <Link
+                  href={session?.user ? "/account" : "/login"}
+                  onClick={closeMenu}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-white/20"
+                >
+                  <User className="size-4" />
+                  {session?.user ? "Account" : "Sign in"}
+                </Link>
+              </div>
               <Link
                 href="/#our-story"
                 onClick={closeMenu}

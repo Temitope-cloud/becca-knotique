@@ -32,6 +32,7 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"
         className="object-cover"
+        priority={activeImage === safeImages[0]}
       />
 
       <div className="absolute inset-x-0 bottom-0 z-20 px-2 pt-10 pb-3 sm:px-3 sm:pb-4">

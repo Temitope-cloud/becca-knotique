@@ -2,19 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ShieldCheck,
-  Sparkles,
-  Truck,
-} from "lucide-react";
+import { ArrowLeft, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { products, type Product } from "@/data/Products";
 import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductRevisitNudge from "@/components/ProductRevisitNudge";
 import ProductViewTracker from "@/components/ProductViewTracker";
-import { getWhatsAppLink } from "@/lib/utils";
+import ProductPurchasePanel from "@/components/cart/ProductPurchasePanel";
+// v1 ordered via WhatsApp — kept in src/lib/utils.ts (getWhatsAppLink) as a fallback.
 
 type ProductDetailsProps = {
   params: Promise<{ slug: string }>;
@@ -232,14 +227,20 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
 
             <ProductRevisitNudge slug={product.slug} />
 
-            {/* <button
-              type="button"
-              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-6 py-4 text-sm font-semibold tracking-[0.14em] text-white uppercase transition hover:bg-stone-800"
-            >
-              Add to cart
-              <ArrowRight className="h-4 w-4" />
-            </button> */}
+            <ProductPurchasePanel
+              product={{
+                id: product.id,
+                slug: product.slug,
+                name: product.name,
+                price: product.price,
+                image: product.images?.[0] ?? product.image,
+                sizes: product.sizes,
+                colors: product.colors,
+                inStock: product.inStock,
+              }}
+            />
 
+            {/* v1 fallback — order on WhatsApp (disabled while Paystack checkout is live):
             <a
               href={getWhatsAppLink(product)}
               target="_blank"
@@ -248,6 +249,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
               Order on WhatsApp
               <ArrowRight className="h-4 w-4" />
             </a>
+            */}
 
             {product.infos?.length ? (
               <div className="mt-6 space-y-2 rounded-2xl border border-stone-200 bg-white p-4">
