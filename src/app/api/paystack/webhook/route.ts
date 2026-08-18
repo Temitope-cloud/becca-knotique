@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { connectToDatabase } from "@/lib/db";
-import { Order } from "@/lib/models/Order";
+import { markOrderPaid } from "@/lib/orders";
 
 export const runtime = "nodejs";
 
@@ -37,11 +36,8 @@ export async function POST(request: Request) {
 
   try {
     if (event.event === "charge.success" && event.data?.reference) {
-      await connectToDatabase();
-      await Order.findOneAndUpdate(
-        { reference: event.data.reference, status: { $ne: "paid" } },
-        { status: "paid", paidAt: new Date(), paystack: event.data },
-      );
+      // Atomically marks paid + sends confirmation emails once.
+      await markOrderPaid(event.data.reference, event.data);
     }
   } catch (error) {
     console.error("[paystack webhook] error:", error);

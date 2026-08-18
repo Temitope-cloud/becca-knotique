@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import CartIcon from "./cart/CartIcon";
+import { useCart } from "@/context/CartContext";
 
 const MENUS = [
   { label: "Home", href: "/" },
@@ -25,6 +26,7 @@ const Header = () => {
   const pathname = usePathname();
   const Homepage = pathname === "/";
   const { data: session } = useSession();
+  const { count, hydrated } = useCart();
 
   const closeMenu = () => setMenuClicked(false);
 
@@ -145,10 +147,6 @@ const Header = () => {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4 lg:hidden">
-          <CartIcon className="text-white" />
-        </div>
-
         <div
           className={`group z-60 flex cursor-pointer flex-col items-end lg:hidden ${menuClicked ? "gap-0" : "gap-2"}`}
           onClick={handleMenuClick}
@@ -230,6 +228,11 @@ const Header = () => {
                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-white/20"
                 >
                   Cart
+                  {hydrated && count > 0 ? (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e3948e] px-1 text-[11px] font-bold text-stone-900">
+                      {count > 99 ? "99+" : count}
+                    </span>
+                  ) : null}
                 </Link>
                 <Link
                   href={session?.user ? "/account" : "/login"}

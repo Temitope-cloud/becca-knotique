@@ -1,141 +1,215 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import TextPressure from "./ui/TextPressure";
-import { Heart, Scissors, Sparkles } from "lucide-react";
+import { useRef } from "react";
+import {
+  IconBrandInstagram,
+  IconBrandTiktok,
+  IconBrandWhatsapp,
+} from "@tabler/icons-react";
+import { ArrowUpRight, ArrowUp, Heart } from "lucide-react";
+
+const footerMenus = [
+  {
+    label: "Shop",
+    links: [
+      { label: "All Products", href: "/products" },
+      { label: "New Arrivals", href: "/products" },
+      { label: "Custom Orders", href: "/contact" },
+      { label: "Most Viewed", href: "/products/chart" },
+    ],
+  },
+  {
+    label: "Explore",
+    links: [
+      { label: "Home", href: "/" },
+      { label: "About", href: "/about" },
+      { label: "Our Story", href: "/our-story" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
+  {
+    label: "Support",
+    links: [
+      { label: "Privacy Policy", href: "/legal/privacy-policy" },
+      { label: "Terms of Service", href: "/legal/terms-of-service" },
+      { label: "Disclaimer", href: "/legal/disclaimer" },
+      { label: "Refund Policy", href: "/legal/refund-policy" },
+    ],
+  },
+];
+
+const socials = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/beccasknotique/",
+    Icon: IconBrandInstagram,
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@beccas_knotique/",
+    Icon: IconBrandTiktok,
+  },
+  {
+    label: "WhatsApp",
+    href: "https://wa.me/2348029086678",
+    Icon: IconBrandWhatsapp,
+  },
+];
 
 const Footer = () => {
-  const footerMenus = [
-    {
-      label: "EXPLORE",
-      links: [
-        { label: "Home", href: "/home" },
-        { label: "Chart", href: "/products/chart" },
-        { label: "Process", href: "/process" },
-        { label: "Our Story", href: "/our-story" },
-        { label: "Contact", href: "/contact" },
-      ],
-    },
-    {
-      label: "COLLECTIONS",
-      links: [
-        { label: "New Arrivals", href: "new-arrivals" },
-        { label: "Best Sellers", href: "/products" },
-        { label: "Custom Orders", href: "/contact" },
-        { label: "Ready to Wear", href: "/products" },
-      ],
-    },
-
-    {
-      label: "LEGAL",
-      links: [
-        { label: "Privacy Policy", href: "/legal/privacy-policy" },
-        { label: "TOS", href: "/legal/terms-of-service" },
-        { label: "Disclaimer", href: "/legal/disclaimer" },
-        { label: "Refund Policy", href: "/legal/refund-policy" },
-      ],
-    },
-  ];
-
   const year = new Date().getFullYear();
-  const socials = [
-    {
-      label: "Instagram",
-      href: "https://www.instagram.com/beccasknotique/",
-    },
-    {
-      label: "TikTok",
-      href: "https://www.tiktok.com/@beccas_knotique/",
-    },
-    {
-      label: "Whatsapp",
-      href: "https://wa.me/2348029086678",
-    },
-  ];
+  const footerRef = useRef<HTMLElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef(0);
+
+  const handleMove = (e: React.MouseEvent) => {
+    const el = footerRef.current;
+    const glow = glowRef.current;
+    if (!el || !glow) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      glow.style.opacity = "1";
+      glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    });
+  };
+
+  const handleLeave = () => {
+    if (glowRef.current) glowRef.current.style.opacity = "0";
+  };
+
+  const scrollTop = () =>
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
-    <>
-      <div className="w-full bg-[#1a120b] px-10 py-5">
-        <div className="flex flex-col justify-between gap-10 md:flex-row">
-          <div>
+    <footer
+      ref={footerRef}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      className="relative overflow-hidden bg-[#160f09] text-white"
+    >
+      {/* cursor-following accent glow */}
+      <div
+        ref={glowRef}
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 -mt-[300px] -ml-[300px] hidden h-[600px] w-[600px] rounded-full opacity-0 blur-3xl transition-opacity duration-500 will-change-transform lg:block"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(227,148,142,0.16), transparent 62%)",
+        }}
+      />
+      {/* top hairline */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-16 pb-8 sm:px-10 sm:pt-20 lg:px-16">
+        {/* top: brand + link columns */}
+        <div className="grid gap-12 lg:grid-cols-[1.25fr_1.75fr] lg:gap-16">
+          {/* brand block */}
+          <div className="max-w-sm">
             <Image
-              width={250}
-              height={100}
+              width={220}
+              height={88}
               src="/footer-logo.png"
               alt="Becca's Knotique"
-              className=""
+              className="h-auto w-40 sm:w-48"
             />
-          </div>
-          <div className="ml-auto grid w-full grid-cols-2 gap-y-10 lg:grid-cols-3">
-            {" "}
-            {footerMenus.map((footer, idx) => (
-              <div key={idx}>
-                <h1 className="text-sm text-[#8f8f8f]"> {footer.label} </h1>
+            <p className="mt-5 text-sm leading-relaxed text-white/60">
+              Handmade crochet fashion and custom statement pieces, crafted with
+              care in Nigeria — made by hand, made for you.
+            </p>
 
-                <div className="mt-2 flex flex-col gap-4">
-                  {footer.links.map((link, idx) => (
-                    <div key={idx}>
+            <Link
+              href="/contact"
+              className="group mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-white transition hover:border-[#e3948e]/50 hover:bg-[#e3948e]/10"
+            >
+              Have a custom idea? Let&apos;s make it
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+
+            <div className="mt-7 flex items-center gap-3">
+              {socials.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-[#e3948e]/50 hover:bg-[#e3948e]/15 hover:text-white focus-visible:ring-2 focus-visible:ring-[#e3948e]/60 focus-visible:outline-none"
+                >
+                  <Icon className="h-5 w-5" stroke={1.6} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* link columns */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            {footerMenus.map((menu) => (
+              <nav key={menu.label} aria-label={menu.label}>
+                <h2 className="text-xs font-semibold tracking-[0.18em] text-white/40 uppercase">
+                  {menu.label}
+                </h2>
+                <ul className="mt-4 space-y-3">
+                  {menu.links.map((link) => (
+                    <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="font-arial flex font-medium text-white"
+                        className="text-sm text-white/70 transition-colors hover:text-white"
                       >
-                        {" "}
-                        {link.label}{" "}
+                        {link.label}
                       </Link>
-                    </div>
+                    </li>
                   ))}
-                </div>
-              </div>
+                </ul>
+              </nav>
             ))}
           </div>
         </div>
 
-        <div className="my-5 flex justify-center border-y border-white/10 px-2 py-5 text-gray-200">
-          {" "}
-          {socials.map((s, i) => (
-            <div
-              key={i}
-              className={`px-4 ${
-                i !== socials.length - 1 ? "border-r border-gray-600/40" : ""
-              }`}
-            >
-              <Link href={s.href}>{s.label}</Link>
-            </div>
-          ))}
+        {/* giant wordmark */}
+        <div className="mt-16 sm:mt-20">
+          <h2
+            aria-hidden
+            className="font-apparel pointer-events-none bg-gradient-to-b from-white/[0.13] to-white/[0.03] bg-clip-text text-center leading-[0.85] tracking-tight text-transparent select-none"
+            style={{ fontSize: "clamp(2.75rem, 14vw, 12rem)" }}
+          >
+            Becca&apos;s Knotique
+          </h2>
         </div>
 
-        <div className="mb-10 flex flex-col items-center justify-center gap-2 text-sm text-white/70 md:flex-row md:justify-between md:gap-0">
-          <p className="text-center">
-            © {year} {""} Becca&apos;s Knotique. All rights reserved.
-          </p>{" "}
-          <div className="flex items-center gap-2 text-[#e3948e]">
-            {/* <Scissors className="h-5 w-5" /> */}
-            <Heart className="h-5 w-5" />
-            <Link
-              className="text-center"
+        {/* bottom bar */}
+        <div className="mt-10 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
+          <p className="order-2 text-center text-xs text-white/50 sm:order-1 sm:text-left">
+            © {year} Becca&apos;s Knotique. All rights reserved.
+          </p>
+
+          <div className="order-1 flex items-center gap-5 sm:order-2">
+            <a
               href="https://temistudio.vercel.app/"
               target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs text-white/60 transition hover:text-white"
             >
-              Designed by Temi Studio
-            </Link>
+              Designed with
+              <Heart className="h-3.5 w-3.5 fill-[#e3948e] text-[#e3948e]" />
+              by Temi Studio
+            </a>
+            <button
+              type="button"
+              onClick={scrollTop}
+              aria-label="Back to top"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-[#e3948e]/50 hover:bg-[#e3948e]/15 hover:text-white"
+            >
+              <ArrowUp className="h-4 w-4" />
+            </button>
           </div>
         </div>
-        <div>
-          <TextPressure
-            text="Becca's"
-            className="opacity-5"
-            flex
-            alpha={false}
-            stroke={false}
-            width
-            weight
-            italic
-            textColor="#f5f5f5"
-            strokeColor="#e1dbdb"
-            minFontSize={36}
-          />
-        </div>
       </div>
-    </>
+    </footer>
   );
 };
 
