@@ -64,7 +64,7 @@ export async function generateMetadata({
           width: 1200,
           height: 1200,
         }))
-      : [{ url: "/images/about1.png", width: 1200, height: 630, alt: product.name }];
+      : [{ url: "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png", width: 1200, height: 630, alt: product.name }];
 
   const keywordParts = [
     product.category?.replace("-", " "),
@@ -132,7 +132,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
     description: truncateMeta(product.longDescription ?? product.description, 480),
     image: gallery.length
       ? gallery.map(absoluteUrl)
-      : [absoluteUrl("/images/about1.png")],
+      : [absoluteUrl("https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png")],
     category: product.category?.replace("-", " "),
     brand: {
       "@type": "Brand",

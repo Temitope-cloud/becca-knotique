@@ -65,7 +65,7 @@ const CrochetProcess = () => {
         <div className="w-full shrink-0 lg:sticky lg:top-24 lg:w-[min(100%,28rem)] lg:flex-none xl:w-[min(100%,32rem)]">
           <div className="group relative overflow-hidden rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.2)] ring-1 ring-stone-900/10">
             <img
-              src="/becca-knitting.jpg"
+              src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262021/beccas-knotique/becca-knitting.jpg"
               alt="Handmade crochet work in progress"
               className="w-full cursor-pointer object-cover transition-all duration-700 ease-out"
             />
@@ -80,7 +80,7 @@ const CrochetProcess = () => {
         </div>
         {/* <div className="h-full w-full flex-1">
           <img
-            src="/becca-knitting.jpg"
+            src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262021/beccas-knotique/becca-knitting.jpg"
             alt="Handmade crochet work in progress"
             className="h-full w-full cursor-pointer rounded-xl object-cover grayscale transition-all duration-700 ease-out group-hover:grayscale-0"
           />

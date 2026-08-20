@@ -44,7 +44,7 @@ const OurStory = () => {
         {/* Background image div — this is the only thing we animate */}
         <div
           ref={topRef}
-          className="absolute top-0 left-0 z-0 h-full w-full bg-[url(/images/becca.jpeg)] bg-cover bg-bottom"
+          className="absolute top-0 left-0 z-0 h-full w-full bg-[url(https://res.cloudinary.com/u3kraw33/image/upload/v1787262030/beccas-knotique/images/becca.jpg)] bg-cover bg-bottom"
         ></div>
 
         {/* Overlay with text and button — stays static */}

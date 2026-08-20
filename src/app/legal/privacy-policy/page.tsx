@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description:
       "Learn what data we collect, why we collect it, and how your privacy is protected.",
     url: "/legal/privacy-policy",
-    images: ["/images/about2.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
   },
 };
 

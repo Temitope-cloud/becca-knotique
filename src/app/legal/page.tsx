@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description:
       "Browse all Becca's Knotique legal policies and customer protection information.",
     url: "/legal",
-    images: ["/images/about2.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
   },
 };
 

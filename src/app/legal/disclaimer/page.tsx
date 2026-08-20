@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description:
       "Understand the limitations and legal clarifications for using Becca's Knotique content and services.",
     url: "/legal/disclaimer",
-    images: ["/images/about2.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
   },
 };
 

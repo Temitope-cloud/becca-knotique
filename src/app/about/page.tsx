@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     description:
       "Discover how Becca's Knotique transforms yarn into wearable art with heart and detail.",
     url: "/about",
-    images: ["/images/about2.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
   },
 };
 
@@ -59,7 +59,7 @@ const AboutUs = () => {
 
         <ParallaxReveal
           className="my-10 h-80 w-full rounded bg-cover bg-top"
-          src="bg-[url('/images/about1.png')]"
+          src="bg-[url('https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png')]"
         />
 
         <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
@@ -90,7 +90,7 @@ const AboutUs = () => {
           </div>
           <div className="hidden rounded-2xl bg-linear-to-b lg:block">
             <img
-              src="/images/about2.png"
+              src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"
               alt="About Us"
               className="h-full rounded-xl object-cover"
             />

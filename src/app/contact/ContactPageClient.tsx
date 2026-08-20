@@ -73,7 +73,7 @@ const ContactPageClient = () => {
         </div>
         <div className="hidden md:block md:flex-1">
           <ParallaxImage
-            src="/images/contact.jpg"
+            src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262031/beccas-knotique/images/contact.jpg"
             alt="Contact"
             className="h-screen object-cover"
           />

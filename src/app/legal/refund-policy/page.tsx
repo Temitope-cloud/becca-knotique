@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description:
       "Understand return windows, handmade item rules, and refund timelines for Becca's Knotique orders.",
     url: "/legal/refund-policy",
-    images: ["/images/about2.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
   },
 };
 

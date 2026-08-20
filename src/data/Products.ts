@@ -68,10 +68,10 @@ export const products: Product[] = [
       },
     ],
     images: [
-      "/images/products/golden-hour/golden-hour-1.jpeg",
-      "/images/products/golden-hour/golden-hour-2.jpeg",
-      "/images/products/golden-hour/golden-hour-3.jpeg",
-      "/images/products/golden-hour/golden-hour-4.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262049/beccas-knotique/images/products/golden-hour/golden-hour-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262050/beccas-knotique/images/products/golden-hour/golden-hour-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262051/beccas-knotique/images/products/golden-hour/golden-hour-3.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262052/beccas-knotique/images/products/golden-hour/golden-hour-4.jpg",
     ],
     description:
       "A handmade crochet mini dress with sheer openwork panels, delicate straps, and a long fringe hem for standout resort-ready styling.",
@@ -103,12 +103,12 @@ export const products: Product[] = [
       "This coordinated top-and-skirt set is handmade with premium yarn using classic granny-square techniques. It delivers a flattering silhouette, breathable comfort, and a confident fashion-forward look for events, photoshoots, and standout everyday wear.",
 
     images: [
-      "/images/products/granny-squares-top-skirt/granny-squares-top-skirt-1.jpg",
-      "/images/products/granny-squares-top-skirt/granny-squares-top-skirt-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262058/beccas-knotique/images/products/granny-squares-top-skirt/granny-squares-top-skirt-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262059/beccas-knotique/images/products/granny-squares-top-skirt/granny-squares-top-skirt-2.jpg",
     ],
 
     hoverImage:
-      "/images/products/granny-squares-top-skirt/granny-squares-top-skirt-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262059/beccas-knotique/images/products/granny-squares-top-skirt/granny-squares-top-skirt-2.jpg",
 
     inStock: true,
     stockCount: 4,
@@ -144,11 +144,11 @@ export const products: Product[] = [
       "Designed as a versatile layering piece, this vest combines retro crochet craftsmanship with contemporary styling. Its breathable weave and durable yarn make it perfect over shirts, dresses, or tees for effortless day-to-night looks.",
 
     images: [
-      "/images/products/granny-square-vest/granny-square-vest-1.jpg",
-      "/images/products/granny-square-vest/granny-square-vest-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262053/beccas-knotique/images/products/granny-square-vest/granny-square-vest-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262054/beccas-knotique/images/products/granny-square-vest/granny-square-vest-2.jpg",
     ],
 
-    hoverImage: "/images/products/granny-square-vest/granny-square-vest-2.jpg",
+    hoverImage: "https://res.cloudinary.com/u3kraw33/image/upload/v1787262054/beccas-knotique/images/products/granny-square-vest/granny-square-vest-2.jpg",
 
     inStock: true,
     stockCount: 6,
@@ -183,11 +183,11 @@ export const products: Product[] = [
       "Made for both style and practicality, this bag set pairs traditional crochet artistry with modern structure. Each piece is carefully handmade with durable yarn to hold essentials while elevating casual and occasion outfits.",
 
     images: [
-      "/images/products/granny-squares-set/granny-squares-set-1.jpg",
-      "/images/products/granny-squares-set/granny-squares-set-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262055/beccas-knotique/images/products/granny-squares-set/granny-squares-set-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262056/beccas-knotique/images/products/granny-squares-set/granny-squares-set-2.jpg",
     ],
 
-    hoverImage: "/images/products/granny-squares-set/granny-squares-set-2.jpg",
+    hoverImage: "https://res.cloudinary.com/u3kraw33/image/upload/v1787262056/beccas-knotique/images/products/granny-squares-set/granny-squares-set-2.jpg",
 
     inStock: true,
     stockCount: 3,
@@ -223,13 +223,13 @@ export const products: Product[] = [
       "Designed as a coordinated editorial look, this set combines structured lapels and long sleeves with a crisp ivory crochet bandeau and a high-waisted pleated mini skirt. Each piece is crafted with dense artisan stitches that read beautifully on camera and in daylight—ideal for events, shoots, and confident everyday statement styling.",
 
     images: [
-      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-1.jpeg",
-      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-2.jpeg",
-      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-3.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262036/beccas-knotique/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262037/beccas-knotique/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262038/beccas-knotique/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-3.jpg",
     ],
 
     hoverImage:
-      "/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-2.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262037/beccas-knotique/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-2.jpg",
 
     inStock: true,
     stockCount: 4,
@@ -265,14 +265,14 @@ export const products: Product[] = [
       "Designed around artisan texture and movement, this dress combines classic cluster stitches with bold flare sleeves and a clean boat neckline. The warm stripe rhythm reads beautifully outdoors and indoors alike—perfect for events, creative shoots, and statement casual dressing with breathable handmade comfort.",
 
     images: [
-      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-4.png",
-      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-3.png",
-      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-2.png",
-      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-1.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262071/beccas-knotique/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-4.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262070/beccas-knotique/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-3.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262069/beccas-knotique/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-2.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262067/beccas-knotique/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-1.png",
     ],
 
     hoverImage:
-      "/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-1.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262067/beccas-knotique/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-1.png",
 
     inStock: true,
     stockCount: 5,
@@ -308,14 +308,14 @@ export const products: Product[] = [
       "Designed for warm-light moments and confident movement, this dress pairs delicate openwork crochet with a sculpted halter neckline and bold fringe finish. The tonal pink layout highlights artisan stitching while staying breathable—ideal for vacations, outdoor gatherings, and editorial-ready weekend styling.",
 
     images: [
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-3.png",
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-4.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262043/beccas-knotique/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262045/beccas-knotique/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262046/beccas-knotique/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-3.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262047/beccas-knotique/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-4.png",
     ],
 
     hoverImage:
-      "/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262045/beccas-knotique/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-2.png",
 
     inStock: true,
     stockCount: 5,
@@ -348,13 +348,13 @@ export const products: Product[] = [
       "This crochet beanie is handmade with premium, breathable yarn for all-day comfort and reliable warmth. Its soft texture, flexible fit, and timeless silhouette make it an easy choice for casual outfits, travel days, and cooler evenings.",
 
     images: [
-      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-1.jpeg",
-      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-2.jpeg",
-      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-3.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262040/beccas-knotique/images/products/classic-ribbed-beanie/classic-ribbed-beanie-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262041/beccas-knotique/images/products/classic-ribbed-beanie/classic-ribbed-beanie-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262042/beccas-knotique/images/products/classic-ribbed-beanie/classic-ribbed-beanie-3.jpg",
     ],
 
     hoverImage:
-      "/images/products/classic-ribbed-beanie/classic-ribbed-beanie-2.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262041/beccas-knotique/images/products/classic-ribbed-beanie/classic-ribbed-beanie-2.jpg",
 
     inStock: true,
     stockCount: 5,
@@ -388,13 +388,13 @@ export const products: Product[] = [
       "This handcrafted crochet bikini set is made with high-quality yarn, offering a soft feel and secure fit. Designed for both comfort and style, it’s perfect for beach outings, vacations, and fashion-forward summer moments. Its breathable weave and flattering cut make it a must-have statement piece.",
 
     images: [
-      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-2.jpeg",
-      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-3.jpeg",
-      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-1.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262062/beccas-knotique/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262063/beccas-knotique/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-3.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262061/beccas-knotique/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-1.jpg",
     ],
 
     hoverImage:
-      "/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-1.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262061/beccas-knotique/images/products/handmade-crochet-bikini-set/handmade-crochet-bikini-set-1.jpg",
 
     inStock: true,
     stockCount: 5,
@@ -428,13 +428,13 @@ export const products: Product[] = [
       "This luxe crochet ruffle mini dress is carefully handmade to deliver a striking, feminine silhouette. With detailed stitching, breathable fabric, and layered ruffle accents, it’s designed for special occasions, photoshoots, and confident everyday fashion. It combines elegance with playful texture for a truly eye-catching look.",
 
     images: [
-      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-1.jpeg",
-      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-2.jpeg",
-      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-3.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262064/beccas-knotique/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-1.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262065/beccas-knotique/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-2.jpg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262066/beccas-knotique/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-3.jpg",
     ],
 
     hoverImage:
-      "/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-2.jpeg",
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262065/beccas-knotique/images/products/luxe-crochet-ruffle-mini-dress/luxe-crochet-ruffle-mini-dress-2.jpg",
 
     inStock: true,
     stockCount: 5,

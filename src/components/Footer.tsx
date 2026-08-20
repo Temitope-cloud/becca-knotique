@@ -113,7 +113,7 @@ const Footer = () => {
             <Image
               width={220}
               height={88}
-              src="/footer-logo.png"
+              src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262022/beccas-knotique/footer-logo.png"
               alt="Becca's Knotique"
               className="h-auto w-40 sm:w-48"
             />

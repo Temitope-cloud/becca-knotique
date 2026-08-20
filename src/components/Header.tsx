@@ -95,7 +95,7 @@ const Header = () => {
             // className="font-akira inline-block cursor-pointer font-bold tracking-wider text-white"
           >
             <img
-              src="/light-logo.png"
+              src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262078/beccas-knotique/light-logo.png"
               alt="Becca's Knotique"
               className="h-15 w-15"
             />

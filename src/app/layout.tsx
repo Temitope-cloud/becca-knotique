@@ -42,7 +42,7 @@ export const metadata: Metadata = {
       "Handmade crochet pieces and custom fashion crafted with creativity, quality, and personality.",
     images: [
       {
-        url: "/images/about1.png",
+        url: "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png",
         width: 1200,
         height: 630,
         alt: "Handmade crochet designs by Becca's Knotique",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     title: "Becca's Knotique | Handmade Crochet Fashion",
     description:
       "Explore handmade crochet fashion and custom statement pieces by Becca's Knotique.",
-    images: ["/images/about1.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png"],
   },
   alternates: {
     canonical: "/",

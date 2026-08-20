@@ -25,7 +25,7 @@ const HeroSection = () => {
                 playsInline
                 className="h-full w-full object-cover"
               >
-                <source src="/videos/moving.mp4" />
+                <source src="https://res.cloudinary.com/u3kraw33/video/upload/v1787262082/beccas-knotique/videos/moving.mp4" />
               </video>
               <Noise
                 patternSize={250}

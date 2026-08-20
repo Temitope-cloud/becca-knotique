@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description:
       "Read the rules and responsibilities for shopping and using the Becca's Knotique website.",
     url: "/legal/terms-of-service",
-    images: ["/images/about2.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
   },
 };
 

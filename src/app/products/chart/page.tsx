@@ -4,7 +4,7 @@ import { getAllProducts } from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
-const OG_IMAGE = "/images/about1.png";
+const OG_IMAGE = "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png";
 
 const description =
   "Products you have opened most often on this browser, from Becca's Knotique.";

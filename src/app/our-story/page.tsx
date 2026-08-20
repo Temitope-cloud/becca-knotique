@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description:
       "See how Becca's Knotique grew into a handcrafted crochet brand rooted in originality and care.",
     url: "/our-story",
-    images: ["/images/about1.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png"],
   },
 };
 
@@ -79,7 +79,7 @@ const OurStoryPage = () => {
 
         <ParallaxReveal
           className="mt-8 h-72 w-full rounded-3xl bg-cover bg-center sm:h-96"
-          src="bg-[url('/images/our-story.jpeg')]"
+          src="bg-[url('https://res.cloudinary.com/u3kraw33/image/upload/v1787262035/beccas-knotique/images/our-story.jpg')]"
         />
 
         <section className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_1fr]">

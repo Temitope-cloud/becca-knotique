@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "Get in touch with Becca's Knotique for support and custom order requests.",
     url: "/contact",
-    images: ["/images/contact.jpg"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262031/beccas-knotique/images/contact.jpg"],
   },
 };
 

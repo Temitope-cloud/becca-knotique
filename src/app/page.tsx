@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     description:
       "Explore handcrafted crochet collections and custom designs by Becca's Knotique.",
     url: "/",
-    images: ["/images/about1.png"],
+    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png"],
   },
 };
 
