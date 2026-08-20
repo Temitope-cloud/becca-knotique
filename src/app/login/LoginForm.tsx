@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
-import GoogleButton from "@/components/auth/GoogleButton";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -40,16 +39,6 @@ export default function LoginForm() {
 
   return (
     <div className="w-full">
-      <GoogleButton callbackUrl={callbackUrl} label="Sign in with Google" />
-
-      <div className="my-6 flex items-center gap-4">
-        <span className="h-px flex-1 bg-stone-200" />
-        <span className="text-xs font-medium tracking-wide text-stone-400 uppercase">
-          or
-        </span>
-        <span className="h-px flex-1 bg-stone-200" />
-      </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label
