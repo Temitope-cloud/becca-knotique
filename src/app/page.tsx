@@ -6,8 +6,10 @@ import OnePiece from "@/components/OnePiece";
 import OurStory from "@/components/OurStory";
 import PreFooterCta from "@/components/PreFooterCta";
 import { AnimatedTestimonial } from "@/components/Testimonial";
-import Image from "next/image";
 import type { Metadata } from "next";
+import { getFeaturedProduct, getProductsByCategory } from "@/lib/catalog";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Becca’s Knotique — Made by Hand, Made for You",
@@ -25,15 +27,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const [featured, newCollection] = await Promise.all([
+    getFeaturedProduct(),
+    getProductsByCategory("new-collection"),
+  ]);
+
   return (
     <>
       <HeroSection />
-      <NewCollection />
+      <NewCollection products={newCollection} />
       <OurStory />
       <CrochetProcess />
       {/* <AnimatedTestimonial /> */}
-      <OnePiece />
+      <OnePiece product={featured} />
       <PreFooterCta />
       <Footer />
     </>

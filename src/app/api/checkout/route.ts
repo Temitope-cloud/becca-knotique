@@ -4,13 +4,16 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrderItem } from "@/lib/models/Order";
-import { products } from "@/data/Products";
+import { Coupon, computeCouponDiscount } from "@/lib/models/Coupon";
+import { getProductById, getProductBySlug } from "@/lib/catalog";
+import { getSettings, shippingFeeFor } from "@/lib/settings";
 import { paystackInitialize } from "@/lib/paystack";
 
 export const runtime = "nodejs";
 
 const checkoutSchema = z.object({
   email: z.string().email().optional(),
+  couponCode: z.string().optional(),
   customer: z.object({
     name: z.string().min(2).max(80),
     phone: z.string().min(7).max(20),
@@ -24,7 +27,8 @@ const checkoutSchema = z.object({
   items: z
     .array(
       z.object({
-        productId: z.string(),
+        productId: z.string().optional(),
+        slug: z.string().optional(),
         size: z.string().optional(),
         color: z.string().optional(),
         quantity: z.number().int().min(1).max(20),
@@ -51,15 +55,12 @@ export async function POST(request: Request) {
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      {
-        error: "Please check your details.",
-        fieldErrors: parsed.error.flatten().fieldErrors,
-      },
+      { error: "Please check your details.", fieldErrors: parsed.error.flatten().fieldErrors },
       { status: 400 },
     );
   }
 
-  const { customer, shipping, items } = parsed.data;
+  const { customer, shipping, items, couponCode } = parsed.data;
 
   const session = await auth();
   const email = (session?.user?.email || parsed.data.email || "")
@@ -72,14 +73,15 @@ export async function POST(request: Request) {
     );
   }
 
-  // Recompute line items and totals from the trusted server-side catalog —
-  // never trust prices sent by the browser.
+  // Recompute every line from the trusted catalog (never trust client prices).
   const orderItems: IOrderItem[] = [];
   for (const line of items) {
-    const product = products.find((p) => p.id === line.productId);
+    const product =
+      (line.slug ? await getProductBySlug(line.slug) : null) ??
+      (line.productId ? await getProductById(line.productId) : null);
     if (!product) {
       return NextResponse.json(
-        { error: `A product in your cart is no longer available.` },
+        { error: "A product in your cart is no longer available." },
         { status: 400 },
       );
     }
@@ -95,24 +97,45 @@ export async function POST(request: Request) {
     });
   }
 
-  const amount = orderItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
-  if (amount <= 0) {
+  const subtotal = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
+  if (subtotal <= 0) {
     return NextResponse.json({ error: "Invalid order total." }, { status: 400 });
   }
+
+  await connectToDatabase();
+
+  // Coupon (validated server-side)
+  let discount = 0;
+  let appliedCoupon: string | null = null;
+  if (couponCode) {
+    const coupon = await Coupon.findOne({
+      code: couponCode.toUpperCase().trim(),
+    }).lean();
+    if (coupon) {
+      const evaln = computeCouponDiscount(coupon, subtotal);
+      if (evaln.valid) {
+        discount = evaln.discount;
+        appliedCoupon = coupon.code;
+      }
+    }
+  }
+
+  const settings = await getSettings();
+  const shippingFee = shippingFeeFor(settings, subtotal);
+  const amount = Math.max(0, subtotal - discount) + shippingFee;
 
   const reference = `bk_${Date.now()}_${randomUUID().slice(0, 8)}`;
 
   try {
-    await connectToDatabase();
-
     await Order.create({
       reference,
       user: session?.user?.id ?? null,
       email,
       items: orderItems,
+      subtotal,
+      discount,
+      couponCode: appliedCoupon,
+      shippingFee,
       amount,
       currency: "NGN",
       status: "pending",
@@ -125,11 +148,7 @@ export async function POST(request: Request) {
       amountNaira: amount,
       reference,
       callbackUrl: `${baseUrl(request)}/order/callback`,
-      metadata: {
-        reference,
-        customerName: customer.name,
-        phone: customer.phone,
-      },
+      metadata: { reference, customerName: customer.name, phone: customer.phone },
     });
 
     return NextResponse.json({ authorizationUrl, reference });

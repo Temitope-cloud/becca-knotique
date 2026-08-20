@@ -9,7 +9,7 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
-import { getProductsByCategory } from "@/data/Products";
+import type { CatalogProduct } from "@/lib/catalog";
 import { formatNaira } from "@/lib/money";
 import StarRating from "./StarRating";
 // v1 CTA used WhatsApp (getWhatsAppLink in @/lib/utils) — now routes to the store.
@@ -20,8 +20,7 @@ const highlights = [
   { Icon: ShieldCheck, label: "Secure payment via Paystack" },
 ];
 
-const OnePiece = () => {
-  const product = getProductsByCategory("one-piece")[0];
+const OnePiece = ({ product }: { product: CatalogProduct | null }) => {
   const images = product?.images ?? [];
   const [activeImage, setActiveImage] = useState(images[0]);
 

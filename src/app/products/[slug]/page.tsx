@@ -3,7 +3,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ShieldCheck, Sparkles, Truck } from "lucide-react";
-import { products, type Product } from "@/data/Products";
+import {
+  getAllProducts,
+  getProductBySlug,
+  type CatalogProduct,
+} from "@/lib/catalog";
 import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductRevisitNudge from "@/components/ProductRevisitNudge";
@@ -19,10 +23,6 @@ const SITE_URL = "https://www.beccasknotique.com";
 
 const formatPrice = (value: number) => `₦${value.toLocaleString()}`;
 
-function getValidProducts() {
-  return products.filter((item) => item.slug && item.name);
-}
-
 function truncateMeta(text: string, max = 158): string {
   const trimmed = text.trim().replace(/\s+/g, " ");
   if (trimmed.length <= max) return trimmed;
@@ -33,7 +33,7 @@ function truncateMeta(text: string, max = 158): string {
   return `${base.trimEnd()}…`;
 }
 
-function galleryImages(product: Product): string[] {
+function galleryImages(product: CatalogProduct): string[] {
   if (product.images?.length) return product.images;
   if (product.image) return [product.image];
   return [];
@@ -44,15 +44,11 @@ function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-export async function generateStaticParams() {
-  return getValidProducts().map((p) => ({ slug: p.slug }));
-}
-
 export async function generateMetadata({
   params,
 }: ProductDetailsProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getValidProducts().find((item) => item.slug === slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: "Product not found" };
 
   const plainDescription =
@@ -102,12 +98,13 @@ export async function generateMetadata({
 
 export default async function ProductDetails({ params }: ProductDetailsProps) {
   const { slug } = await params;
-  const validProducts = getValidProducts();
-  const product = validProducts.find((item) => item.slug === slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
+
+  const validProducts = await getAllProducts();
 
   const gallery = galleryImages(product);
   const discount =

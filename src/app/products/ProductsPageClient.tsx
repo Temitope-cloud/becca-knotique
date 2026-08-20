@@ -1,13 +1,17 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { products } from "@/data/Products";
+import type { CatalogProduct } from "@/lib/catalog";
 import { ArrowRight, BarChart3, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const formatPrice = (value: number) => `₦${value.toLocaleString()}`;
 
-export default function ProductsPageClient() {
+export default function ProductsPageClient({
+  products,
+}: {
+  products: CatalogProduct[];
+}) {
   const validProducts = products.filter(
     (product) => product.slug && product.name,
   );

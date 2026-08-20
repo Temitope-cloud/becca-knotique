@@ -1,20 +1,16 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/data/Products";
+import { getAllProducts } from "@/lib/catalog";
 
 const baseUrl = "https://www.beccasknotique.com";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const validProducts = products.filter((p) => p.slug && p.name);
-  const productEntries: MetadataRoute.Sitemap = validProducts.map(
-    (product) => ({
-      url: `${baseUrl}/products/${product.slug}`,
-      lastModified: product.createdAt
-        ? new Date(product.createdAt)
-        : new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.85,
-    }),
-  );
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const products = await getAllProducts();
+  const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
+    url: `${baseUrl}/products/${product.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+  }));
 
   return [
     {

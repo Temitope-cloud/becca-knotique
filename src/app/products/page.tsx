@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import ProductsPageClient from "./ProductsPageClient";
-import { products } from "@/data/Products";
+import { getAllProducts } from "@/lib/catalog";
+
+export const dynamic = "force-dynamic";
 
 const OG_IMAGE = "/images/about1.png";
 
@@ -42,7 +44,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const products = await getAllProducts();
   const itemListElements = products
     .filter((p) => p.slug && p.name)
     .map((product, index) => ({
@@ -73,7 +76,7 @@ export default function ProductsPage() {
           __html: JSON.stringify(collectionJsonLd),
         }}
       />
-      <ProductsPageClient />
+      <ProductsPageClient products={products} />
     </>
   );
 }

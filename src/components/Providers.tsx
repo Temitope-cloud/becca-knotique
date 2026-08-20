@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import Header from "./Header";
 import Footer from "./Footer";
 import PreFooterCta from "./PreFooterCta";
+import AnnouncementBanner from "./AnnouncementBanner";
 import { CartProvider } from "@/context/CartContext";
 
 interface providersProps {
@@ -14,13 +15,17 @@ interface providersProps {
 const Providers = ({ children }: providersProps) => {
   const pathname = usePathname();
   const Homepage = pathname === "/";
+  // Admin has its own chrome — hide the storefront header/footer there.
+  const hideChrome = pathname.startsWith("/admin");
+  const showChrome = !Homepage && !hideChrome;
   return (
     <SessionProvider>
       <CartProvider>
-        {!Homepage && <Header />}
+        {!hideChrome && <AnnouncementBanner />}
+        {showChrome && <Header />}
         {children}
-        {!Homepage && <PreFooterCta />}
-        {!Homepage && <Footer />}
+        {showChrome && <PreFooterCta />}
+        {showChrome && <Footer />}
       </CartProvider>
     </SessionProvider>
   );

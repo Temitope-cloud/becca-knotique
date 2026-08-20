@@ -2,11 +2,12 @@
 import { ArrowRight } from "lucide-react";
 import React from "react";
 import ButtonFill from "./ui/ButtonFill";
-import { getProductsByCategory } from "@/data/Products";
+import type { CatalogProduct } from "@/lib/catalog";
+import { formatNaira } from "@/lib/money";
 import Link from "next/link";
 
-const NewCollection = () => {
-  const newCollection = getProductsByCategory("new-collection");
+const NewCollection = ({ products }: { products: CatalogProduct[] }) => {
+  const newCollection = products;
   return (
     <section
       id="collection"
@@ -65,10 +66,8 @@ const NewCollection = () => {
             const hoverImage = item.hoverImage ?? item.images?.[1];
 
             return (
-              <>
-                <Link href={`/products/${item.slug}`}>
+                <Link key={item.slug || idx} href={`/products/${item.slug}`}>
                   <article
-                    key={item.slug || idx}
                     data-aos="zoom-in-down"
                     data-aos-delay={idx * 90}
                     className="group/card relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_-28px_rgba(0,0,0,0.42)]"
@@ -113,16 +112,17 @@ const NewCollection = () => {
                       </div>
                       <div className="shrink-0 text-right">
                         <p className="text-lg font-semibold text-stone-900 sm:text-xl">
-                          {item.price}
+                          {formatNaira(item.price)}
                         </p>
-                        <p className="text-sm text-stone-400 line-through decoration-stone-300 decoration-1">
-                          {item.oldPrice}
-                        </p>
+                        {item.oldPrice ? (
+                          <p className="text-sm text-stone-400 line-through decoration-stone-300 decoration-1">
+                            {formatNaira(item.oldPrice)}
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   </article>
                 </Link>
-              </>
             );
           })}
         </div>

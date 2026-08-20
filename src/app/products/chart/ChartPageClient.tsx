@@ -5,14 +5,12 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { products, type Product } from "@/data/Products";
+import type { CatalogProduct } from "@/lib/catalog";
 import {
   PRODUCT_VIEWS_STORAGE_KEY,
   readProductViews,
 } from "@/lib/product-views";
 import { cn } from "@/lib/utils";
-
-const validProducts = products.filter((p) => p.slug && p.name);
 
 /** Single accent for bars: depth varies slightly by index so rows stay distinct without rainbow gradients. */
 function barToneClass(index: number) {
@@ -31,7 +29,7 @@ function barToneClass(index: number) {
   return steps[index % steps.length];
 }
 
-function coverFor(p: Product) {
+function coverFor(p: CatalogProduct) {
   return p.images?.[0] ?? p.image ?? "";
 }
 
@@ -39,7 +37,12 @@ function rankLabel(index: number) {
   return String(index + 1).padStart(2, "0");
 }
 
-export default function ChartPageClient() {
+export default function ChartPageClient({
+  products,
+}: {
+  products: CatalogProduct[];
+}) {
+  const validProducts = products.filter((p) => p.slug && p.name);
   const [views, setViews] = useState<Record<string, number>>({});
   const [mounted, setMounted] = useState(false);
 

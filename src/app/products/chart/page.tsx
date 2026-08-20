@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import ChartPageClient from "./ChartPageClient";
+import { getAllProducts } from "@/lib/catalog";
+
+export const dynamic = "force-dynamic";
 
 const OG_IMAGE = "/images/about1.png";
 
@@ -40,6 +43,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProductChartPage() {
-  return <ChartPageClient />;
+export default async function ProductChartPage() {
+  const products = await getAllProducts();
+  return <ChartPageClient products={products} />;
 }

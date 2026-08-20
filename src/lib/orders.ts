@@ -1,8 +1,35 @@
 import "server-only";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
+import { Product } from "@/lib/models/Product";
+import { Coupon } from "@/lib/models/Coupon";
 import { paystackVerify } from "@/lib/paystack";
 import { sendOrderEmails } from "@/lib/email";
+
+/** Reduce stock levels and bump coupon usage once, when an order is paid. */
+async function applyPaidSideEffects(order: IOrder): Promise<void> {
+  await Promise.allSettled(
+    order.items.map((item) =>
+      Product.updateOne(
+        { slug: item.slug },
+        {
+          $inc: { stockCount: -item.quantity },
+        },
+      ),
+    ),
+  );
+  // Any product that dropped to/below zero is marked out of stock.
+  await Product.updateMany(
+    { stockCount: { $lte: 0 } },
+    { $set: { inStock: false } },
+  );
+  if (order.couponCode) {
+    await Coupon.updateOne(
+      { code: order.couponCode },
+      { $inc: { timesUsed: 1 } },
+    );
+  }
+}
 
 /**
  * Atomically flip an order pending -> paid. Returns true only for the caller
@@ -25,7 +52,10 @@ export async function markOrderPaid(
   if (!previous) return false; // already paid (or missing) — no duplicate email
 
   const fresh = await Order.findOne({ reference }).lean<IOrder>();
-  if (fresh) await sendOrderEmails(fresh);
+  if (fresh) {
+    await applyPaidSideEffects(fresh);
+    await sendOrderEmails(fresh);
+  }
   return true;
 }
 

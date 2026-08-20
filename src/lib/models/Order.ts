@@ -1,6 +1,11 @@
 import { Schema, model, models, Types, type Model } from "mongoose";
 
 export type OrderStatus = "pending" | "paid" | "failed" | "cancelled";
+export type FulfillmentStatus =
+  | "unfulfilled"
+  | "processing"
+  | "shipped"
+  | "delivered";
 
 export interface IOrderItem {
   productId: string;
@@ -20,10 +25,16 @@ export interface IOrder {
   user?: Types.ObjectId | null;
   email: string;
   items: IOrderItem[];
-  /** total in NGN (naira) */
+  /** items total before discount (NGN) */
+  subtotal: number;
+  discount: number;
+  couponCode?: string | null;
+  shippingFee: number;
+  /** amount actually charged in NGN (subtotal - discount + shippingFee) */
   amount: number;
   currency: "NGN";
   status: OrderStatus;
+  fulfillmentStatus: FulfillmentStatus;
   customer: { name: string; phone: string };
   shipping: {
     address: string;
@@ -57,12 +68,22 @@ const OrderSchema = new Schema<IOrder>(
     user: { type: Schema.Types.ObjectId, ref: "User", default: null },
     email: { type: String, required: true, lowercase: true, trim: true, index: true },
     items: { type: [OrderItemSchema], required: true },
+    subtotal: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
+    couponCode: { type: String, default: null },
+    shippingFee: { type: Number, default: 0 },
     amount: { type: Number, required: true },
     currency: { type: String, default: "NGN" },
     status: {
       type: String,
       enum: ["pending", "paid", "failed", "cancelled"],
       default: "pending",
+      index: true,
+    },
+    fulfillmentStatus: {
+      type: String,
+      enum: ["unfulfilled", "processing", "shipped", "delivered"],
+      default: "unfulfilled",
       index: true,
     },
     customer: {
