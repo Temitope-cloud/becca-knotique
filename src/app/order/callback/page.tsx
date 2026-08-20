@@ -99,6 +99,14 @@ export default async function OrderCallbackPage({
         >
           Continue shopping
         </Link>
+        {order ? (
+          <Link
+            href={`/track?ref=${encodeURIComponent(order.reference)}`}
+            className="rounded-xl border border-stone-300 px-6 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-100"
+          >
+            Track order
+          </Link>
+        ) : null}
         <Link
           href="/account"
           className="rounded-xl border border-stone-300 px-6 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-100"

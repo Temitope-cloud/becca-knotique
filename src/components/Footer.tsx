@@ -16,7 +16,7 @@ const footerMenus = [
     links: [
       { label: "All Products", href: "/products" },
       { label: "New Arrivals", href: "/products" },
-      { label: "Custom Orders", href: "/contact" },
+      { label: "Track Order", href: "/track" },
       { label: "Most Viewed", href: "/products/chart" },
     ],
   },

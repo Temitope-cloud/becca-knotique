@@ -128,6 +128,14 @@ export default async function AccountPage() {
                     {formatNaira(order.amount)}
                   </span>
                 </div>
+                <div className="mt-3 text-right">
+                  <Link
+                    href={`/track?ref=${encodeURIComponent(order.reference)}`}
+                    className="text-sm font-medium text-stone-600 underline underline-offset-4 hover:text-stone-900"
+                  >
+                    Track order
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
