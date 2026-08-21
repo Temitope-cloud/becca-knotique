@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Package, ShieldCheck } from "lucide-react";
+import { Package, ShieldCheck, Heart } from "lucide-react";
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
@@ -49,7 +49,13 @@ export default async function AccountPage() {
             {session.user.name} · {session.user.email}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/account/wishlist"
+            className="inline-flex items-center gap-2 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-100"
+          >
+            <Heart className="h-4 w-4" /> Wishlist
+          </Link>
           {session.user.role === "admin" ? (
             <Link
               href="/admin"

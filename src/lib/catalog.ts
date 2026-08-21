@@ -29,6 +29,7 @@ export interface CatalogProduct {
   infos: { label: string }[];
   featured: boolean;
   active: boolean;
+  viewCount?: number;
 }
 
 function fromDoc(doc: IProduct): CatalogProduct {
@@ -57,6 +58,7 @@ function fromDoc(doc: IProduct): CatalogProduct {
     infos: (doc.infos ?? []).map((i) => ({ label: i.label })),
     featured: !!doc.featured,
     active: doc.active !== false,
+    viewCount: doc.viewCount ?? 0,
   };
 }
 
@@ -87,6 +89,7 @@ function fromStatic(p: (typeof staticProducts)[number]): CatalogProduct {
     infos: (p.infos ?? []).map((i) => ({ label: i.label })),
     featured: false,
     active: true,
+    viewCount: 0,
   };
 }
 
@@ -140,4 +143,44 @@ export async function getProductsByCategory(
 export async function getFeaturedProduct(): Promise<CatalogProduct | null> {
   const all = await getAllProducts();
   return all.find((p) => p.featured) ?? all.find((p) => p.category === "one-piece") ?? all[0] ?? null;
+}
+
+/** Active products for the given slugs, in the order the slugs were given. */
+export async function getProductsBySlugs(
+  slugs: string[],
+): Promise<CatalogProduct[]> {
+  if (!slugs.length) return [];
+  const all = await getAllProducts();
+  const bySlug = new Map(all.map((p) => [p.slug, p]));
+  return slugs.map((s) => bySlug.get(s)).filter(Boolean) as CatalogProduct[];
+}
+
+/** Most-viewed active products (global view counts). */
+export async function getMostViewed(limit = 8): Promise<CatalogProduct[]> {
+  if (await dbIsEmpty()) return staticValid().slice(0, limit);
+  const docs = await Product.find({ active: { $ne: false } })
+    .sort({ viewCount: -1, createdAt: -1 })
+    .limit(limit)
+    .lean<IProduct[]>();
+  return docs.filter((d) => (d.viewCount ?? 0) > 0).map(fromDoc);
+}
+
+/** Best sellers computed from paid orders (by units sold). */
+export async function getBestSellers(limit = 8): Promise<CatalogProduct[]> {
+  await connectToDatabase();
+  const { Order } = await import("@/lib/models/Order");
+  const rows = await Order.aggregate<{ _id: string; qty: number }>([
+    { $match: { status: "paid" } },
+    { $unwind: "$items" },
+    {
+      $group: {
+        _id: "$items.slug",
+        qty: { $sum: "$items.quantity" },
+      },
+    },
+    { $sort: { qty: -1 } },
+    { $limit: limit },
+  ]);
+  const slugs = rows.map((r) => r._id).filter(Boolean);
+  return getProductsBySlugs(slugs);
 }

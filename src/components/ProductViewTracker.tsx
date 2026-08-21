@@ -23,6 +23,13 @@ export default function ProductViewTracker({ slug }: ProductViewTrackerProps) {
     sessionStorage.setItem(key, String(now));
     incrementProductView(slug);
     window.dispatchEvent(new Event("bk-product-views-changed"));
+    // Global (store-wide) view count for Trending — fire and forget.
+    fetch("/api/products/view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+      keepalive: true,
+    }).catch(() => {});
   }, [slug]);
 
   return null;

@@ -29,6 +29,7 @@ export interface IProduct {
   infos: IProductInfo[];
   featured: boolean;
   active: boolean;
+  viewCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -61,6 +62,7 @@ const ProductSchema = new Schema<IProduct>(
     },
     featured: { type: Boolean, default: false, index: true },
     active: { type: Boolean, default: true, index: true },
+    viewCount: { type: Number, default: 0, index: true },
   },
   { timestamps: true },
 );

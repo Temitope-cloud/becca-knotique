@@ -2,18 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ShoppingBag,
-  Check,
   BarChart3,
   Search,
   SlidersHorizontal,
-  Star,
   ArrowRight,
 } from "lucide-react";
 import type { CatalogProduct } from "@/lib/catalog";
-import { useCart } from "@/context/CartContext";
+import ProductCard from "@/components/ProductCard";
+import { readProductViews } from "@/lib/product-views";
 import { formatNaira } from "@/lib/money";
 
 const GENDERS = [
@@ -45,135 +43,54 @@ function prettyCategory(c: string) {
     .join(" ");
 }
 
-/* ---------------- product card ---------------- */
+/* ---------------- recently viewed rail ---------------- */
 
-function ProductCard({ product }: { product: CatalogProduct }) {
-  const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
-  const cover = product.images?.[0] ?? product.image ?? "";
-  const hover = product.hoverImage ?? product.images?.[1];
-  const soldOut = product.inStock === false;
-  const discount =
-    product.oldPrice && product.oldPrice > product.price
-      ? Math.round(
-          ((product.oldPrice - product.price) / product.oldPrice) * 100,
-        )
-      : null;
+function RecentlyViewed({ products }: { products: CatalogProduct[] }) {
+  const [recent, setRecent] = useState<CatalogProduct[]>([]);
 
-  function quickAdd() {
-    addItem({
-      productId: product.id,
-      slug: product.slug,
-      name: product.name,
-      image: cover,
-      price: product.price,
-      size: product.sizes?.[0],
-      color: product.colors?.[0],
-    });
-    setAdded(true);
-    window.setTimeout(() => setAdded(false), 1600);
-  }
+  useEffect(() => {
+    const views = readProductViews();
+    const bySlug = new Map(products.map((p) => [p.slug, p]));
+    const ranked = Object.entries(views)
+      .sort((a, b) => b[1] - a[1])
+      .map(([slug]) => bySlug.get(slug))
+      .filter(Boolean) as CatalogProduct[];
+    setRecent(ranked.slice(0, 8));
+  }, [products]);
+
+  if (recent.length === 0) return null;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/80 bg-white transition hover:-translate-y-0.5 hover:shadow-[0_24px_60px_-38px_rgba(0,0,0,0.4)]">
-      <Link
-        href={`/products/${product.slug}`}
-        className="relative block aspect-3/4 overflow-hidden bg-stone-100"
-      >
-        {cover ? (
-          <>
-            <Image
-              src={cover}
-              alt={product.name}
-              fill
-              sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
-              className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
-            />
-            {hover ? (
-              <Image
-                src={hover}
-                alt=""
-                aria-hidden
-                fill
-                sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw"
-                className="object-cover object-center opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-              />
-            ) : null}
-          </>
-        ) : null}
-
-        {discount ? (
-          <span className="absolute top-3 left-3 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold tracking-wide text-stone-900 uppercase backdrop-blur">
-            −{discount}%
-          </span>
-        ) : null}
-        {soldOut ? (
-          <span className="absolute inset-x-0 bottom-0 bg-stone-900/80 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase">
-            Sold out
-          </span>
-        ) : null}
-      </Link>
-
-      <div className="flex flex-1 flex-col p-3.5">
-        <div className="flex items-start justify-between gap-2">
+    <section className="mx-auto w-full max-w-7xl px-4 pt-10 sm:px-6">
+      <h2 className="mb-3 text-sm font-semibold tracking-wide text-stone-500 uppercase">
+        Recently viewed
+      </h2>
+      <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+        {recent.map((p) => (
           <Link
-            href={`/products/${product.slug}`}
-            className="line-clamp-1 text-sm font-semibold text-stone-900 hover:underline"
+            key={p.id}
+            href={`/products/${p.slug}`}
+            className="group w-36 shrink-0"
           >
-            {product.name}
+            <div className="relative aspect-3/4 overflow-hidden rounded-xl bg-stone-100">
+              {(p.images?.[0] ?? p.image) ? (
+                <Image
+                  src={p.images?.[0] ?? p.image ?? ""}
+                  alt={p.name}
+                  fill
+                  sizes="144px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : null}
+            </div>
+            <p className="mt-2 line-clamp-1 text-xs font-medium text-stone-800">
+              {p.name}
+            </p>
+            <p className="text-xs text-stone-500">{formatNaira(p.price)}</p>
           </Link>
-          {product.stars ? (
-            <span className="flex shrink-0 items-center gap-0.5 text-xs text-stone-500">
-              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              {product.stars}
-            </span>
-          ) : null}
-        </div>
-
-        {product.madefor ? (
-          <p className="mt-0.5 text-[11px] tracking-wide text-stone-400 capitalize">
-            {product.madefor}
-            {product.category ? ` · ${prettyCategory(product.category)}` : ""}
-          </p>
-        ) : null}
-
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-base font-semibold text-stone-900">
-            {formatNaira(product.price)}
-          </span>
-          {product.oldPrice ? (
-            <span className="text-xs text-stone-400 line-through">
-              {formatNaira(product.oldPrice)}
-            </span>
-          ) : null}
-        </div>
-
-        <div className="mt-3.5 flex items-center gap-2">
-          <button
-            type="button"
-            onClick={quickAdd}
-            disabled={soldOut}
-            className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-stone-900 px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {added ? (
-              <>
-                <Check className="h-3.5 w-3.5" /> Added
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="h-3.5 w-3.5" /> Add to cart
-              </>
-            )}
-          </button>
-          <Link
-            href={`/products/${product.slug}`}
-            className="inline-flex shrink-0 items-center justify-center rounded-lg border border-stone-300 px-3 py-2.5 text-xs font-semibold text-stone-700 transition hover:bg-stone-100"
-          >
-            Details
-          </Link>
-        </div>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -191,7 +108,9 @@ export default function ProductsPageClient({
 
   const categories = useMemo(
     () =>
-      Array.from(new Set(valid.map((p) => p.category).filter(Boolean))) as string[],
+      Array.from(
+        new Set(valid.map((p) => p.category).filter(Boolean)),
+      ) as string[],
     [valid],
   );
 
@@ -278,10 +197,10 @@ export default function ProductsPageClient({
             </p>
           </div>
           <Link
-            href="/products/chart"
+            href="/trending"
             className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400"
           >
-            <BarChart3 className="h-4 w-4" /> Your stitch chart
+            <BarChart3 className="h-4 w-4" /> Trending now
           </Link>
         </div>
       </section>
@@ -290,7 +209,6 @@ export default function ProductsPageClient({
       <section className="sticky top-0 z-20 mt-8 border-y border-stone-200 bg-stone-50/90 backdrop-blur">
         <div className="mx-auto w-full max-w-7xl px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* gender pills */}
             <div className="flex items-center gap-1 rounded-full border border-stone-200 bg-white p-1">
               {GENDERS.map((g) => (
                 <button
@@ -337,7 +255,6 @@ export default function ProductsPageClient({
               ))}
             </select>
 
-            {/* search grows */}
             <div className="relative min-w-[160px] flex-1">
               <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-stone-400" />
               <input
@@ -406,6 +323,8 @@ export default function ProductsPageClient({
           </div>
         )}
       </section>
+
+      <RecentlyViewed products={valid} />
     </main>
   );
 }

@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import PreFooterCta from "./PreFooterCta";
 import AnnouncementBanner from "./AnnouncementBanner";
 import { CartProvider } from "@/context/CartContext";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 interface providersProps {
   children: React.ReactNode;
@@ -30,13 +31,15 @@ const Providers = ({ children }: providersProps) => {
   ].some((p) => pathname.startsWith(p));
   return (
     <SessionProvider>
-      <CartProvider>
-        {!hideChrome && <AnnouncementBanner />}
-        {showChrome && <Header />}
-        {children}
-        {showChrome && !hideCta && <PreFooterCta />}
-        {showChrome && <Footer />}
-      </CartProvider>
+      <WishlistProvider>
+        <CartProvider>
+          {!hideChrome && <AnnouncementBanner />}
+          {showChrome && <Header />}
+          {children}
+          {showChrome && !hideCta && <PreFooterCta />}
+          {showChrome && <Footer />}
+        </CartProvider>
+      </WishlistProvider>
     </SessionProvider>
   );
 };

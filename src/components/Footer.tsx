@@ -17,7 +17,7 @@ const footerMenus = [
       { label: "All Products", href: "/products" },
       { label: "New Arrivals", href: "/products" },
       { label: "Track Order", href: "/track" },
-      { label: "Most Viewed", href: "/products/chart" },
+      { label: "Trending", href: "/trending" },
     ],
   },
   {

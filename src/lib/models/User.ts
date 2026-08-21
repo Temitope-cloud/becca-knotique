@@ -13,6 +13,7 @@ export interface IUser {
   provider: AuthProvider;
   role: UserRole;
   phone?: string;
+  wishlist: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,6 +38,7 @@ const UserSchema = new Schema<IUser>(
     },
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
     phone: { type: String },
+    wishlist: { type: [String], default: [] },
   },
   { timestamps: true },
 );
