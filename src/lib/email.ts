@@ -88,7 +88,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
     resend.emails.send({
       from,
       to: order.email,
-      subject: `Your Becca's Knotique order is confirmed (${order.reference})`,
+      subject: `Your Becca's Knotique order is confirmed (${order.orderNumber ?? order.reference})`,
       html: shell(
         "Thank you for your order!",
         `<p style="color:#57534e;font-size:14px;line-height:1.6;">
@@ -96,7 +96,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
            We&apos;ll be in touch about delivery to <strong>${shipping}</strong>.
          </p>
          <div style="margin:20px 0;">${itemsTable(order)}</div>
-         <p style="color:#a8a29e;font-size:12px;">Order reference: ${order.reference}</p>`,
+         <p style="color:#a8a29e;font-size:12px;">Order number: ${order.orderNumber ?? order.reference}</p>`,
       ),
     }),
   );
@@ -107,7 +107,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
       resend.emails.send({
         from,
         to: admin,
-        subject: `New paid order — ${formatNaira(order.amount)} (${order.reference})`,
+        subject: `New paid order — ${formatNaira(order.amount)} (${order.orderNumber ?? order.reference})`,
         html: shell(
           "New order received 🎉",
           `<p style="color:#57534e;font-size:14px;line-height:1.6;">

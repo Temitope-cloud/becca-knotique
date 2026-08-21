@@ -99,6 +99,11 @@ export default async function AdminOrdersPage({
                       {o.customer?.name}
                     </p>
                     <p className="text-xs text-stone-400">{o.email}</p>
+                    {o.orderNumber ? (
+                      <p className="mt-0.5 font-mono text-[11px] text-stone-500">
+                        {o.orderNumber}
+                      </p>
+                    ) : null}
                   </td>
                   <td className="px-4 py-3 font-semibold whitespace-nowrap text-stone-900">
                     {formatNaira(o.amount)}

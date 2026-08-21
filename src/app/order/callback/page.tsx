@@ -51,7 +51,9 @@ export default async function OrderCallbackPage({
         <div className="mt-4 w-full rounded-2xl border border-stone-200 bg-white p-6 text-left">
           <div className="flex items-center justify-between text-sm">
             <span className="text-stone-500">Order reference</span>
-            <span className="font-mono text-stone-900">{order.reference}</span>
+            <span className="font-mono text-stone-900">
+              {order.orderNumber ?? order.reference}
+            </span>
           </div>
           <div className="mt-2 flex items-center justify-between text-sm">
             <span className="text-stone-500">Total</span>
@@ -104,7 +106,7 @@ export default async function OrderCallbackPage({
         </Link>
         {order ? (
           <Link
-            href={`/track?ref=${encodeURIComponent(order.reference)}`}
+            href={`/track?ref=${encodeURIComponent(order.orderNumber ?? order.reference)}`}
             className="rounded-xl border border-stone-300 px-6 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-100"
           >
             Track order

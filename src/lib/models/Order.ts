@@ -22,6 +22,8 @@ export interface IOrderItem {
 export interface IOrder {
   _id: string;
   reference: string;
+  /** Short, customer-facing order number, e.g. "BK-1042". */
+  orderNumber?: string;
   user?: Types.ObjectId | null;
   email: string;
   items: IOrderItem[];
@@ -65,6 +67,7 @@ const OrderItemSchema = new Schema<IOrderItem>(
 const OrderSchema = new Schema<IOrder>(
   {
     reference: { type: String, required: true, unique: true, index: true },
+    orderNumber: { type: String, unique: true, sparse: true, index: true },
     user: { type: Schema.Types.ObjectId, ref: "User", default: null },
     email: { type: String, required: true, lowercase: true, trim: true, index: true },
     items: { type: [OrderItemSchema], required: true },

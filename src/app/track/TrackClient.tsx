@@ -75,7 +75,7 @@ export default function TrackClient() {
               required
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              placeholder="bk_..."
+              placeholder="BK-1042"
               className={inputClass}
             />
           </div>

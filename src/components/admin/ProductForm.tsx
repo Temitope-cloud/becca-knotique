@@ -11,6 +11,8 @@ export interface ProductInput {
   slug?: string;
   subtitle?: string;
   category: string;
+  madefor?: "women" | "men" | "unisex";
+  infos?: { label: string }[];
   price: number;
   oldPrice?: number;
   sizePrices?: { size: string; price: number }[];
@@ -42,6 +44,8 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     slug: product?.slug ?? "",
     subtitle: product?.subtitle ?? "",
     category: product?.category ?? "one-piece",
+    madefor: product?.madefor ?? "women",
+    infos: (product?.infos ?? []).map((i) => i.label).join("\n"),
     price: product?.price?.toString() ?? "",
     oldPrice: product?.oldPrice?.toString() ?? "",
     description: product?.description ?? "",
@@ -82,6 +86,12 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       slug: form.slug.trim() || undefined,
       subtitle: form.subtitle.trim() || undefined,
       category: form.category,
+      madefor: form.madefor,
+      infos: form.infos
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .map((label) => ({ label })),
       price: Number(form.price),
       oldPrice: form.oldPrice ? Number(form.oldPrice) : undefined,
       description: form.description.trim(),
@@ -178,6 +188,14 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               ))}
             </select>
           </div>
+          <div>
+            <label className={label}>Made for</label>
+            <select value={form.madefor} onChange={set("madefor")} className={input}>
+              <option value="women">Women</option>
+              <option value="men">Men</option>
+              <option value="unisex">Unisex</option>
+            </select>
+          </div>
           <div className="sm:col-span-2">
             <label className={label}>Subtitle</label>
             <input value={form.subtitle} onChange={set("subtitle")} className={input} />
@@ -199,6 +217,20 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               onChange={set("longDescription")}
               className={input}
             />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={label}>Feature list (one per line)</label>
+            <textarea
+              rows={3}
+              value={form.infos}
+              onChange={set("infos")}
+              placeholder={"Safe Payment\nFree Shipping\nDelivery in 2–5 days"}
+              className={input}
+            />
+            <p className="mt-1 text-xs text-stone-400">
+              Shown as bullet highlights on the product page and the featured
+              section.
+            </p>
           </div>
         </div>
       </div>

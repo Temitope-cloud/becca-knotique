@@ -5,6 +5,10 @@ export const productSchema = z.object({
   slug: z.string().max(160).optional(),
   subtitle: z.string().max(200).optional(),
   category: z.string().max(60),
+  madefor: z.enum(["women", "men", "unisex"]).default("women"),
+  infos: z
+    .array(z.object({ label: z.string().min(1).max(120) }))
+    .default([]),
   price: z.number().min(0),
   oldPrice: z.number().min(0).optional(),
   sizePrices: z

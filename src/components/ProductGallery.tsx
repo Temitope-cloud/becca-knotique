@@ -23,7 +23,7 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
   }
 
   return (
-    <div className="relative aspect-4/5 w-full shrink-0 overflow-scroll rounded-xl bg-neutral-200">
+    <div className="relative aspect-4/5 w-full shrink-0 overflow-hidden rounded-xl bg-neutral-200">
       <div className="pointer-events-none absolute inset-0 z-10 rounded-xl bg-linear-to-t from-black via-black/10 to-transparent" />
 
       <Image

@@ -33,6 +33,8 @@ export default async function EditProductPage({
           slug: product.slug,
           subtitle: product.subtitle,
           category: product.category,
+          madefor: product.madefor as "women" | "men" | "unisex" | undefined,
+          infos: product.infos,
           price: product.price,
           oldPrice: product.oldPrice,
           sizePrices: product.sizePrices,

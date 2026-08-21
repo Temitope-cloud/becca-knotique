@@ -12,11 +12,11 @@ export const runtime = "nodejs";
  */
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
-  const reference =
+  const input =
     typeof body?.reference === "string" ? body.reference.trim() : "";
   const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
 
-  if (!reference) {
+  if (!input) {
     return NextResponse.json(
       { found: false, error: "Enter your order number." },
       { status: 400 },
@@ -24,7 +24,13 @@ export async function POST(request: Request) {
   }
 
   await connectToDatabase();
-  const order = await Order.findOne({ reference }).lean<IOrder>();
+  // Accept either the short order number (BK-1042) or the internal reference.
+  const order = await Order.findOne({
+    $or: [
+      { orderNumber: new RegExp(`^${input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") },
+      { reference: input },
+    ],
+  }).lean<IOrder>();
 
   const session = await auth();
   const ownsByAuth =
@@ -43,7 +49,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     found: true,
-    reference: order.reference,
+    reference: order.orderNumber ?? order.reference,
     status: order.status,
     fulfillmentStatus: order.fulfillmentStatus ?? "unfulfilled",
     placedAt: order.createdAt,

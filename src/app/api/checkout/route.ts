@@ -7,6 +7,7 @@ import { Order, type IOrderItem } from "@/lib/models/Order";
 import { Coupon, computeCouponDiscount } from "@/lib/models/Coupon";
 import { getProductById, getProductBySlug } from "@/lib/catalog";
 import { priceForSize } from "@/lib/money";
+import { nextOrderNumber } from "@/lib/models/Counter";
 import { getSettings, shippingFeeFor } from "@/lib/settings";
 import { paystackInitialize } from "@/lib/paystack";
 
@@ -128,8 +129,10 @@ export async function POST(request: Request) {
   const reference = `bk_${Date.now()}_${randomUUID().slice(0, 8)}`;
 
   try {
+    const orderNumber = await nextOrderNumber();
     await Order.create({
       reference,
+      orderNumber,
       user: session?.user?.id ?? null,
       email,
       items: orderItems,

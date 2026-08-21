@@ -14,17 +14,26 @@ import { formatNaira } from "@/lib/money";
 import StarRating from "./StarRating";
 // v1 CTA used WhatsApp (getWhatsAppLink in @/lib/utils) — now routes to the store.
 
-const highlights = [
+const DEFAULT_HIGHLIGHTS = [
   { Icon: Scissors, label: "Handmade to order in Nigeria" },
   { Icon: Truck, label: "Priority shipping nationwide" },
   { Icon: ShieldCheck, label: "Secure payment via Paystack" },
 ];
+const ICON_CYCLE = [Scissors, Truck, ShieldCheck];
 
 const OnePiece = ({ product }: { product: CatalogProduct | null }) => {
   const images = product?.images ?? [];
   const [activeImage, setActiveImage] = useState(images[0]);
 
   if (!product) return null;
+
+  // Use the product's own feature list (set in admin) when available.
+  const highlights = product.infos?.length
+    ? product.infos.map((info, i) => ({
+        Icon: ICON_CYCLE[i % ICON_CYCLE.length],
+        label: info.label,
+      }))
+    : DEFAULT_HIGHLIGHTS;
 
   const discount =
     product.oldPrice && product.oldPrice > product.price

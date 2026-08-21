@@ -31,9 +31,9 @@ export default async function AdminOrderDetail({
       <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
-            Order
+            Order {order.orderNumber ?? ""}
           </h1>
-          <p className="mt-1 font-mono text-sm text-stone-500">
+          <p className="mt-1 font-mono text-xs text-stone-400">
             {order.reference}
           </p>
         </div>

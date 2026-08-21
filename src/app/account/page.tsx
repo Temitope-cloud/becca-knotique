@@ -94,7 +94,7 @@ export default async function AccountPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="font-mono text-xs text-stone-500">
-                      {order.reference}
+                      {order.orderNumber ?? order.reference}
                     </p>
                     <p className="mt-1 text-sm text-stone-500">
                       {new Date(order.createdAt).toLocaleDateString("en-NG", {
@@ -136,7 +136,7 @@ export default async function AccountPage() {
                 </div>
                 <div className="mt-3 text-right">
                   <Link
-                    href={`/track?ref=${encodeURIComponent(order.reference)}`}
+                    href={`/track?ref=${encodeURIComponent(order.orderNumber ?? order.reference)}`}
                     className="text-sm font-medium text-stone-600 underline underline-offset-4 hover:text-stone-900"
                   >
                     Track order
