@@ -95,6 +95,8 @@ export default function AdminSidebar({ name }: { name?: string | null }) {
         <div className="mt-auto border-t border-stone-100 pt-4">
           <Link
             href="/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-stone-600 transition hover:bg-stone-100 hover:text-stone-900"
           >
             <Store className="h-[18px] w-[18px]" /> View store

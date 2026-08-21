@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira } from "@/lib/money";
+import CheckoutSteps from "@/components/CheckoutSteps";
 
 export default function CartPage() {
   const {
@@ -65,8 +66,9 @@ export default function CartPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
+    <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
+      <CheckoutSteps current={0} />
+      <h1 className="mt-8 text-3xl font-semibold tracking-tight text-stone-900">
         Your cart
       </h1>
 

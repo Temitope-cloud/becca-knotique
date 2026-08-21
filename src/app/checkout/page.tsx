@@ -12,12 +12,10 @@ import {
   ShieldCheck,
   Truck,
   RotateCcw,
-  Check,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira } from "@/lib/money";
-
-const steps = ["Cart", "Details", "Payment"];
+import CheckoutSteps from "@/components/CheckoutSteps";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -121,42 +119,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
-      {/* step indicator */}
-      <div className="flex items-center justify-center gap-2 text-xs font-medium sm:gap-3">
-        {steps.map((s, i) => {
-          const active = i === 1; // Details is the current step
-          const done = i === 0; // Cart done
-          return (
-            <div key={s} className="flex items-center gap-2 sm:gap-3">
-              <span
-                className={`flex items-center gap-1.5 ${
-                  active
-                    ? "text-stone-900"
-                    : done
-                      ? "text-stone-500"
-                      : "text-stone-300"
-                }`}
-              >
-                <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] ${
-                    active
-                      ? "bg-stone-900 text-white"
-                      : done
-                        ? "bg-stone-200 text-stone-600"
-                        : "border border-stone-300"
-                  }`}
-                >
-                  {done ? <Check className="h-3 w-3" /> : i + 1}
-                </span>
-                {s}
-              </span>
-              {i < steps.length - 1 ? (
-                <span className="h-px w-6 bg-stone-200 sm:w-10" />
-              ) : null}
-            </div>
-          );
-        })}
-      </div>
+      <CheckoutSteps current={1} />
 
       <h1 className="mt-8 text-3xl font-semibold tracking-tight text-stone-900">
         Checkout

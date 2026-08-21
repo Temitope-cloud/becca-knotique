@@ -4,6 +4,7 @@ import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import { verifyAndSyncOrder } from "@/lib/orders";
 import { formatNaira } from "@/lib/money";
 import ClearCartOnPaid from "@/components/cart/ClearCartOnPaid";
+import CheckoutSteps from "@/components/CheckoutSteps";
 
 export const metadata: Metadata = {
   title: "Order status",
@@ -25,8 +26,10 @@ export default async function OrderCallbackPage({
   const pending = order?.status === "pending";
 
   return (
-    <main className="mx-auto flex min-h-[70vh] w-full max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
+    <main className="mx-auto flex min-h-[70vh] w-full max-w-2xl flex-col px-4 py-10 text-center">
       <ClearCartOnPaid active={paid} />
+      <CheckoutSteps current={2} />
+      <div className="flex flex-1 flex-col items-center justify-center pt-10">
 
       {paid ? (
         <CheckCircle2 className="h-16 w-16 text-emerald-600" />
@@ -113,6 +116,7 @@ export default async function OrderCallbackPage({
         >
           View my orders
         </Link>
+      </div>
       </div>
     </main>
   );
