@@ -1,17 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Loader2, Lock, ArrowRight, Check, X } from "lucide-react";
+import {
+  Loader2,
+  Lock,
+  ArrowRight,
+  ShieldCheck,
+  Truck,
+  RotateCcw,
+  Check,
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira } from "@/lib/money";
+
+const steps = ["Cart", "Details", "Payment"];
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const { items, subtotal, hydrated } = useCart();
+  const { items, subtotal, hydrated, coupon } = useCart();
 
   const [form, setForm] = useState({
     name: "",
@@ -24,14 +35,6 @@ export default function CheckoutPage() {
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // coupon
-  const [couponInput, setCouponInput] = useState("");
-  const [coupon, setCoupon] = useState<{ code: string; discount: number } | null>(null);
-  const [couponError, setCouponError] = useState<string | null>(null);
-  const [couponLoading, setCouponLoading] = useState(false);
-
-  // shipping (from store settings)
   const [shippingCfg, setShippingCfg] = useState({ fee: 0, threshold: 0 });
 
   useEffect(() => {
@@ -72,31 +75,6 @@ export default function CheckoutPage() {
       ? shippingCfg.fee
       : 0;
   const total = Math.max(0, subtotal - discount) + shipping;
-
-  async function applyCoupon() {
-    if (!couponInput.trim()) return;
-    setCouponLoading(true);
-    setCouponError(null);
-    try {
-      const res = await fetch("/api/coupons/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: couponInput, subtotal }),
-      });
-      const data = await res.json();
-      if (data.valid) {
-        setCoupon({ code: data.code, discount: data.discount });
-        setCouponError(null);
-      } else {
-        setCoupon(null);
-        setCouponError(data.reason || "Invalid code.");
-      }
-    } catch {
-      setCouponError("Could not check that code.");
-    } finally {
-      setCouponLoading(false);
-    }
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -142,13 +120,49 @@ export default function CheckoutPage() {
     "w-full rounded-xl border border-stone-300 px-4 py-3 text-stone-900 outline-none transition focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10";
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
+    <main className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6">
+      {/* step indicator */}
+      <div className="flex items-center justify-center gap-2 text-xs font-medium sm:gap-3">
+        {steps.map((s, i) => {
+          const active = i === 1; // Details is the current step
+          const done = i === 0; // Cart done
+          return (
+            <div key={s} className="flex items-center gap-2 sm:gap-3">
+              <span
+                className={`flex items-center gap-1.5 ${
+                  active
+                    ? "text-stone-900"
+                    : done
+                      ? "text-stone-500"
+                      : "text-stone-300"
+                }`}
+              >
+                <span
+                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] ${
+                    active
+                      ? "bg-stone-900 text-white"
+                      : done
+                        ? "bg-stone-200 text-stone-600"
+                        : "border border-stone-300"
+                  }`}
+                >
+                  {done ? <Check className="h-3 w-3" /> : i + 1}
+                </span>
+                {s}
+              </span>
+              {i < steps.length - 1 ? (
+                <span className="h-px w-6 bg-stone-200 sm:w-10" />
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+
+      <h1 className="mt-8 text-3xl font-semibold tracking-tight text-stone-900">
         Checkout
       </h1>
-
       {!session?.user ? (
-        <p className="mt-3 text-sm text-stone-600">
+        <p className="mt-2 text-sm text-stone-600">
           Checking out as a guest.{" "}
           <Link
             href="/login?callbackUrl=/checkout"
@@ -160,145 +174,216 @@ export default function CheckoutPage() {
         </p>
       ) : null}
 
-      <form onSubmit={handleSubmit} className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]"
+      >
         <div className="space-y-6">
           <section className="rounded-2xl border border-stone-200 bg-white p-6">
-            <h2 className="text-lg font-semibold text-stone-900">Contact details</h2>
+            <h2 className="text-lg font-semibold text-stone-900">
+              Contact details
+            </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">Full name</label>
-                <input required value={form.name} onChange={update("name")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  Full name
+                </label>
+                <input
+                  required
+                  value={form.name}
+                  onChange={update("name")}
+                  className={inputClass}
+                />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">Email</label>
-                <input required type="email" value={form.email} onChange={update("email")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  Email
+                </label>
+                <input
+                  required
+                  type="email"
+                  value={form.email}
+                  onChange={update("email")}
+                  className={inputClass}
+                />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">Phone</label>
-                <input required type="tel" value={form.phone} onChange={update("phone")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  Phone
+                </label>
+                <input
+                  required
+                  type="tel"
+                  value={form.phone}
+                  onChange={update("phone")}
+                  className={inputClass}
+                />
               </div>
             </div>
           </section>
 
           <section className="rounded-2xl border border-stone-200 bg-white p-6">
-            <h2 className="text-lg font-semibold text-stone-900">Delivery address</h2>
+            <h2 className="text-lg font-semibold text-stone-900">
+              Delivery address
+            </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">Address</label>
-                <input required value={form.address} onChange={update("address")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  Address
+                </label>
+                <input
+                  required
+                  value={form.address}
+                  onChange={update("address")}
+                  className={inputClass}
+                />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">City</label>
-                <input required value={form.city} onChange={update("city")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  City
+                </label>
+                <input
+                  required
+                  value={form.city}
+                  onChange={update("city")}
+                  className={inputClass}
+                />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">State</label>
-                <input required value={form.state} onChange={update("state")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  State
+                </label>
+                <input
+                  required
+                  value={form.state}
+                  onChange={update("state")}
+                  className={inputClass}
+                />
               </div>
               <div className="sm:col-span-2">
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">Delivery note (optional)</label>
-                <textarea rows={3} value={form.note} onChange={update("note")} className={inputClass} />
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  Delivery note (optional)
+                </label>
+                <textarea
+                  rows={3}
+                  value={form.note}
+                  onChange={update("note")}
+                  className={inputClass}
+                />
               </div>
             </div>
           </section>
         </div>
 
-        <aside className="h-fit rounded-2xl border border-stone-200 bg-stone-50 p-6 lg:sticky lg:top-24">
-          <h2 className="text-lg font-semibold text-stone-900">Your order</h2>
+        <aside className="h-fit rounded-2xl border border-stone-200 bg-white p-6 lg:sticky lg:top-24">
+          <h2 className="text-lg font-semibold text-stone-900">Order summary</h2>
+
+          {/* items with thumbnails */}
           <ul className="mt-4 space-y-3">
             {items.map((item, i) => (
-              <li key={i} className="flex items-start justify-between gap-3 text-sm">
-                <span className="min-w-0 text-stone-600">
-                  {item.name}
-                  {item.size ? ` · ${item.size}` : ""}
-                  <span className="text-stone-400"> × {item.quantity}</span>
-                </span>
-                <span className="shrink-0 font-medium text-stone-900">
+              <li key={i} className="flex items-center gap-3">
+                <div className="relative h-14 w-12 shrink-0 overflow-hidden rounded-lg bg-stone-100">
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
+                  ) : null}
+                  <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-stone-900 px-1 text-[11px] font-semibold text-white">
+                    {item.quantity}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-stone-900">
+                    {item.name}
+                  </p>
+                  {item.size || item.color ? (
+                    <p className="text-xs text-stone-500">
+                      {[item.size, item.color].filter(Boolean).join(" · ")}
+                    </p>
+                  ) : null}
+                </div>
+                <span className="shrink-0 text-sm font-medium text-stone-900">
                   {formatNaira(item.price * item.quantity)}
                 </span>
               </li>
             ))}
           </ul>
 
-          {/* coupon */}
-          <div className="mt-4 border-t border-stone-200 pt-4">
-            {coupon ? (
-              <div className="flex items-center justify-between rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-                <span className="flex items-center gap-1.5">
-                  <Check className="h-4 w-4" /> {coupon.code} applied
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCoupon(null);
-                    setCouponInput("");
-                  }}
-                  aria-label="Remove coupon"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            ) : (
-              <div>
-                <div className="flex gap-2">
-                  <input
-                    value={couponInput}
-                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                    placeholder="Discount code"
-                    className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-stone-900"
-                  />
-                  <button
-                    type="button"
-                    onClick={applyCoupon}
-                    disabled={couponLoading}
-                    className="shrink-0 rounded-lg border border-stone-900 px-4 py-2 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white disabled:opacity-60"
-                  >
-                    {couponLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
-                  </button>
-                </div>
-                {couponError ? (
-                  <p className="mt-1.5 text-xs text-rose-600">{couponError}</p>
-                ) : null}
-              </div>
-            )}
-          </div>
-
           {/* totals */}
-          <div className="mt-4 space-y-1.5 border-t border-stone-200 pt-4 text-sm">
+          <div className="mt-5 space-y-2 border-t border-stone-200 pt-4 text-sm">
             <div className="flex justify-between text-stone-600">
               <span>Subtotal</span>
               <span>{formatNaira(subtotal)}</span>
             </div>
             {discount > 0 ? (
-              <div className="flex justify-between text-emerald-700">
-                <span>Discount</span>
+              <div className="flex justify-between text-[#b06a63]">
+                <span>
+                  Discount{coupon?.code ? ` (${coupon.code})` : ""}
+                </span>
                 <span>−{formatNaira(discount)}</span>
               </div>
             ) : null}
             <div className="flex justify-between text-stone-600">
               <span>Shipping</span>
-              <span>{shipping > 0 ? formatNaira(shipping) : "Arranged after"}</span>
+              <span>{shipping > 0 ? formatNaira(shipping) : "Free"}</span>
             </div>
-            <div className="flex justify-between pt-2 text-base font-semibold text-stone-900">
+            <div className="flex justify-between border-t border-stone-100 pt-2 text-base font-semibold text-stone-900">
               <span>Total</span>
               <span>{formatNaira(total)}</span>
             </div>
           </div>
 
+          <p className="mt-3 text-xs text-stone-400">
+            Have a coupon?{" "}
+            <Link
+              href="/cart"
+              className="font-medium text-stone-600 underline underline-offset-2 hover:text-stone-900"
+            >
+              Add it in your cart
+            </Link>
+            .
+          </p>
+
           {error ? (
-            <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>
+            <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              {error}
+            </p>
           ) : null}
 
           <button
             type="submit"
             disabled={loading || items.length === 0}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:opacity-60"
+            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:opacity-60"
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Lock className="h-4 w-4" />
+            )}
             Pay {formatNaira(total)}
             {!loading ? <ArrowRight className="h-4 w-4" /> : null}
           </button>
-          <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-stone-500">
+
+          {/* trust badges */}
+          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-stone-100 pt-5 text-center">
+            {[
+              { Icon: ShieldCheck, label: "Secure\ncheckout" },
+              { Icon: Truck, label: "Fast\nshipping" },
+              { Icon: RotateCcw, label: "Easy\nreturns" },
+            ].map(({ Icon, label }) => (
+              <div key={label} className="flex flex-col items-center gap-1.5">
+                <Icon className="h-5 w-5 text-stone-700" strokeWidth={1.6} />
+                <span className="text-[11px] leading-tight whitespace-pre-line text-stone-500">
+                  {label}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-stone-500">
             <Lock className="h-3 w-3" /> Secured by Paystack
           </p>
         </aside>

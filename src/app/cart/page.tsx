@@ -2,7 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import {
+  Minus,
+  Plus,
+  Trash2,
+  ShoppingBag,
+  ArrowRight,
+  Tag,
+  X,
+  Check,
+  Loader2,
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira } from "@/lib/money";
 
@@ -10,11 +21,30 @@ export default function CartPage() {
   const {
     items,
     subtotal,
+    total,
     updateQuantity,
     removeItem,
     lineKey,
     hydrated,
+    coupon,
+    applyCoupon,
+    removeCoupon,
   } = useCart();
+
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+
+  async function handleApply(e: React.FormEvent) {
+    e.preventDefault();
+    if (!couponInput.trim()) return;
+    setCouponLoading(true);
+    setCouponError(null);
+    const res = await applyCoupon(couponInput);
+    if (!res.ok) setCouponError(res.reason || "Invalid code.");
+    else setCouponInput("");
+    setCouponLoading(false);
+  }
 
   if (hydrated && items.length === 0) {
     return (
@@ -23,9 +53,7 @@ export default function CartPage() {
         <h1 className="mt-6 text-2xl font-semibold text-stone-900">
           Your cart is empty
         </h1>
-        <p className="mt-2 text-stone-600">
-          Find something handmade you love.
-        </p>
+        <p className="mt-2 text-stone-600">Find something handmade you love.</p>
         <Link
           href="/products"
           className="mt-8 inline-flex items-center gap-2 rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-stone-800"
@@ -90,9 +118,7 @@ export default function CartPage() {
                     <div className="inline-flex items-center rounded-lg border border-stone-300">
                       <button
                         type="button"
-                        onClick={() =>
-                          updateQuantity(key, item.quantity - 1)
-                        }
+                        onClick={() => updateQuantity(key, item.quantity - 1)}
                         className="px-2.5 py-1.5 text-stone-700 hover:bg-stone-100"
                         aria-label="Decrease quantity"
                       >
@@ -103,9 +129,7 @@ export default function CartPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() =>
-                          updateQuantity(key, item.quantity + 1)
-                        }
+                        onClick={() => updateQuantity(key, item.quantity + 1)}
                         className="px-2.5 py-1.5 text-stone-700 hover:bg-stone-100"
                         aria-label="Increase quantity"
                       >
@@ -122,33 +146,103 @@ export default function CartPage() {
           })}
         </ul>
 
-        <aside className="h-fit rounded-2xl border border-stone-200 bg-stone-50 p-6 lg:sticky lg:top-24">
-          <h2 className="text-lg font-semibold text-stone-900">
-            Order summary
-          </h2>
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <span className="text-stone-600">Subtotal</span>
-            <span className="font-semibold text-stone-900">
-              {formatNaira(subtotal)}
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-stone-500">
-            Shipping is arranged after checkout.
-          </p>
+        <div className="space-y-4 lg:sticky lg:top-24 lg:h-fit">
+          {/* coupon */}
+          <div className="rounded-2xl border border-stone-200 bg-white p-5">
+            <div className="flex items-center gap-2">
+              <Tag className="h-4 w-4 text-stone-500" />
+              <h2 className="text-sm font-semibold text-stone-900">
+                Coupon code
+              </h2>
+            </div>
 
-          <Link
-            href="/checkout"
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-stone-800"
-          >
-            Proceed to checkout <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href="/products"
-            className="mt-3 block text-center text-sm font-medium text-stone-600 hover:text-stone-900"
-          >
-            Continue shopping
-          </Link>
-        </aside>
+            {coupon ? (
+              <div className="mt-3 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5">
+                <span className="flex items-center gap-2 text-sm font-medium text-emerald-800">
+                  <Check className="h-4 w-4" />
+                  {coupon.code} applied
+                </span>
+                <button
+                  type="button"
+                  onClick={removeCoupon}
+                  className="rounded-md p-1 text-emerald-700 transition hover:bg-emerald-100"
+                  aria-label="Remove coupon"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleApply} className="mt-3 flex gap-2">
+                <input
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value)}
+                  placeholder="Enter code"
+                  className="min-w-0 flex-1 rounded-xl border border-stone-300 px-3 py-2.5 text-sm uppercase text-stone-900 outline-none transition focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10"
+                />
+                <button
+                  type="submit"
+                  disabled={couponLoading}
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:opacity-60"
+                >
+                  {couponLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : null}
+                  Apply
+                </button>
+              </form>
+            )}
+            {couponError ? (
+              <p className="mt-2 text-xs text-rose-600">{couponError}</p>
+            ) : null}
+          </div>
+
+          {/* summary */}
+          <aside className="rounded-2xl border border-stone-200 bg-stone-50 p-6">
+            <h2 className="text-lg font-semibold text-stone-900">
+              Order summary
+            </h2>
+            <div className="mt-4 space-y-2.5 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-stone-600">Subtotal</span>
+                <span className="font-medium text-stone-900">
+                  {formatNaira(subtotal)}
+                </span>
+              </div>
+              {coupon ? (
+                <div className="flex items-center justify-between text-[#b06a63]">
+                  <span>Discount ({coupon.code})</span>
+                  <span className="font-medium">
+                    −{formatNaira(coupon.discount)}
+                  </span>
+                </div>
+              ) : null}
+              <div className="flex items-center justify-between text-stone-500">
+                <span>Shipping</span>
+                <span>Calculated at checkout</span>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-between border-t border-stone-200 pt-4">
+              <span className="font-medium text-stone-700">Total</span>
+              <span className="text-lg font-semibold text-stone-900">
+                {formatNaira(total)}
+              </span>
+            </div>
+
+            <Link
+              href="/checkout"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-stone-800"
+            >
+              Proceed to checkout <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/products"
+              className="mt-3 block text-center text-sm font-medium text-stone-600 hover:text-stone-900"
+            >
+              Continue shopping
+            </Link>
+          </aside>
+        </div>
       </div>
     </main>
   );
