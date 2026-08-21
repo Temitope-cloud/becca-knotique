@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Loader2, Search, PackageSearch } from "lucide-react";
 import OrderTimeline, { type TimelineOrder } from "@/components/OrderTimeline";
@@ -25,6 +26,7 @@ const statusStyles: Record<string, string> = {
 
 export default function TrackClient() {
   const params = useSearchParams();
+  const { data: session } = useSession();
   const [reference, setReference] = useState("");
   const [email, setEmail] = useState("");
   const [order, setOrder] = useState<TrackResult | null>(null);
@@ -35,6 +37,11 @@ export default function TrackClient() {
     const ref = params.get("ref");
     if (ref) setReference(ref);
   }, [params]);
+
+  // Prefill the email for signed-in shoppers.
+  useEffect(() => {
+    if (session?.user?.email) setEmail((e) => e || session.user!.email!);
+  }, [session]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -86,6 +93,8 @@ export default function TrackClient() {
             <input
               required
               type="email"
+              name="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"

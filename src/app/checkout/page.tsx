@@ -153,6 +153,8 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   required
+                  name="name"
+                  autoComplete="name"
                   value={form.name}
                   onChange={update("name")}
                   className={inputClass}
@@ -165,6 +167,8 @@ export default function CheckoutPage() {
                 <input
                   required
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   value={form.email}
                   onChange={update("email")}
                   className={inputClass}
@@ -177,6 +181,8 @@ export default function CheckoutPage() {
                 <input
                   required
                   type="tel"
+                  name="tel"
+                  autoComplete="tel"
                   value={form.phone}
                   onChange={update("phone")}
                   className={inputClass}
@@ -196,6 +202,8 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   required
+                  name="street-address"
+                  autoComplete="street-address"
                   value={form.address}
                   onChange={update("address")}
                   className={inputClass}
@@ -207,6 +215,8 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   required
+                  name="city"
+                  autoComplete="address-level2"
                   value={form.city}
                   onChange={update("city")}
                   className={inputClass}
@@ -218,6 +228,8 @@ export default function CheckoutPage() {
                 </label>
                 <input
                   required
+                  name="state"
+                  autoComplete="address-level1"
                   value={form.state}
                   onChange={update("state")}
                   className={inputClass}
