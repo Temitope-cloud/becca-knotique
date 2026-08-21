@@ -184,7 +184,8 @@ const Footer = () => {
         {/* bottom bar */}
         <div className="mt-10 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
           <p className="order-2 text-center text-xs text-white/50 sm:order-1 sm:text-left">
-            © {year} Becca&apos;s Knotique. All rights reserved.
+            © {year}{" "}
+            Becca&apos;s Knotique. All rights reserved.
           </p>
 
           <div className="order-1 flex items-center gap-5 sm:order-2">
