@@ -1,13 +1,49 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Package } from "lucide-react";
+import { Plus, Package, Star } from "lucide-react";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getAllProducts } from "@/lib/catalog";
 import { formatNaira } from "@/lib/money";
 
-export default async function AdminProductsPage() {
+type Filter = "all" | "featured" | "active" | "hidden";
+
+export default async function AdminProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
   await requireAdmin();
-  const products = await getAllProducts({ includeInactive: true });
+  const { filter: rawFilter } = await searchParams;
+  const filter: Filter = (
+    ["all", "featured", "active", "hidden"].includes(rawFilter ?? "")
+      ? rawFilter
+      : "all"
+  ) as Filter;
+
+  const all = await getAllProducts({ includeInactive: true });
+
+  const counts = {
+    all: all.length,
+    featured: all.filter((p) => p.featured).length,
+    active: all.filter((p) => p.active).length,
+    hidden: all.filter((p) => !p.active).length,
+  };
+
+  const products =
+    filter === "featured"
+      ? all.filter((p) => p.featured)
+      : filter === "active"
+        ? all.filter((p) => p.active)
+        : filter === "hidden"
+          ? all.filter((p) => !p.active)
+          : all;
+
+  const tabs: { key: Filter; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "featured", label: "Featured" },
+    { key: "active", label: "Active" },
+    { key: "hidden", label: "Hidden" },
+  ];
 
   return (
     <div className="px-5 py-8 sm:px-8">
@@ -17,8 +53,7 @@ export default async function AdminProductsPage() {
             Products
           </h1>
           <p className="mt-1 text-sm text-stone-500">
-            {products.length} product{products.length === 1 ? "" : "s"} in your
-            catalog
+            {counts.all} product{counts.all === 1 ? "" : "s"} in your catalog
           </p>
         </div>
         <Link
@@ -29,19 +64,55 @@ export default async function AdminProductsPage() {
         </Link>
       </div>
 
+      {/* filter pills */}
+      <div className="mt-6 flex flex-wrap gap-2">
+        {tabs.map((t) => {
+          const isActive = filter === t.key;
+          return (
+            <Link
+              key={t.key}
+              href={t.key === "all" ? "/admin/products" : `/admin/products?filter=${t.key}`}
+              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                isActive
+                  ? "bg-stone-900 text-white"
+                  : "border border-stone-300 bg-white text-stone-600 hover:border-stone-400"
+              }`}
+            >
+              {t.key === "featured" ? (
+                <Star
+                  className={`h-3.5 w-3.5 ${isActive ? "fill-white" : "fill-amber-400 text-amber-400"}`}
+                />
+              ) : null}
+              {t.label}
+              <span
+                className={`rounded-full px-1.5 text-xs ${
+                  isActive ? "bg-white/20" : "bg-stone-100 text-stone-500"
+                }`}
+              >
+                {counts[t.key]}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+
       {products.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
+        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-16 text-center">
           <Package className="h-10 w-10 text-stone-300" />
-          <p className="mt-4 text-stone-600">No products yet.</p>
+          <p className="mt-4 text-stone-600">
+            {filter === "featured"
+              ? "No featured products yet. Open a product and toggle 'Featured' to spotlight it on the homepage."
+              : "No products here."}
+          </p>
           <Link
             href="/admin/products/new"
             className="mt-6 rounded-xl bg-stone-900 px-5 py-2.5 text-sm font-semibold text-white"
           >
-            Add your first product
+            Add a product
           </Link>
         </div>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-2xl border border-stone-200 bg-white">
+        <div className="mt-4 overflow-x-auto rounded-2xl border border-stone-200 bg-white">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="border-b border-stone-200 bg-stone-50 text-xs tracking-wide text-stone-500 uppercase">
               <tr>
@@ -74,8 +145,14 @@ export default async function AdminProductsPage() {
                             />
                           ) : null}
                         </div>
-                        <span className="font-medium text-stone-900">
+                        <span className="flex items-center gap-1.5 font-medium text-stone-900">
                           {p.name}
+                          {p.featured ? (
+                            <Star
+                              className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400"
+                              aria-label="Featured"
+                            />
+                          ) : null}
                         </span>
                       </div>
                     </td>
