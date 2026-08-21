@@ -30,6 +30,8 @@ export interface CatalogProduct {
   infos: { label: string }[];
   featured: boolean;
   active: boolean;
+  status: "published" | "draft";
+  trashed: boolean;
   viewCount?: number;
 }
 
@@ -60,6 +62,8 @@ function fromDoc(doc: IProduct): CatalogProduct {
     infos: (doc.infos ?? []).map((i) => ({ label: i.label })),
     featured: !!doc.featured,
     active: doc.active !== false,
+    status: doc.status === "draft" ? "draft" : "published",
+    trashed: !!doc.trashed,
     viewCount: doc.viewCount ?? 0,
   };
 }
@@ -92,6 +96,8 @@ function fromStatic(p: (typeof staticProducts)[number]): CatalogProduct {
     infos: (p.infos ?? []).map((i) => ({ label: i.label })),
     featured: false,
     active: true,
+    status: "published",
+    trashed: false,
     viewCount: 0,
   };
 }
@@ -104,13 +110,29 @@ async function dbIsEmpty(): Promise<boolean> {
 const staticValid = () =>
   staticProducts.filter((p) => p.slug && p.name).map(fromStatic);
 
-/** All products. Storefront gets active-only by default; admin passes includeInactive. */
+/**
+ * All products.
+ * - Storefront (default): published, active, not trashed.
+ * - Admin (includeInactive): everything except trash (published + drafts + hidden).
+ * - trashedOnly: just the trash.
+ */
 export async function getAllProducts(opts?: {
   includeInactive?: boolean;
+  trashedOnly?: boolean;
 }): Promise<CatalogProduct[]> {
-  if (await dbIsEmpty()) return staticValid();
-  const filter = opts?.includeInactive ? {} : { active: { $ne: false } };
-  const docs = await Product.find(filter).sort({ createdAt: -1 }).lean<IProduct[]>();
+  if (await dbIsEmpty()) return opts?.trashedOnly ? [] : staticValid();
+  const filter: Record<string, unknown> = opts?.trashedOnly
+    ? { trashed: true }
+    : opts?.includeInactive
+      ? { trashed: { $ne: true } }
+      : {
+          trashed: { $ne: true },
+          active: { $ne: false },
+          status: { $ne: "draft" },
+        };
+  const docs = await Product.find(filter)
+    .sort({ createdAt: -1 })
+    .lean<IProduct[]>();
   return docs.map(fromDoc);
 }
 
@@ -161,7 +183,11 @@ export async function getProductsBySlugs(
 /** Most-viewed active products (global view counts). */
 export async function getMostViewed(limit = 8): Promise<CatalogProduct[]> {
   if (await dbIsEmpty()) return staticValid().slice(0, limit);
-  const docs = await Product.find({ active: { $ne: false } })
+  const docs = await Product.find({
+    active: { $ne: false },
+    status: { $ne: "draft" },
+    trashed: { $ne: true },
+  })
     .sort({ viewCount: -1, createdAt: -1 })
     .limit(limit)
     .lean<IProduct[]>();

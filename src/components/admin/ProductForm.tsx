@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, FileText } from "lucide-react";
 import ImageUploader from "./ImageUploader";
+
+type SaveStatus = "published" | "draft";
 
 export interface ProductInput {
   id?: string;
@@ -25,6 +27,7 @@ export interface ProductInput {
   inStock: boolean;
   featured: boolean;
   active: boolean;
+  status?: "published" | "draft";
 }
 
 const categories = [
@@ -63,7 +66,9 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
   const [images, setImages] = useState<string[]>(product?.images ?? []);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [savingAs, setSavingAs] = useState<SaveStatus | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const isDraft = product?.status === "draft";
 
   const set = (k: keyof typeof form) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -76,12 +81,13 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
           : e.target.value,
     }));
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function submit(status: SaveStatus) {
     setError(null);
     setSaving(true);
+    setSavingAs(status);
 
     const payload = {
+      status,
       name: form.name.trim(),
       slug: form.slug.trim() || undefined,
       subtitle: form.subtitle.trim() || undefined,
@@ -127,6 +133,7 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       if (!res.ok) {
         setError(data?.error || "Could not save the product.");
         setSaving(false);
+        setSavingAs(null);
         return;
       }
       router.push("/admin/products");
@@ -134,16 +141,24 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     } catch {
       setError("Something went wrong.");
       setSaving(false);
+      setSavingAs(null);
     }
   }
 
-  async function handleDelete() {
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    submit(editing && !isDraft ? "published" : "published");
+  }
+
+  async function handleTrash() {
     if (!editing) return;
-    if (!confirm("Delete this product? This cannot be undone.")) return;
+    if (!confirm("Move this product to trash? You can restore it later.")) return;
     setDeleting(true);
     try {
       const res = await fetch(`/api/admin/products/${product!.id}`, {
-        method: "DELETE",
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "trash" }),
       });
       if (res.ok) {
         router.push("/admin/products");
@@ -344,28 +359,50 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
         </p>
       ) : null}
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
-          type="submit"
+          type="button"
+          onClick={() => submit("published")}
           disabled={saving}
           className="inline-flex items-center gap-2 rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:opacity-60"
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-          {editing ? "Save changes" : "Create product"}
+          {saving && savingAs === "published" ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : null}
+          {editing
+            ? isDraft
+              ? "Publish"
+              : "Save changes"
+            : "Publish product"}
         </button>
+
+        <button
+          type="button"
+          onClick={() => submit("draft")}
+          disabled={saving}
+          className="inline-flex items-center gap-2 rounded-xl border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-700 transition hover:bg-stone-100 disabled:opacity-60"
+        >
+          {saving && savingAs === "draft" ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <FileText className="h-4 w-4" />
+          )}
+          Save as draft
+        </button>
+
         {editing ? (
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={handleTrash}
             disabled={deleting}
-            className="inline-flex items-center gap-2 rounded-xl border border-rose-200 px-5 py-3 text-sm font-semibold text-rose-600 transition hover:bg-rose-50 disabled:opacity-60"
+            className="ml-auto inline-flex items-center gap-2 rounded-xl border border-rose-200 px-5 py-3 text-sm font-semibold text-rose-600 transition hover:bg-rose-50 disabled:opacity-60"
           >
             {deleting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <Trash2 className="h-4 w-4" />
             )}
-            Delete
+            Move to trash
           </button>
         ) : null}
       </div>

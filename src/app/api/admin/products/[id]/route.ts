@@ -17,6 +17,21 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json().catch(() => ({}));
+
+  // Lightweight actions that don't require the full product schema.
+  if (body?.action === "trash" || body?.action === "restore") {
+    await connectToDatabase();
+    const set =
+      body.action === "trash"
+        ? { trashed: true, trashedAt: new Date() }
+        : { trashed: false, trashedAt: null };
+    const res = await Product.updateOne({ _id: id }, { $set: set });
+    if (res.matchedCount === 0) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+    return NextResponse.json({ ok: true });
+  }
+
   const parsed = productSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(

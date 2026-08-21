@@ -23,6 +23,7 @@ export const productSchema = z.object({
   inStock: z.boolean().default(true),
   featured: z.boolean().default(false),
   active: z.boolean().default(true),
+  status: z.enum(["published", "draft"]).default("published"),
 });
 
 export type ProductPayload = z.infer<typeof productSchema>;

@@ -31,6 +31,11 @@ export interface IProduct {
   infos: IProductInfo[];
   featured: boolean;
   active: boolean;
+  /** "published" shows on the storefront; "draft" is saved but hidden. */
+  status: "published" | "draft";
+  /** soft delete */
+  trashed: boolean;
+  trashedAt?: Date | null;
   viewCount: number;
   createdAt: Date;
   updatedAt: Date;
@@ -73,6 +78,14 @@ const ProductSchema = new Schema<IProduct>(
     },
     featured: { type: Boolean, default: false, index: true },
     active: { type: Boolean, default: true, index: true },
+    status: {
+      type: String,
+      enum: ["published", "draft"],
+      default: "published",
+      index: true,
+    },
+    trashed: { type: Boolean, default: false, index: true },
+    trashedAt: { type: Date, default: null },
     viewCount: { type: Number, default: 0, index: true },
   },
   { timestamps: true },
