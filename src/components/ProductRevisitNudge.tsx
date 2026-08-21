@@ -77,10 +77,10 @@ export default function ProductRevisitNudge({
   if (!line || count < MIN_VISITS) return null;
 
   return (
-    <div className="mt-6 rounded-2xl border border-amber-200/70 bg-linear-to-br from-amber-50/90 to-orange-50/40 p-4 sm:p-5">
+    <div className="mt-6 rounded-2xl border border-emerald-200/70 bg-linear-to-br from-emerald-50/90 to-orange-50/40 p-4 sm:p-5">
       <div className="flex gap-3 sm:gap-4">
         <div
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/70 text-amber-800 shadow-sm ring-1 ring-amber-200/60"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/70 text-emerald-800 shadow-sm ring-1 ring-emerald-200/60"
           aria-hidden
         >
           <Smile className="h-5 w-5" strokeWidth={1.75} />

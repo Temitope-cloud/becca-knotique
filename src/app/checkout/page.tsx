@@ -283,7 +283,7 @@ export default function CheckoutPage() {
               <span>{formatNaira(subtotal)}</span>
             </div>
             {discount > 0 ? (
-              <div className="flex justify-between text-[#b06a63]">
+              <div className="flex justify-between text-[#047857]">
                 <span>
                   Discount{coupon?.code ? ` (${coupon.code})` : ""}
                 </span>

@@ -4,16 +4,75 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Check, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { formatNaira, priceForSize } from "@/lib/money";
 
 export interface PurchaseProduct {
   id: string;
   slug: string;
   name: string;
   price: number;
+  oldPrice?: number;
+  sizePrices?: { size: string; price: number }[];
   image?: string;
   sizes?: string[];
   colors?: string[];
   inStock?: boolean;
+}
+
+/** Map a colour name to a usable swatch. Returns null when we can't tell. */
+const COLOR_MAP: Record<string, string> = {
+  cream: "#e7dcc4",
+  ivory: "#f3ead7",
+  white: "#f5f5f5",
+  black: "#111827",
+  green: "#059669",
+  emerald: "#059669",
+  forest: "#065f46",
+  sage: "#9caf88",
+  olive: "#6b7d3a",
+  mocha: "#7b5e46",
+  brown: "#6b4f3a",
+  earth: "#8a6d4f",
+  tan: "#d2b48c",
+  camel: "#c19a6b",
+  sunset: "#e08a5b",
+  rust: "#b45309",
+  mustard: "#d4a017",
+  gold: "#c9a227",
+  terracotta: "#c56b4a",
+  rose: "#e11d48",
+  pink: "#ec4899",
+  lilac: "#b57edc",
+  purple: "#7c3aed",
+  blue: "#2563eb",
+  navy: "#1e3a5f",
+  teal: "#0d9488",
+  grey: "#6b7280",
+  gray: "#6b7280",
+  charcoal: "#374151",
+  stone: "#78716c",
+  red: "#dc2626",
+  yellow: "#eab308",
+  orange: "#ea580c",
+};
+
+function resolveColor(name?: string): string | null {
+  if (!name) return null;
+  const key = name.toLowerCase();
+  if (COLOR_MAP[key]) return COLOR_MAP[key];
+  for (const k of Object.keys(COLOR_MAP)) {
+    if (key.includes(k)) return COLOR_MAP[k];
+  }
+  return null;
+}
+
+function isLight(hex: string): boolean {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  // relative luminance
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.62;
 }
 
 export default function ProductPurchasePanel({
@@ -30,6 +89,16 @@ export default function ProductPurchasePanel({
   const [added, setAdded] = useState(false);
 
   const soldOut = product.inStock === false;
+  const unitPrice = priceForSize(product.price, product.sizePrices, size);
+  const discount =
+    product.oldPrice && product.oldPrice > unitPrice
+      ? Math.round(((product.oldPrice - unitPrice) / product.oldPrice) * 100)
+      : null;
+
+  // CTA colour follows the selected colour (falls back to brand black).
+  const swatch = resolveColor(color);
+  const ctaBg = swatch ?? "#111827";
+  const ctaText = isLight(ctaBg) ? "#111827" : "#ffffff";
 
   function buildItem() {
     return {
@@ -37,7 +106,7 @@ export default function ProductPurchasePanel({
       slug: product.slug,
       name: product.name,
       image: product.image,
-      price: product.price,
+      price: unitPrice,
       size,
       color,
     };
@@ -55,25 +124,52 @@ export default function ProductPurchasePanel({
   }
 
   return (
-    <div className="mt-7">
+    <div className="mt-6">
+      {/* reactive price */}
+      <div className="mb-6 flex flex-wrap items-baseline gap-3">
+        <span className="text-4xl font-semibold tracking-tight text-stone-900">
+          {formatNaira(unitPrice)}
+        </span>
+        {product.oldPrice && product.oldPrice > unitPrice ? (
+          <span className="text-xl text-stone-400 line-through">
+            {formatNaira(product.oldPrice)}
+          </span>
+        ) : null}
+        {discount ? (
+          <span className="rounded-full bg-emerald-700/10 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-800 uppercase">
+            Save {discount}%
+          </span>
+        ) : null}
+      </div>
+
       {product.sizes?.length ? (
         <div className="mb-4">
           <p className="mb-2 text-sm font-medium text-stone-700">Size</p>
           <div className="flex flex-wrap gap-2">
-            {product.sizes.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSize(s)}
-                className={`min-w-11 rounded-lg border px-3 py-2 text-sm font-medium transition ${
-                  size === s
-                    ? "border-stone-900 bg-stone-900 text-white"
-                    : "border-stone-300 text-stone-700 hover:border-stone-500"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
+            {product.sizes.map((s) => {
+              const sp = product.sizePrices?.find((x) => x.size === s);
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSize(s)}
+                  className={`flex min-w-11 flex-col items-center rounded-lg border px-3 py-2 text-sm font-medium transition ${
+                    size === s
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-300 text-stone-700 hover:border-stone-500"
+                  }`}
+                >
+                  {s}
+                  {sp ? (
+                    <span
+                      className={`text-[10px] ${size === s ? "text-white/70" : "text-stone-400"}`}
+                    >
+                      {formatNaira(sp.price)}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : null}
@@ -82,20 +178,29 @@ export default function ProductPurchasePanel({
         <div className="mb-4">
           <p className="mb-2 text-sm font-medium text-stone-700">Color</p>
           <div className="flex flex-wrap gap-2">
-            {product.colors.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setColor(c)}
-                className={`rounded-lg border px-3 py-2 text-sm font-medium capitalize transition ${
-                  color === c
-                    ? "border-stone-900 bg-stone-900 text-white"
-                    : "border-stone-300 text-stone-700 hover:border-stone-500"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+            {product.colors.map((c) => {
+              const dot = resolveColor(c);
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setColor(c)}
+                  className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium capitalize transition ${
+                    color === c
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-300 text-stone-700 hover:border-stone-500"
+                  }`}
+                >
+                  {dot ? (
+                    <span
+                      className="h-3.5 w-3.5 rounded-full ring-1 ring-black/10"
+                      style={{ backgroundColor: dot }}
+                    />
+                  ) : null}
+                  {c}
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : null}
@@ -130,7 +235,8 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleAdd}
           disabled={soldOut}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-stone-900 bg-white px-6 py-4 text-sm font-semibold tracking-[0.14em] text-stone-900 uppercase transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ borderColor: ctaBg, color: ctaBg }}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 bg-white px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {added ? (
             <>
@@ -146,18 +252,13 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleBuyNow}
           disabled={soldOut}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-stone-900 px-6 py-4 text-sm font-semibold tracking-[0.14em] text-white uppercase transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ backgroundColor: ctaBg, color: ctaText }}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {soldOut ? "Sold out" : "Buy now"}
           {!soldOut ? <ArrowRight className="h-4 w-4" /> : null}
         </button>
       </div>
-
-      {/* ── v1 fallback: order via WhatsApp (kept for reference, see src/lib/utils.ts getWhatsAppLink) ──
-      <a href={getWhatsAppLink(product)} target="_blank" className="...">
-        Order on WhatsApp
-      </a>
-      */}
     </div>
   );
 }

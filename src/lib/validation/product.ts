@@ -7,6 +7,9 @@ export const productSchema = z.object({
   category: z.string().max(60),
   price: z.number().min(0),
   oldPrice: z.number().min(0).optional(),
+  sizePrices: z
+    .array(z.object({ size: z.string().min(1), price: z.number().min(0) }))
+    .default([]),
   description: z.string().max(2000).default(""),
   longDescription: z.string().max(6000).optional(),
   images: z.array(z.string().url()).default([]),

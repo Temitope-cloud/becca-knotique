@@ -17,7 +17,7 @@ const STEPS = [
     title: "Browse Designs",
     description: "Explore our collection or share your own vision",
     icon: LayoutGrid,
-    accent: "from-rose-100 to-amber-50 text-rose-800 ring-rose-200/60",
+    accent: "from-emerald-100 to-emerald-50 text-emerald-800 ring-emerald-200/60",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const STEPS = [
     title: "Confirm Order",
     description: "We start crafting your piece with care",
     icon: Sparkles,
-    accent: "from-amber-100 to-orange-50 text-amber-900 ring-amber-200/70",
+    accent: "from-emerald-100 to-orange-50 text-emerald-900 ring-emerald-200/70",
   },
   {
     id: 4,
@@ -53,11 +53,11 @@ const CrochetProcess = () => {
       className="relative scroll-mt-24 overflow-hidden border-t border-stone-200/80 bg-linear-to-b from-[#faf8f5] via-stone-50 to-[#f5f0ea]"
     >
       <div
-        className="pointer-events-none absolute -top-24 right-0 h-64 w-64 rounded-full bg-amber-200/20 blur-3xl"
+        className="pointer-events-none absolute -top-24 right-0 h-64 w-64 rounded-full bg-emerald-200/20 blur-3xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-rose-200/15 blur-3xl"
+        className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-emerald-200/15 blur-3xl"
         aria-hidden
       />
 
@@ -89,7 +89,7 @@ const CrochetProcess = () => {
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex items-center gap-2">
             <span
-              className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-amber-600/90 ring-2 ring-amber-200"
+              className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-emerald-600/90 ring-2 ring-emerald-200"
               aria-hidden
             />
             <p className="text-xs font-semibold tracking-[0.2em] text-stone-500 uppercase">
@@ -132,7 +132,7 @@ const CrochetProcess = () => {
 
           <div className="relative mt-12">
             <span
-              className="absolute top-4 bottom-4 left-4.5 hidden w-px bg-linear-to-b from-stone-300 via-amber-200/80 to-stone-300 md:block"
+              className="absolute top-4 bottom-4 left-4.5 hidden w-px bg-linear-to-b from-stone-300 via-emerald-200/80 to-stone-300 md:block"
               aria-hidden
             />
             <ol className="m-0 list-none space-y-0 p-0">

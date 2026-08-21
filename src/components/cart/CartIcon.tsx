@@ -19,7 +19,7 @@ export default function CartIcon({
     >
       <ShoppingBag className="h-6 w-6" />
       {hydrated && count > 0 ? (
-        <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e3948e] px-1 text-[11px] font-bold text-stone-900">
+        <span className="absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#059669] px-1 text-[11px] font-bold text-stone-900">
           {count > 99 ? "99+" : count}
         </span>
       ) : null}

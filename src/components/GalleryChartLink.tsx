@@ -8,16 +8,16 @@ export default function GalleryChartLink() {
   return (
     <Link
       href="/products/chart"
-      className="group relative mt-5 flex items-stretch gap-0 overflow-hidden rounded-2xl border border-stone-200/90 bg-linear-to-br from-white via-stone-50 to-amber-50/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition hover:border-stone-300 hover:shadow-md"
+      className="group relative mt-5 flex items-stretch gap-0 overflow-hidden rounded-2xl border border-stone-200/90 bg-linear-to-br from-white via-stone-50 to-emerald-50/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] transition hover:border-stone-300 hover:shadow-md"
     >
       <div
-        className="w-1 shrink-0 bg-linear-to-b from-amber-600/85 via-stone-600/70 to-amber-700/75"
+        className="w-1 shrink-0 bg-linear-to-b from-emerald-600/85 via-stone-600/70 to-emerald-700/75"
         aria-hidden
       />
       <div className="flex min-w-0 flex-1 items-center gap-3 px-3.5 py-3.5 sm:gap-4 sm:px-4 sm:py-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-stone-200/80 bg-white shadow-sm ring-1 ring-black/4 transition group-hover:border-amber-200 group-hover:bg-amber-50/60">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-stone-200/80 bg-white shadow-sm ring-1 ring-black/4 transition group-hover:border-emerald-200 group-hover:bg-emerald-50/60">
           <BarChart3
-            className="h-[1.15rem] w-[1.15rem] text-stone-700 transition group-hover:text-amber-950"
+            className="h-[1.15rem] w-[1.15rem] text-stone-700 transition group-hover:text-emerald-950"
             strokeWidth={2}
           />
         </div>

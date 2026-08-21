@@ -67,7 +67,7 @@ const AboutUs = () => {
             {about.map((a, i) => (
               <div
                 key={a.title}
-                className="group rounded-2xl border bg-white/80 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-700/10"
+                className="group rounded-2xl border bg-white/80 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-700/10"
               >
                 <div className="mb-3 flex items-center gap-3">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold">

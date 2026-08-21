@@ -7,3 +7,14 @@ export function formatNaira(amount: number): string {
 export function nairaToKobo(naira: number): number {
   return Math.round(naira * 100);
 }
+
+/** Resolve a product's unit price for a chosen size (falls back to base price). */
+export function priceForSize(
+  basePrice: number,
+  sizePrices: { size: string; price: number }[] | undefined,
+  size: string | undefined,
+): number {
+  if (!size || !sizePrices?.length) return basePrice;
+  const match = sizePrices.find((sp) => sp.size === size);
+  return match && typeof match.price === "number" ? match.price : basePrice;
+}

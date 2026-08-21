@@ -59,7 +59,7 @@ export default async function TrendingPage() {
           {bestSellers.length > 0 ? (
             <section className="mx-auto w-full max-w-7xl px-4 pt-12 sm:px-6">
               <div className="mb-5 flex items-center gap-2">
-                <Flame className="h-5 w-5 text-[#e3948e]" />
+                <Flame className="h-5 w-5 text-[#059669]" />
                 <h2 className="text-xl font-semibold tracking-tight text-stone-900">
                   Best sellers
                 </h2>

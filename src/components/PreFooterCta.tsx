@@ -6,13 +6,13 @@ const PreFooterCta = () => {
   return (
     <section className="w-full px-4 pb-10 sm:px-6 sm:pb-12 md:pb-14">
       <div className="mx-auto max-w-7xl">
-        <div className="relative overflow-hidden rounded-3xl border border-stone-200/80 bg-linear-to-br from-rose-50 via-amber-50 to-white p-7 shadow-[0_24px_70px_-36px_rgba(0,0,0,0.4)] sm:p-9 md:p-12">
+        <div className="relative overflow-hidden rounded-3xl border border-stone-200/80 bg-linear-to-br from-emerald-50 via-white to-white p-7 shadow-[0_24px_70px_-36px_rgba(0,0,0,0.4)] sm:p-9 md:p-12">
           <div
-            className="pointer-events-none absolute -top-12 -right-10 h-36 w-36 rounded-full bg-rose-200/40 blur-3xl"
+            className="pointer-events-none absolute -top-12 -right-10 h-36 w-36 rounded-full bg-emerald-200/40 blur-3xl"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute -bottom-14 -left-10 h-44 w-44 rounded-full bg-amber-200/40 blur-3xl"
+            className="pointer-events-none absolute -bottom-14 -left-10 h-44 w-44 rounded-full bg-emerald-300/30 blur-3xl"
             aria-hidden
           />
 

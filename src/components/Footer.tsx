@@ -90,7 +90,7 @@ const Footer = () => {
       ref={footerRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      className="relative overflow-hidden bg-[#160f09] text-white"
+      className="relative overflow-hidden bg-[#0a0a0a] text-white"
     >
       {/* cursor-following accent glow */}
       <div
@@ -99,7 +99,7 @@ const Footer = () => {
         className="pointer-events-none absolute top-0 left-0 -mt-[300px] -ml-[300px] hidden h-[600px] w-[600px] rounded-full opacity-0 blur-3xl transition-opacity duration-500 will-change-transform lg:block"
         style={{
           background:
-            "radial-gradient(circle, rgba(227,148,142,0.16), transparent 62%)",
+            "radial-gradient(circle, rgba(5,150,105,0.16), transparent 62%)",
         }}
       />
       {/* top hairline */}
@@ -124,7 +124,7 @@ const Footer = () => {
 
             <Link
               href="/contact"
-              className="group mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-white transition hover:border-[#e3948e]/50 hover:bg-[#e3948e]/10"
+              className="group mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-white transition hover:border-[#059669]/50 hover:bg-[#059669]/10"
             >
               Have a custom idea? Let&apos;s make it
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -138,7 +138,7 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-[#e3948e]/50 hover:bg-[#e3948e]/15 hover:text-white focus-visible:ring-2 focus-visible:ring-[#e3948e]/60 focus-visible:outline-none"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-[#059669]/50 hover:bg-[#059669]/15 hover:text-white focus-visible:ring-2 focus-visible:ring-[#059669]/60 focus-visible:outline-none"
                 >
                   <Icon className="h-5 w-5" stroke={1.6} />
                 </a>
@@ -196,14 +196,14 @@ const Footer = () => {
               className="flex items-center gap-1.5 text-xs text-white/60 transition hover:text-white"
             >
               Designed with
-              <Heart className="h-3.5 w-3.5 fill-[#e3948e] text-[#e3948e]" />
+              <Heart className="h-3.5 w-3.5 fill-[#059669] text-[#059669]" />
               by Temi Studio
             </a>
             <button
               type="button"
               onClick={scrollTop}
               aria-label="Back to top"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-[#e3948e]/50 hover:bg-[#e3948e]/15 hover:text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition hover:border-[#059669]/50 hover:bg-[#059669]/15 hover:text-white"
             >
               <ArrowUp className="h-4 w-4" />
             </button>

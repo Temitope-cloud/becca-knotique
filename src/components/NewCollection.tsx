@@ -14,7 +14,7 @@ const NewCollection = ({ products }: { products: CatalogProduct[] }) => {
       className="relative w-full scroll-mt-24 px-4 py-14 sm:px-6 sm:py-16 md:py-20"
     >
       <div
-        className="pointer-events-none absolute inset-x-0 top-6 z-0 mx-auto h-64 max-w-5xl rounded-full bg-amber-200/25 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-6 z-0 mx-auto h-64 max-w-5xl rounded-full bg-emerald-200/25 blur-3xl"
         aria-hidden
       />
 
@@ -24,11 +24,11 @@ const NewCollection = ({ products }: { products: CatalogProduct[] }) => {
           className="relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white/85 p-6 shadow-[0_25px_70px_-35px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-8 md:p-10"
         >
           <div
-            className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-rose-200/35 blur-2xl"
+            className="pointer-events-none absolute -top-12 -right-12 h-36 w-36 rounded-full bg-emerald-200/35 blur-2xl"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-amber-200/30 blur-2xl"
+            className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-emerald-200/30 blur-2xl"
             aria-hidden
           />
 

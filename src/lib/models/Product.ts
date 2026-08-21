@@ -13,6 +13,8 @@ export interface IProduct {
   madefor?: "women" | "men" | "unisex";
   price: number;
   oldPrice?: number;
+  /** Optional absolute price override per size (e.g. XL costs more). */
+  sizePrices: { size: string; price: number }[];
   currency: "NGN";
   description: string;
   longDescription?: string;
@@ -43,6 +45,15 @@ const ProductSchema = new Schema<IProduct>(
     madefor: { type: String, enum: ["women", "men", "unisex"], default: "women" },
     price: { type: Number, required: true, min: 0 },
     oldPrice: { type: Number, min: 0 },
+    sizePrices: {
+      type: [
+        new Schema<{ size: string; price: number }>(
+          { size: String, price: Number },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
     currency: { type: String, default: "NGN" },
     description: { type: String, default: "" },
     longDescription: { type: String },

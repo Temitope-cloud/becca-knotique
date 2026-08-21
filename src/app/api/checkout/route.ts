@@ -6,6 +6,7 @@ import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrderItem } from "@/lib/models/Order";
 import { Coupon, computeCouponDiscount } from "@/lib/models/Coupon";
 import { getProductById, getProductBySlug } from "@/lib/catalog";
+import { priceForSize } from "@/lib/money";
 import { getSettings, shippingFeeFor } from "@/lib/settings";
 import { paystackInitialize } from "@/lib/paystack";
 
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
       slug: product.slug,
       name: product.name,
       image: product.images?.[0] ?? product.image,
-      price: product.price,
+      price: priceForSize(product.price, product.sizePrices, line.size),
       quantity: line.quantity,
       size: line.size,
       color: line.color,

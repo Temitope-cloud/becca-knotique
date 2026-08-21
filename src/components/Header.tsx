@@ -78,7 +78,7 @@ const Header = () => {
   };
 
   const linkClass =
-    "block border-b border-white/10 py-4 text-2xl font-light tracking-wide text-white transition-colors hover:text-amber-100 sm:text-3xl";
+    "block border-b border-white/10 py-4 text-2xl font-light tracking-wide text-white transition-colors hover:text-emerald-300 sm:text-3xl";
 
   const navLinkClass =
     "whitespace-nowrap text-[15px] font-light tracking-wide text-white transition-colors hover:text-white/90";
@@ -86,7 +86,7 @@ const Header = () => {
   return (
     <>
       <header
-        className={`relative z-50 flex items-center justify-between gap-6 border-b border-b-gray-100/60 ${!Homepage && "bg-amber-950/70"} px-4 py-4 sm:px-6 lg:gap-8 lg:px-8`}
+        className={`relative z-50 flex items-center justify-between gap-6 border-b border-b-white/15 ${!Homepage && "bg-neutral-950/85 backdrop-blur"} px-4 py-4 sm:px-6 lg:gap-8 lg:px-8`}
       >
         <div className="z-60 shrink-0">
           <Link
@@ -220,7 +220,7 @@ const Header = () => {
                 >
                   Cart
                   {hydrated && count > 0 ? (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#e3948e] px-1 text-[11px] font-bold text-stone-900">
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#059669] px-1 text-[11px] font-bold text-stone-900">
                       {count > 99 ? "99+" : count}
                     </span>
                   ) : null}

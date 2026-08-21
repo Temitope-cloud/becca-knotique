@@ -107,13 +107,13 @@ export default function OrderTimeline({ order }: { order: TimelineOrder }) {
                 step.done
                   ? "border-stone-900 bg-stone-900 text-white"
                   : isCurrent
-                    ? "border-[#e3948e] bg-[#e3948e]/15 text-[#b06a63]"
+                    ? "border-[#059669] bg-[#059669]/15 text-[#047857]"
                     : "border-stone-200 bg-white text-stone-300"
               }`}
             >
               <Icon className="h-4 w-4" />
               {isCurrent ? (
-                <span className="absolute inset-0 animate-ping rounded-full border-2 border-[#e3948e]/50" />
+                <span className="absolute inset-0 animate-ping rounded-full border-2 border-[#059669]/50" />
               ) : null}
             </span>
 

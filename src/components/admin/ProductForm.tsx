@@ -13,6 +13,7 @@ export interface ProductInput {
   category: string;
   price: number;
   oldPrice?: number;
+  sizePrices?: { size: string; price: number }[];
   description: string;
   longDescription?: string;
   images: string[];
@@ -46,6 +47,9 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     description: product?.description ?? "",
     longDescription: product?.longDescription ?? "",
     sizes: (product?.sizes ?? []).join(", "),
+    sizePrices: (product?.sizePrices ?? [])
+      .map((sp) => `${sp.size}:${sp.price}`)
+      .join(", "),
     colors: (product?.colors ?? []).join(", "),
     stockCount: product?.stockCount?.toString() ?? "10",
     inStock: product?.inStock ?? true,
@@ -84,6 +88,15 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       longDescription: form.longDescription.trim() || undefined,
       images,
       sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
+      sizePrices: form.sizePrices
+        .split(",")
+        .map((pair) => pair.trim())
+        .filter(Boolean)
+        .map((pair) => {
+          const [size, price] = pair.split(":").map((x) => x.trim());
+          return { size, price: Number(price) };
+        })
+        .filter((sp) => sp.size && Number.isFinite(sp.price) && sp.price > 0),
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
       stockCount: form.stockCount ? Number(form.stockCount) : undefined,
       inStock: form.inStock,
@@ -241,6 +254,21 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               placeholder="S, M, L"
               className={input}
             />
+          </div>
+          <div className="sm:col-span-2">
+            <label className={label}>
+              Per-size prices (optional) — overrides base price
+            </label>
+            <input
+              value={form.sizePrices}
+              onChange={set("sizePrices")}
+              placeholder="S:100000, M:100000, L:110000, XL:120000"
+              className={input}
+            />
+            <p className="mt-1 text-xs text-stone-400">
+              Format: SIZE:PRICE, comma separated. Sizes not listed use the base
+              price.
+            </p>
           </div>
           <div>
             <label className={label}>Colors (comma separated)</label>

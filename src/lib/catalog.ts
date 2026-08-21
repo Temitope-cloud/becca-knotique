@@ -13,6 +13,7 @@ export interface CatalogProduct {
   madefor?: string;
   price: number;
   oldPrice?: number;
+  sizePrices: { size: string; price: number }[];
   currency: "NGN";
   description: string;
   longDescription?: string;
@@ -42,6 +43,7 @@ function fromDoc(doc: IProduct): CatalogProduct {
     madefor: doc.madefor,
     price: doc.price,
     oldPrice: doc.oldPrice,
+    sizePrices: (doc.sizePrices ?? []).map((sp) => ({ size: sp.size, price: sp.price })),
     currency: "NGN",
     description: doc.description ?? "",
     longDescription: doc.longDescription,
@@ -73,6 +75,7 @@ function fromStatic(p: (typeof staticProducts)[number]): CatalogProduct {
     madefor: p.madefor,
     price: p.price,
     oldPrice: p.oldPrice,
+    sizePrices: [],
     currency: "NGN",
     description: p.description ?? "",
     longDescription: p.longDescription,

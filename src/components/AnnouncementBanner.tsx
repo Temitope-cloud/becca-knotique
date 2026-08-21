@@ -15,7 +15,7 @@ export default function AnnouncementBanner() {
   if (!text) return null;
 
   return (
-    <div className="bg-stone-900 px-4 py-2 text-center text-xs font-medium tracking-wide text-white sm:text-sm">
+    <div className="bg-emerald-700 px-4 py-2 text-center text-xs font-medium tracking-wide text-white sm:text-sm">
       {text}
     </div>
   );

@@ -107,12 +107,6 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
   const validProducts = await getAllProducts();
 
   const gallery = galleryImages(product);
-  const discount =
-    typeof product.oldPrice === "number" && product.oldPrice > product.price
-      ? Math.round(
-          ((product.oldPrice - product.price) / product.oldPrice) * 100,
-        )
-      : null;
 
   const relatedProducts = validProducts
     .filter(
@@ -159,7 +153,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
       <ProductViewTracker slug={product.slug} />
       <main className="relative min-h-screen w-full bg-stone-50 pb-16">
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-amber-100/55 via-rose-50/35 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-80 bg-linear-to-b from-emerald-100/50 via-emerald-50/30 to-transparent"
         aria-hidden
       />
 
@@ -179,7 +173,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
           </div>
 
           <div className="flex flex-col">
-            <p className="inline-flex w-fit items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-rose-700 uppercase">
+            <p className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-emerald-700 uppercase">
               <Sparkles className="h-3.5 w-3.5" />
               Handmade premium
             </p>
@@ -191,23 +185,22 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
               {product.longDescription || product.description}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <p className="text-4xl font-semibold tracking-tight text-stone-900">
-                {formatPrice(product.price)}
-              </p>
-              {product.oldPrice ? (
-                <p className="text-xl text-stone-400 line-through">
-                  {formatPrice(product.oldPrice)}
-                </p>
-              ) : null}
-              {discount ? (
-                <span className="rounded-full bg-emerald-700/10 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-900 uppercase">
-                  Save {discount}%
-                </span>
-              ) : null}
-            </div>
+            <ProductPurchasePanel
+              product={{
+                id: product.id,
+                slug: product.slug,
+                name: product.name,
+                price: product.price,
+                oldPrice: product.oldPrice,
+                sizePrices: product.sizePrices,
+                image: product.images?.[0] ?? product.image,
+                sizes: product.sizes,
+                colors: product.colors,
+                inStock: product.inStock,
+              }}
+            />
 
-            <div className="mt-5 grid grid-cols-1 gap-3 rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4 sm:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 rounded-2xl border border-stone-200/80 bg-stone-50/70 p-4 sm:grid-cols-3">
               <div className="flex items-center gap-2 text-sm font-medium text-stone-700">
                 <Truck className="h-4 w-4 text-stone-900" />
                 Fast shipping
@@ -223,19 +216,6 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
             </div>
 
             <ProductRevisitNudge slug={product.slug} />
-
-            <ProductPurchasePanel
-              product={{
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                price: product.price,
-                image: product.images?.[0] ?? product.image,
-                sizes: product.sizes,
-                colors: product.colors,
-                inStock: product.inStock,
-              }}
-            />
 
             {/* v1 fallback — order on WhatsApp (disabled while Paystack checkout is live):
             <a

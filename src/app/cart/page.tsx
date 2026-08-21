@@ -211,7 +211,7 @@ export default function CartPage() {
                 </span>
               </div>
               {coupon ? (
-                <div className="flex items-center justify-between text-[#b06a63]">
+                <div className="flex items-center justify-between text-[#047857]">
                   <span>Discount ({coupon.code})</span>
                   <span className="font-medium">
                     −{formatNaira(coupon.discount)}
