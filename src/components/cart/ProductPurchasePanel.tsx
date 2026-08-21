@@ -43,6 +43,16 @@ const COLOR_MAP: Record<string, string> = {
   terracotta: "#c56b4a",
   rose: "#e11d48",
   pink: "#ec4899",
+  blush: "#e8b4b8",
+  magenta: "#c026d3",
+  fuchsia: "#c026d3",
+  burgundy: "#7b1e3a",
+  wine: "#7b1e3a",
+  coral: "#f97362",
+  peach: "#ffb997",
+  lavender: "#b57edc",
+  mint: "#3eb489",
+  beige: "#e3d5b8",
   lilac: "#b57edc",
   purple: "#7c3aed",
   blue: "#2563eb",
@@ -65,6 +75,35 @@ function resolveColor(name?: string): string | null {
     if (key.includes(k)) return COLOR_MAP[k];
   }
   return null;
+}
+
+/** Resolve every colour named in a combo like "Magenta, Blush & Cream". */
+function resolveColors(name?: string): string[] {
+  if (!name) return [];
+  const parts = name
+    .split(/[,/&]|\band\b/i)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const hexes = parts
+    .map((p) => resolveColor(p))
+    .filter((x): x is string => Boolean(x));
+  if (hexes.length) return Array.from(new Set(hexes));
+  const single = resolveColor(name);
+  return single ? [single] : [];
+}
+
+/** CSS background for a swatch: solid for one colour, a gradient for a combo. */
+function swatchBackground(colors: string[]): string | undefined {
+  if (colors.length === 0) return undefined;
+  if (colors.length === 1) return colors[0];
+  const stops = colors
+    .map((c, i) => {
+      const from = Math.round((i / colors.length) * 100);
+      const to = Math.round(((i + 1) / colors.length) * 100);
+      return `${c} ${from}% ${to}%`;
+    })
+    .join(", ");
+  return `linear-gradient(135deg, ${stops})`;
 }
 
 /** "As pictured" / "As shown in the image" style options use the photo itself. */
@@ -119,10 +158,10 @@ export default function ProductPurchasePanel({
       ? Math.round(((product.oldPrice - unitPrice) / product.oldPrice) * 100)
       : null;
 
-  // CTA colour follows the selected colour (falls back to brand black).
-  // "As pictured" has no single colour, so keep the brand black.
-  const swatch = isAsPictured(color) ? null : resolveColor(color);
-  const ctaBg = swatch ?? "#111827";
+  // CTA colour follows the selected colour when it's a single, clear colour.
+  // "As pictured" or multi-colour combos keep the brand black to avoid clashing.
+  const selectedColors = isAsPictured(color) ? [] : resolveColors(color);
+  const ctaBg = selectedColors.length === 1 ? selectedColors[0] : "#111827";
   const ctaText = isLight(ctaBg) ? "#111827" : "#ffffff";
 
   function buildItem() {
@@ -204,8 +243,8 @@ export default function ProductPurchasePanel({
           <p className="mb-2 text-sm font-medium text-stone-700">Color</p>
           <div className="flex flex-wrap gap-2">
             {product.colors.map((c) => {
-              const dot = resolveColor(c);
               const pictured = isAsPictured(c);
+              const dotBg = swatchBackground(resolveColors(c));
               return (
                 <Tooltip
                   key={c}
@@ -231,10 +270,10 @@ export default function ProductPurchasePanel({
                           className="h-full w-full object-cover"
                         />
                       </span>
-                    ) : dot ? (
+                    ) : dotBg ? (
                       <span
                         className="h-3.5 w-3.5 rounded-full ring-1 ring-black/10"
-                        style={{ backgroundColor: dot }}
+                        style={{ background: dotBg }}
                       />
                     ) : null}
                     {c}
