@@ -13,23 +13,23 @@ const MIN_VISITS = 4;
 function pickLine(slug: string, count: number): string {
   const linesLow = [
     (n: number) =>
-      `Seems you're lowkey obsessed with this piece 🤭 Just buy it when you're ready.`,
+      `Seems you're lowkey obsessed with this piece 🤭 Add it to your cart when you're ready.`,
     (n: number) =>
-      `${n} visits in and we're not even mad 👀 Tap WhatsApp when you're ready.`,
+      `${n} visits in and we're not even mad 👀 It's right here whenever you're ready.`,
     (n: number) =>
       `You really like this one, huh? We'd love to make it yours 😄`,
     (n: number) =>
       `This page knows you by name now 🤭 No pressure, order when it feels right.`,
     (n: number) =>
-      `The way you keep coming back… we respect it. Say hi below anytime.`,
+      `The way you keep coming back… we respect it 💚`,
     (n: number) =>
-      `Lowkey crushing on this fit? Same. WhatsApp us when you're ready 💚`,
+      `Lowkey crushing on this fit? Same. Add to cart when you're ready 💚`,
   ];
   const linesHigh = [
     (n: number) =>
-      `${n} peeks?! Okay champion 🤭 You've earned it. Tap below.`,
+      `${n} peeks?! Okay champion 🤭 You've earned it — add it to your cart.`,
     (n: number) =>
-      `At this point you and this piece are in a situationship 😄 Close it out on WhatsApp?`,
+      `At this point you and this piece are in a situationship 😄 Make it official?`,
   ];
 
   const pool = count >= 10 ? [...linesLow, ...linesHigh] : linesLow;
@@ -77,7 +77,7 @@ export default function ProductRevisitNudge({
   if (!line || count < MIN_VISITS) return null;
 
   return (
-    <div className="mt-6 rounded-2xl border border-emerald-200/70 bg-linear-to-br from-emerald-50/90 to-orange-50/40 p-4 sm:p-5">
+    <div className="mt-6 rounded-2xl border border-emerald-200/70 bg-linear-to-br from-emerald-50/90 to-white p-4 sm:p-5">
       <div className="flex gap-3 sm:gap-4">
         <div
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/70 text-emerald-800 shadow-sm ring-1 ring-emerald-200/60"

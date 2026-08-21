@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Check, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira, priceForSize } from "@/lib/money";
+import Tooltip from "@/components/ui/Tooltip";
 
 export interface PurchaseProduct {
   id: string;
@@ -66,6 +67,29 @@ function resolveColor(name?: string): string | null {
   return null;
 }
 
+/** "As pictured" / "As shown in the image" style options use the photo itself. */
+function isAsPictured(name?: string): boolean {
+  if (!name) return false;
+  const k = name.toLowerCase();
+  return (
+    k === "as it is" ||
+    [
+      "as pictured",
+      "as shown",
+      "as in image",
+      "as in the image",
+      "as it is in the image",
+      "as displayed",
+      "as seen",
+      "as photographed",
+      "picture colour",
+      "picture color",
+      "image colour",
+      "image color",
+    ].some((p) => k.includes(p))
+  );
+}
+
 function isLight(hex: string): boolean {
   const h = hex.replace("#", "");
   const r = parseInt(h.slice(0, 2), 16);
@@ -96,7 +120,8 @@ export default function ProductPurchasePanel({
       : null;
 
   // CTA colour follows the selected colour (falls back to brand black).
-  const swatch = resolveColor(color);
+  // "As pictured" has no single colour, so keep the brand black.
+  const swatch = isAsPictured(color) ? null : resolveColor(color);
   const ctaBg = swatch ?? "#111827";
   const ctaText = isLight(ctaBg) ? "#111827" : "#ffffff";
 
@@ -180,25 +205,41 @@ export default function ProductPurchasePanel({
           <div className="flex flex-wrap gap-2">
             {product.colors.map((c) => {
               const dot = resolveColor(c);
+              const pictured = isAsPictured(c);
               return (
-                <button
+                <Tooltip
                   key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium capitalize transition ${
-                    color === c
-                      ? "border-stone-900 bg-stone-900 text-white"
-                      : "border-stone-300 text-stone-700 hover:border-stone-500"
-                  }`}
+                  label={
+                    pictured ? "Colour exactly as shown in the photos" : c
+                  }
                 >
-                  {dot ? (
-                    <span
-                      className="h-3.5 w-3.5 rounded-full ring-1 ring-black/10"
-                      style={{ backgroundColor: dot }}
-                    />
-                  ) : null}
-                  {c}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setColor(c)}
+                    className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium capitalize transition ${
+                      color === c
+                        ? "border-stone-900 bg-stone-900 text-white"
+                        : "border-stone-300 text-stone-700 hover:border-stone-500"
+                    }`}
+                  >
+                    {pictured && product.image ? (
+                      <span className="h-4 w-4 overflow-hidden rounded-full ring-1 ring-black/10">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={product.image}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </span>
+                    ) : dot ? (
+                      <span
+                        className="h-3.5 w-3.5 rounded-full ring-1 ring-black/10"
+                        style={{ backgroundColor: dot }}
+                      />
+                    ) : null}
+                    {c}
+                  </button>
+                </Tooltip>
               );
             })}
           </div>

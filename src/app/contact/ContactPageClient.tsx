@@ -12,19 +12,19 @@ const ContactPageClient = () => {
       title: "Email",
       label: "beccasknotique@gmail.com",
       href: "mailto:beccasknotique@gmail.com",
-      classname: "text-sm  font-semibold text-[#863d20]",
+      classname: "text-sm  font-semibold text-[#059669]",
     },
     {
       title: "Whatsapp",
       label: "chat on whatsapp",
       href: "https://wa.me/2348029086678",
-      classname: "text-sm  font-semibold text-[#863d20]",
+      classname: "text-sm  font-semibold text-[#059669]",
     },
     {
       title: "Phone",
       label: "+234 902 428 4905",
       href: "tel:+2349024284905",
-      classname: "text-sm  font-semibold text-[#863d20]",
+      classname: "text-sm  font-semibold text-[#059669]",
     },
     { title: "Location", label: "Nigeria", href: "#" },
   ];
@@ -63,7 +63,7 @@ const ContactPageClient = () => {
                 <Link
                   href="https://wa.me/2348029086678"
                   target="_blank"
-                  className="flex items-center gap-0.5 font-semibold text-blue-900"
+                  className="flex items-center gap-0.5 font-semibold text-[#059669]"
                 >
                   Contact us on whatsapp <IconBrandWhatsapp size={20} />
                 </Link>
