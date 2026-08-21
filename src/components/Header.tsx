@@ -139,39 +139,30 @@ const Header = () => {
             <User className="h-5 w-5" />
             <span>{session?.user ? "Account" : "Sign in"}</span>
           </Link>
-          <Link
-            href="/our-story"
-            className="rounded-md border border-white/35 bg-white/10 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-white/15"
-          >
-            Our Story
-          </Link>
         </div>
 
-        <div
-          className={`group z-60 flex cursor-pointer flex-col items-end lg:hidden ${menuClicked ? "gap-0" : "gap-2"}`}
+        <button
+          type="button"
           onClick={handleMenuClick}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleMenuClick();
-            }
-          }}
           aria-expanded={menuClicked}
           aria-controls="mobile-navigation"
           aria-label={menuClicked ? "Close menu" : "Open menu"}
+          className="group z-60 -mr-2 flex h-11 w-11 shrink-0 items-center justify-center lg:hidden"
         >
           <span
-            className={`h-0.5 bg-white transition-all duration-300 ${menuClicked ? "w-10" : "w-5 group-hover:w-10"}`}
-          />
-          <span
-            className={`h-0.5 w-10 bg-white transition-all duration-300 ${menuClicked ? "hidden" : "block"} `}
-          />
-          <span
-            className={`h-0.5 bg-white transition-all duration-300 ${menuClicked ? "w-10 rotate-90" : "w-5 group-hover:w-10"}`}
-          />
-        </div>
+            className={`flex flex-col items-end ${menuClicked ? "gap-0" : "gap-2"}`}
+          >
+            <span
+              className={`h-0.5 bg-white transition-all duration-300 ${menuClicked ? "w-8" : "w-5 group-hover:w-8"}`}
+            />
+            <span
+              className={`h-0.5 w-8 bg-white transition-all duration-300 ${menuClicked ? "hidden" : "block"} `}
+            />
+            <span
+              className={`h-0.5 bg-white transition-all duration-300 ${menuClicked ? "w-8 rotate-90" : "w-5 group-hover:w-8"}`}
+            />
+          </span>
+        </button>
 
         <div
           ref={menuRef}
