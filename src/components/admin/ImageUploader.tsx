@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
 import { ImagePlus, X, Plus } from "lucide-react";
 
@@ -20,6 +20,10 @@ export default function ImageUploader({
   onChange: (urls: string[]) => void;
 }) {
   const [manualUrl, setManualUrl] = useState("");
+  // Always holds the latest images so rapid multi-file uploads accumulate
+  // instead of each onSuccess overwriting the last (stale-closure fix).
+  const valueRef = useRef(value);
+  valueRef.current = value;
   const remove = (url: string) => onChange(value.filter((u) => u !== url));
 
   const addManual = () => {
@@ -64,7 +68,11 @@ export default function ImageUploader({
               const info = result?.info;
               if (info && typeof info === "object" && "secure_url" in info) {
                 const url = (info as { secure_url: string }).secure_url;
-                if (url && !value.includes(url)) onChange([...value, url]);
+                if (url && !valueRef.current.includes(url)) {
+                  const next = [...valueRef.current, url];
+                  valueRef.current = next; // accumulate across rapid callbacks
+                  onChange(next);
+                }
               }
             }}
           >
