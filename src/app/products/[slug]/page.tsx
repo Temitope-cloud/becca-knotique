@@ -13,6 +13,7 @@ import ProductGallery from "@/components/ProductGallery";
 import ProductRevisitNudge from "@/components/ProductRevisitNudge";
 import ProductViewTracker from "@/components/ProductViewTracker";
 import ProductPurchasePanel from "@/components/cart/ProductPurchasePanel";
+import ShareButton from "@/components/ShareButton";
 // v1 ordered via WhatsApp — kept in src/lib/utils.ts (getWhatsAppLink) as a fallback.
 
 type ProductDetailsProps = {
@@ -173,10 +174,16 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
           </div>
 
           <div className="flex flex-col">
-            <p className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-emerald-700 uppercase">
-              <Sparkles className="h-3.5 w-3.5" />
-              Handmade premium
-            </p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold tracking-[0.16em] text-emerald-700 uppercase">
+                <Sparkles className="h-3.5 w-3.5" />
+                Handmade premium
+              </p>
+              <ShareButton
+                url={`${SITE_URL}/products/${product.slug}`}
+                title={product.name}
+              />
+            </div>
 
             <h1 className="mt-4 text-4xl leading-tight font-semibold tracking-tight text-stone-900 sm:text-5xl">
               {product.name}
