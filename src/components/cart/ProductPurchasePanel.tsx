@@ -162,7 +162,13 @@ export default function ProductPurchasePanel({
   // "As pictured" or multi-colour combos keep the brand black to avoid clashing.
   const selectedColors = isAsPictured(color) ? [] : resolveColors(color);
   const ctaBg = selectedColors.length === 1 ? selectedColors[0] : "#111827";
-  const ctaText = isLight(ctaBg) ? "#111827" : "#ffffff";
+  const bgIsLight = isLight(ctaBg);
+  const ctaText = bgIsLight ? "#111827" : "#ffffff";
+  // Outlined "Add to cart": a light swatch would be invisible as border+text on
+  // white, so fall back to brand black. The filled "Buy now" also gets a subtle
+  // border when its fill is light so it stays delineated from the page.
+  const outlineColor = bgIsLight ? "#111827" : ctaBg;
+  const filledBorder = bgIsLight ? "rgba(0,0,0,0.12)" : ctaBg;
 
   function buildItem() {
     return {
@@ -315,7 +321,7 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleAdd}
           disabled={soldOut}
-          style={{ borderColor: ctaBg, color: ctaBg }}
+          style={{ borderColor: outlineColor, color: outlineColor }}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 bg-white px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {added ? (
@@ -332,8 +338,12 @@ export default function ProductPurchasePanel({
           type="button"
           onClick={handleBuyNow}
           disabled={soldOut}
-          style={{ backgroundColor: ctaBg, color: ctaText }}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            backgroundColor: ctaBg,
+            color: ctaText,
+            borderColor: filledBorder,
+          }}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {soldOut ? "Sold out" : "Buy now"}
           {!soldOut ? <ArrowRight className="h-4 w-4" /> : null}
