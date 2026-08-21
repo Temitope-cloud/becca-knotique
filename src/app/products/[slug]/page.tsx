@@ -180,7 +180,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
                 Handmade premium
               </p>
               <ShareButton
-                url={`${SITE_URL}/products/${product.slug}`}
+                path={`/products/${product.slug}`}
                 title={product.name}
               />
             </div>

@@ -9,24 +9,30 @@ import {
 } from "@tabler/icons-react";
 
 export default function ShareButton({
-  url,
+  path,
   title,
   className = "",
 }: {
-  url: string;
+  /** Relative path, e.g. "/products/golden-hour". The absolute URL is built
+   *  from the runtime origin so it always matches the domain the site is on. */
+  path: string;
   title: string;
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
+  const [origin, setOrigin] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setOrigin(window.location.origin);
     setCanNativeShare(
       typeof navigator !== "undefined" && typeof navigator.share === "function",
     );
   }, []);
+
+  const url = `${origin}${path}`;
 
   // close on outside click / escape
   useEffect(() => {
