@@ -40,8 +40,9 @@ function ranges(period: Period): {
       return { from, to: now, prevFrom, prevTo: from };
     }
     case "week": {
-      const from = new Date(now);
-      from.setDate(from.getDate() - 7);
+      // Calendar week starting Sunday (getDay(): 0 = Sunday).
+      const from = startOfDay(now);
+      from.setDate(from.getDate() - now.getDay());
       const prevFrom = new Date(from);
       prevFrom.setDate(prevFrom.getDate() - 7);
       return { from, to: now, prevFrom, prevTo: from };
