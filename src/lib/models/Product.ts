@@ -31,6 +31,9 @@ export interface IProduct {
   infos: IProductInfo[];
   featured: boolean;
   active: boolean;
+  /** COGS inputs (NGN) — direct material and packaging cost per unit. */
+  materialCost?: number;
+  packagingCost?: number;
   /** "published" shows on the storefront; "draft" is saved but hidden. */
   status: "published" | "draft";
   /** soft delete */
@@ -78,6 +81,8 @@ const ProductSchema = new Schema<IProduct>(
     },
     featured: { type: Boolean, default: false, index: true },
     active: { type: Boolean, default: true, index: true },
+    materialCost: { type: Number, min: 0, default: 0 },
+    packagingCost: { type: Number, min: 0, default: 0 },
     status: {
       type: String,
       enum: ["published", "draft"],

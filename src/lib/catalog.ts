@@ -26,6 +26,8 @@ export interface CatalogProduct {
   rating?: number;
   inStock: boolean;
   stockCount?: number;
+  materialCost?: number;
+  packagingCost?: number;
   tags: string[];
   infos: { label: string }[];
   featured: boolean;
@@ -58,6 +60,8 @@ function fromDoc(doc: IProduct): CatalogProduct {
     rating: doc.rating,
     inStock: doc.inStock !== false,
     stockCount: doc.stockCount,
+    materialCost: doc.materialCost,
+    packagingCost: doc.packagingCost,
     tags: doc.tags ?? [],
     infos: (doc.infos ?? []).map((i) => ({ label: i.label })),
     featured: !!doc.featured,

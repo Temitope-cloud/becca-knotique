@@ -24,6 +24,8 @@ export interface ProductInput {
   sizes: string[];
   colors: string[];
   stockCount?: number;
+  materialCost?: number;
+  packagingCost?: number;
   inStock: boolean;
   featured: boolean;
   active: boolean;
@@ -59,6 +61,8 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       .join(", "),
     colors: (product?.colors ?? []).join(", "),
     stockCount: product?.stockCount?.toString() ?? "10",
+    materialCost: product?.materialCost?.toString() ?? "",
+    packagingCost: product?.packagingCost?.toString() ?? "",
     inStock: product?.inStock ?? true,
     featured: product?.featured ?? false,
     active: product?.active ?? true,
@@ -115,6 +119,10 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
         .filter((sp) => sp.size && Number.isFinite(sp.price) && sp.price > 0),
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
       stockCount: form.stockCount ? Number(form.stockCount) : undefined,
+      materialCost: form.materialCost ? Number(form.materialCost) : undefined,
+      packagingCost: form.packagingCost
+        ? Number(form.packagingCost)
+        : undefined,
       inStock: form.inStock,
       featured: form.featured,
       active: form.active,
@@ -326,6 +334,32 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               className={input}
             />
           </div>
+          <div>
+            <label className={label}>Material cost (₦, per unit)</label>
+            <input
+              type="number"
+              min="0"
+              value={form.materialCost}
+              onChange={set("materialCost")}
+              placeholder="e.g. 9500"
+              className={input}
+            />
+          </div>
+          <div>
+            <label className={label}>Packaging cost (₦, per unit)</label>
+            <input
+              type="number"
+              min="0"
+              value={form.packagingCost}
+              onChange={set("packagingCost")}
+              placeholder="e.g. 1000"
+              className={input}
+            />
+          </div>
+          <p className="text-xs text-stone-400 sm:col-span-2">
+            Material + packaging cost feed Cost of Goods (COGS) in Finance, so
+            profit is calculated correctly. Leave blank if unknown.
+          </p>
         </div>
       </div>
 

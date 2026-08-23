@@ -5,6 +5,7 @@ import { Product } from "@/lib/models/Product";
 import { Coupon } from "@/lib/models/Coupon";
 import { paystackVerify } from "@/lib/paystack";
 import { sendOrderEmails } from "@/lib/email";
+import { createOrderFinanceEntries } from "@/lib/finance";
 
 /** Reduce stock levels and bump coupon usage once, when an order is paid. */
 async function applyPaidSideEffects(order: IOrder): Promise<void> {
@@ -54,6 +55,7 @@ export async function markOrderPaid(
   const fresh = await Order.findOne({ reference }).lean<IOrder>();
   if (fresh) {
     await applyPaidSideEffects(fresh);
+    await createOrderFinanceEntries(fresh);
     await sendOrderEmails(fresh);
   }
   return true;

@@ -45,6 +45,8 @@ export default async function EditProductPage({
           colors: product.colors,
           stockCount: product.stockCount,
           inStock: product.inStock,
+          materialCost: product.materialCost,
+          packagingCost: product.packagingCost,
           featured: product.featured,
           active: product.active,
           status: product.status,

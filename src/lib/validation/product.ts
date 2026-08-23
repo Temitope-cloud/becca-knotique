@@ -20,6 +20,8 @@ export const productSchema = z.object({
   sizes: z.array(z.string()).default([]),
   colors: z.array(z.string()).default([]),
   stockCount: z.number().min(0).optional(),
+  materialCost: z.number().min(0).optional(),
+  packagingCost: z.number().min(0).optional(),
   inStock: z.boolean().default(true),
   featured: z.boolean().default(false),
   active: z.boolean().default(true),
