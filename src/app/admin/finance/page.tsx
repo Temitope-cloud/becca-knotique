@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { computeOverview, type FinanceOverview } from "@/lib/finance";
 import { formatNaira } from "@/lib/money";
 import FinanceTabs from "@/components/admin/finance/FinanceTabs";
+import SyncOrdersButton from "@/components/admin/finance/SyncOrdersButton";
 
 type Period =
   | "today"
@@ -145,13 +146,16 @@ export default async function FinanceOverviewPage({
 
   return (
     <div className="px-5 py-8 sm:px-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
-          Finance
-        </h1>
-        <p className="mt-1 text-sm text-stone-500">
-          Money in is not the same as money made. Here&apos;s the real picture.
-        </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
+            Finance
+          </h1>
+          <p className="mt-1 text-sm text-stone-500">
+            Money in is not the same as money made. Here&apos;s the real picture.
+          </p>
+        </div>
+        <SyncOrdersButton />
       </div>
 
       <FinanceTabs />
