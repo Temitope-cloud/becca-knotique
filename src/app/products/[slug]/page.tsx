@@ -203,6 +203,8 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
                 image: product.images?.[0] ?? product.image,
                 sizes: product.sizes,
                 colors: product.colors,
+                measurementFields: product.measurementFields,
+                allowCustomColor: product.allowCustomColor,
                 inStock: product.inStock,
               }}
             />

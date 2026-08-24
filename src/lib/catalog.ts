@@ -14,6 +14,9 @@ export interface CatalogProduct {
   price: number;
   oldPrice?: number;
   sizePrices: { size: string; price: number }[];
+  sizeMaterialCosts: { size: string; cost: number }[];
+  measurementFields: { label: string; unit?: string; guide?: string }[];
+  allowCustomColor: boolean;
   currency: "NGN";
   description: string;
   longDescription?: string;
@@ -48,6 +51,16 @@ function fromDoc(doc: IProduct): CatalogProduct {
     price: doc.price,
     oldPrice: doc.oldPrice,
     sizePrices: (doc.sizePrices ?? []).map((sp) => ({ size: sp.size, price: sp.price })),
+    sizeMaterialCosts: (doc.sizeMaterialCosts ?? []).map((sc) => ({
+      size: sc.size,
+      cost: sc.cost,
+    })),
+    measurementFields: (doc.measurementFields ?? []).map((m) => ({
+      label: m.label,
+      unit: m.unit,
+      guide: m.guide,
+    })),
+    allowCustomColor: !!doc.allowCustomColor,
     currency: "NGN",
     description: doc.description ?? "",
     longDescription: doc.longDescription,
@@ -84,6 +97,9 @@ function fromStatic(p: (typeof staticProducts)[number]): CatalogProduct {
     price: p.price,
     oldPrice: p.oldPrice,
     sizePrices: [],
+    sizeMaterialCosts: [],
+    measurementFields: [],
+    allowCustomColor: false,
     currency: "NGN",
     description: p.description ?? "",
     longDescription: p.longDescription,

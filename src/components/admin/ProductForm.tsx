@@ -18,6 +18,9 @@ export interface ProductInput {
   price: number;
   oldPrice?: number;
   sizePrices?: { size: string; price: number }[];
+  sizeMaterialCosts?: { size: string; cost: number }[];
+  measurementFields?: { label: string; unit?: string; guide?: string }[];
+  allowCustomColor?: boolean;
   description: string;
   longDescription?: string;
   images: string[];
@@ -63,6 +66,13 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     stockCount: product?.stockCount?.toString() ?? "10",
     materialCost: product?.materialCost?.toString() ?? "",
     packagingCost: product?.packagingCost?.toString() ?? "",
+    sizeMaterialCosts: (product?.sizeMaterialCosts ?? [])
+      .map((sc) => `${sc.size}:${sc.cost}`)
+      .join(", "),
+    measurementFields: (product?.measurementFields ?? [])
+      .map((m) => [m.label, m.unit ?? "", m.guide ?? ""].join(" | "))
+      .join("\n"),
+    allowCustomColor: product?.allowCustomColor ?? false,
     inStock: product?.inStock ?? true,
     featured: product?.featured ?? false,
     active: product?.active ?? true,
@@ -117,6 +127,31 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
           return { size, price: Number(price) };
         })
         .filter((sp) => sp.size && Number.isFinite(sp.price) && sp.price > 0),
+      sizeMaterialCosts: form.sizeMaterialCosts
+        .split(",")
+        .map((pair) => pair.trim())
+        .filter(Boolean)
+        .map((pair) => {
+          const [size, cost] = pair.split(":").map((x) => x.trim());
+          return { size, cost: Number(cost) };
+        })
+        .filter((sc) => sc.size && Number.isFinite(sc.cost) && sc.cost >= 0),
+      measurementFields: form.measurementFields
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .map((line) => {
+          const [label, unit, guide] = line
+            .split("|")
+            .map((x) => x.trim());
+          return {
+            label,
+            unit: unit || undefined,
+            guide: guide || undefined,
+          };
+        })
+        .filter((m) => m.label),
+      allowCustomColor: form.allowCustomColor,
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
       stockCount: form.stockCount ? Number(form.stockCount) : undefined,
       materialCost: form.materialCost ? Number(form.materialCost) : undefined,
@@ -356,10 +391,73 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               className={input}
             />
           </div>
+          <div className="sm:col-span-2">
+            <label className={label}>
+              Per-size material cost (optional) — overrides material cost
+            </label>
+            <input
+              value={form.sizeMaterialCosts}
+              onChange={set("sizeMaterialCosts")}
+              placeholder="S:8000, M:9500, L:11000, XL:13000"
+              className={input}
+            />
+            <p className="mt-1 text-xs text-stone-400">
+              Format: SIZE:COST, comma separated. Bigger sizes use more yarn —
+              set their real cost here so COGS and profit stay accurate. Sizes
+              not listed use the material cost above.
+            </p>
+          </div>
           <p className="text-xs text-stone-400 sm:col-span-2">
             Material + packaging cost feed Cost of Goods (COGS) in Finance, so
             profit is calculated correctly. Leave blank if unknown.
           </p>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-stone-200 bg-white p-5 sm:p-6">
+        <h2 className="font-semibold text-stone-900">Custom orders</h2>
+        <p className="mt-1 text-sm text-stone-500">
+          Let customers give exact measurements or request a colour on the
+          product page.
+        </p>
+        <div className="mt-4 space-y-4">
+          <div>
+            <label className={label}>
+              Measurement fields (one per line)
+            </label>
+            <textarea
+              rows={4}
+              value={form.measurementFields}
+              onChange={set("measurementFields")}
+              placeholder={
+                "Head circumference | cm | head\nBust | cm | bust\nWaist | cm | waist\nLength | cm | length"
+              }
+              className={input}
+            />
+            <p className="mt-1 text-xs text-stone-400">
+              Format: <code>Label | unit | guide</code>. The guide picks an
+              illustrated &ldquo;how to measure&rdquo; diagram. Available guides:
+              head, diameter, bust, chest, waist, hips, length, shoulder,
+              sleeve, width, height, strap, foot. Unit and guide are optional.
+            </p>
+          </div>
+          <label className="flex items-start gap-3">
+            <input
+              type="checkbox"
+              checked={form.allowCustomColor}
+              onChange={set("allowCustomColor")}
+              className="mt-0.5 h-4 w-4 rounded border-stone-300"
+            />
+            <span className="text-sm">
+              <span className="font-medium text-stone-800">
+                Allow custom colour requests
+              </span>
+              <span className="text-stone-400">
+                {" "}
+                — customers can type a colour and attach a reference photo
+              </span>
+            </span>
+          </label>
         </div>
       </div>
 

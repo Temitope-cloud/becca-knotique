@@ -2,10 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Check, ShoppingBag, ArrowRight } from "lucide-react";
+import { CldUploadWidget } from "next-cloudinary";
+import { Check, ShoppingBag, ArrowRight, ImagePlus, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira, priceForSize } from "@/lib/money";
 import Tooltip from "@/components/ui/Tooltip";
+import MeasureGuideButton from "@/components/MeasureGuide";
+
+export interface MeasurementField {
+  label: string;
+  unit?: string;
+  guide?: string;
+}
 
 export interface PurchaseProduct {
   id: string;
@@ -17,8 +25,17 @@ export interface PurchaseProduct {
   image?: string;
   sizes?: string[];
   colors?: string[];
+  measurementFields?: MeasurementField[];
+  allowCustomColor?: boolean;
   inStock?: boolean;
 }
+
+// NEXT_PUBLIC_* values are inlined at build time. When absent, the Cloudinary
+// widget would throw, so we fall back to letting the customer paste an image URL.
+const cloudinaryReady = Boolean(
+  process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME &&
+    process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+);
 
 /** Map a colour name to a usable swatch. Returns null when we can't tell. */
 const COLOR_MAP: Record<string, string> = {
@@ -151,6 +168,13 @@ export default function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
+  const measurementFields = product.measurementFields ?? [];
+  const [customFit, setCustomFit] = useState(false);
+  const [measurements, setMeasurements] = useState<Record<string, string>>({});
+  const [customColor, setCustomColor] = useState("");
+  const [referenceImage, setReferenceImage] = useState("");
+  const [manualImageUrl, setManualImageUrl] = useState("");
+
   const soldOut = product.inStock === false;
   const unitPrice = priceForSize(product.price, product.sizePrices, size);
   const discount =
@@ -170,6 +194,21 @@ export default function ProductPurchasePanel({
   const outlineColor = bgIsLight ? "#111827" : ctaBg;
   const filledBorder = bgIsLight ? "rgba(0,0,0,0.12)" : ctaBg;
 
+  // Collect filled measurements (with their unit) when custom fit is on.
+  const filledMeasurements =
+    customFit && measurementFields.length
+      ? measurementFields
+          .map((f) => {
+            const raw = measurements[f.label]?.trim();
+            if (!raw) return null;
+            const unit = f.unit?.trim() || "cm";
+            return { label: f.label, value: `${raw} ${unit}`.trim() };
+          })
+          .filter((m): m is { label: string; value: string } => Boolean(m))
+      : [];
+
+  const trimmedCustomColor = customColor.trim();
+
   function buildItem() {
     return {
       productId: product.id,
@@ -179,6 +218,9 @@ export default function ProductPurchasePanel({
       price: unitPrice,
       size,
       color,
+      measurements: filledMeasurements.length ? filledMeasurements : undefined,
+      customColor: trimmedCustomColor || undefined,
+      referenceImage: referenceImage || undefined,
     };
   }
 
@@ -287,6 +329,151 @@ export default function ProductPurchasePanel({
                 </Tooltip>
               );
             })}
+          </div>
+        </div>
+      ) : null}
+
+      {measurementFields.length ? (
+        <div className="mb-4 rounded-xl border border-stone-200 bg-stone-50/60 p-4">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={customFit}
+              onChange={(e) => setCustomFit(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-stone-300"
+            />
+            <span className="text-sm">
+              <span className="font-medium text-stone-800">
+                Made to my measurements
+              </span>
+              <span className="block text-xs text-stone-500">
+                Give us your exact numbers for a custom fit (optional).
+              </span>
+            </span>
+          </label>
+
+          {customFit ? (
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {measurementFields.map((f) => (
+                <div key={f.label}>
+                  <div className="mb-1 flex items-center justify-between gap-2">
+                    <label className="text-xs font-medium text-stone-700">
+                      {f.label}
+                      {f.unit ? (
+                        <span className="text-stone-400"> ({f.unit})</span>
+                      ) : null}
+                    </label>
+                    <MeasureGuideButton guide={f.guide} fieldLabel={f.label} />
+                  </div>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    value={measurements[f.label] ?? ""}
+                    onChange={(e) =>
+                      setMeasurements((m) => ({
+                        ...m,
+                        [f.label]: e.target.value,
+                      }))
+                    }
+                    placeholder={`e.g. 92`}
+                    className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      {product.allowCustomColor ? (
+        <div className="mb-4 rounded-xl border border-stone-200 bg-stone-50/60 p-4">
+          <p className="text-sm font-medium text-stone-800">
+            Want a different colour?
+          </p>
+          <p className="mt-0.5 text-xs text-stone-500">
+            Tell us the colour you&apos;d like, or attach a photo to match.
+          </p>
+          <input
+            type="text"
+            value={customColor}
+            onChange={(e) => setCustomColor(e.target.value)}
+            placeholder="e.g. dusty rose, or 'like the photo I'm attaching'"
+            className="mt-3 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10"
+          />
+
+          <div className="mt-3">
+            {referenceImage ? (
+              <div className="flex items-center gap-3">
+                <div className="relative h-16 w-14 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={referenceImage}
+                    alt="Reference"
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setReferenceImage("")}
+                    aria-label="Remove reference image"
+                    className="absolute top-0.5 right-0.5 rounded-full bg-black/60 p-0.5 text-white"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+                <span className="text-xs text-stone-500">
+                  Reference image added
+                </span>
+              </div>
+            ) : cloudinaryReady ? (
+              <CldUploadWidget
+                signatureEndpoint="/api/cloudinary/sign"
+                options={{
+                  folder: "beccas-knotique/custom-requests",
+                  multiple: false,
+                  maxFiles: 1,
+                  sources: ["local", "url", "camera"],
+                  clientAllowedFormats: ["png", "jpeg", "jpg", "webp"],
+                }}
+                onSuccess={(result) => {
+                  const info = result?.info;
+                  if (info && typeof info === "object" && "secure_url" in info) {
+                    setReferenceImage((info as { secure_url: string }).secure_url);
+                  }
+                }}
+              >
+                {({ open }) => (
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    className="inline-flex items-center gap-2 rounded-lg border-2 border-dashed border-stone-300 px-4 py-2.5 text-sm font-medium text-stone-600 transition hover:border-stone-500 hover:text-stone-800"
+                  >
+                    <ImagePlus className="h-4 w-4" />
+                    Attach a reference photo
+                  </button>
+                )}
+              </CldUploadWidget>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={manualImageUrl}
+                  onChange={(e) => setManualImageUrl(e.target.value)}
+                  placeholder="Paste an image link"
+                  className="min-w-0 flex-1 rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-stone-900"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const u = manualImageUrl.trim();
+                    if (u) setReferenceImage(u);
+                    setManualImageUrl("");
+                  }}
+                  className="shrink-0 rounded-lg border border-stone-900 px-3 py-2 text-sm font-semibold text-stone-900 transition hover:bg-stone-900 hover:text-white"
+                >
+                  Add
+                </button>
+              </div>
+            )}
           </div>
         </div>
       ) : null}

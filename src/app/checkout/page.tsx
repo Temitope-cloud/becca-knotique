@@ -98,6 +98,9 @@ export default function CheckoutPage() {
             size: i.size,
             color: i.color,
             quantity: i.quantity,
+            measurements: i.measurements,
+            customColor: i.customColor,
+            referenceImage: i.referenceImage,
           })),
         }),
       });
@@ -278,6 +281,16 @@ export default function CheckoutPage() {
                   {item.size || item.color ? (
                     <p className="text-xs text-stone-500">
                       {[item.size, item.color].filter(Boolean).join(" · ")}
+                    </p>
+                  ) : null}
+                  {item.customColor ? (
+                    <p className="text-xs text-stone-500">
+                      Custom colour: {item.customColor}
+                    </p>
+                  ) : null}
+                  {item.measurements?.length ? (
+                    <p className="text-xs text-stone-500">
+                      Made to measure
                     </p>
                   ) : null}
                 </div>

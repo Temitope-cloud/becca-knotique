@@ -7,6 +7,7 @@ import {
 } from "@/lib/models/FinanceTransaction";
 import { Product } from "@/lib/models/Product";
 import type { IOrder } from "@/lib/models/Order";
+import { materialCostForSize } from "@/lib/money";
 
 /** Types that represent money coming IN (stored as a positive amount). */
 const INFLOW_TYPES: FinanceType[] = ["revenue", "other_income"];
@@ -58,13 +59,26 @@ export async function createOrderFinanceEntries(order: IOrder): Promise<void> {
   // COGS from configured product costs.
   const slugs = order.items.map((i) => i.slug);
   const products = await Product.find({ slug: { $in: slugs } })
-    .select("slug materialCost packagingCost")
-    .lean<{ slug: string; materialCost?: number; packagingCost?: number }[]>();
+    .select("slug materialCost packagingCost sizeMaterialCosts")
+    .lean<
+      {
+        slug: string;
+        materialCost?: number;
+        packagingCost?: number;
+        sizeMaterialCosts?: { size: string; cost: number }[];
+      }[]
+    >();
   const costBySlug = new Map(products.map((p) => [p.slug, p]));
   let cogs = 0;
   for (const item of order.items) {
     const c = costBySlug.get(item.slug);
-    const unit = (c?.materialCost ?? 0) + (c?.packagingCost ?? 0);
+    // Prefer a per-size material cost when configured (bigger sizes use more yarn).
+    const material = materialCostForSize(
+      c?.materialCost ?? 0,
+      c?.sizeMaterialCosts,
+      item.size,
+    );
+    const unit = material + (c?.packagingCost ?? 0);
     cogs += unit * item.quantity;
   }
 
