@@ -224,7 +224,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
               </div>
             </div>
 
-            <ProductRevisitNudge slug={product.slug} />
+            <ProductRevisitNudge slug={product.slug} productName={product.name} />
 
             {/* v1 fallback — order on WhatsApp (disabled while Paystack checkout is live):
             <a
