@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2, FileText } from "lucide-react";
 import ImageUploader from "./ImageUploader";
+import MeasurementFieldsInput, {
+  type MeasurementField,
+} from "./MeasurementFieldsInput";
 
 type SaveStatus = "published" | "draft";
 
@@ -62,15 +65,15 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     stockCount: product?.stockCount?.toString() ?? "10",
     materialCost: product?.materialCost?.toString() ?? "",
     packagingCost: product?.packagingCost?.toString() ?? "",
-    measurementFields: (product?.measurementFields ?? [])
-      .map((m) => [m.label, m.unit ?? "", m.guide ?? ""].join(" | "))
-      .join("\n"),
     allowCustomColor: product?.allowCustomColor ?? false,
     inStock: product?.inStock ?? true,
     featured: product?.featured ?? false,
     active: product?.active ?? true,
   });
   const [images, setImages] = useState<string[]>(product?.images ?? []);
+  const [measurementFields, setMeasurementFields] = useState<
+    MeasurementField[]
+  >(product?.measurementFields ?? []);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [savingAs, setSavingAs] = useState<SaveStatus | null>(null);
@@ -111,21 +114,11 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       longDescription: form.longDescription.trim() || undefined,
       images,
       sizes: [],
-      measurementFields: form.measurementFields
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean)
-        .map((line) => {
-          const [label, unit, guide] = line
-            .split("|")
-            .map((x) => x.trim());
-          return {
-            label,
-            unit: unit || undefined,
-            guide: guide || undefined,
-          };
-        })
-        .filter((m) => m.label),
+      measurementFields: measurementFields.map((m) => ({
+        label: m.label,
+        unit: m.unit || undefined,
+        guide: m.guide || undefined,
+      })),
       allowCustomColor: form.allowCustomColor,
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
       stockCount: form.stockCount ? Number(form.stockCount) : undefined,
@@ -357,24 +350,11 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
         </p>
         <div className="mt-4 space-y-4">
           <div>
-            <label className={label}>
-              Measurement fields (one per line)
-            </label>
-            <textarea
-              rows={4}
-              value={form.measurementFields}
-              onChange={set("measurementFields")}
-              placeholder={
-                "Head circumference | cm | head\nBust | cm | bust\nWaist | cm | waist\nLength | cm | length"
-              }
-              className={input}
+            <label className={label}>Measurement fields</label>
+            <MeasurementFieldsInput
+              value={measurementFields}
+              onChange={setMeasurementFields}
             />
-            <p className="mt-1 text-xs text-stone-400">
-              Format: <code>Label | unit | guide</code>. The guide picks an
-              illustrated &ldquo;how to measure&rdquo; diagram. Available guides:
-              head, diameter, bust, chest, waist, hips, length, shoulder,
-              sleeve, width, height, strap, foot. Unit and guide are optional.
-            </p>
           </div>
           <label className="flex items-start gap-3">
             <input
