@@ -4,13 +4,21 @@ import { getAllProducts } from "@/lib/catalog";
 const baseUrl = "https://www.beccasknotique.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await getAllProducts();
-  const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${baseUrl}/products/${product.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.85,
-  }));
+  // Product URLs need the DB. If it's unreachable at build time (e.g. env vars
+  // not yet set), fall back to the static routes rather than failing the whole
+  // deploy — a sitemap without every product beats no deploy at all.
+  let productEntries: MetadataRoute.Sitemap = [];
+  try {
+    const products = await getAllProducts();
+    productEntries = products.map((product) => ({
+      url: `${baseUrl}/products/${product.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    }));
+  } catch (error) {
+    console.error("[sitemap] could not load products:", error);
+  }
 
   return [
     {
