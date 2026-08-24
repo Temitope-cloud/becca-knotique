@@ -7,7 +7,7 @@ import OurStory from "@/components/OurStory";
 import PreFooterCta from "@/components/PreFooterCta";
 import { AnimatedTestimonial } from "@/components/Testimonial";
 import type { Metadata } from "next";
-import { getFeaturedProduct, getProductsByCategory } from "@/lib/catalog";
+import { getFeaturedProduct, getFeaturedProducts } from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -28,19 +28,24 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [featured, newCollection] = await Promise.all([
-    getFeaturedProduct(),
-    getProductsByCategory("new-collection"),
-  ]);
+  // Featured products drive both sections: the most recent one is the
+  // "Limited Edition" hero, the rest fill the "Just Dropped" grid.
+  const featuredList = await getFeaturedProducts(13);
+  const hero = featuredList[0] ?? (await getFeaturedProduct());
+  const gridProducts = featuredList
+    .filter((p) => p.id !== hero?.id)
+    .slice(0, 12);
 
   return (
     <>
       <HeroSection />
-      <NewCollection products={newCollection} />
+      {gridProducts.length > 0 ? (
+        <NewCollection products={gridProducts} />
+      ) : null}
       <OurStory />
       <CrochetProcess />
       {/* <AnimatedTestimonial /> */}
-      <OnePiece product={featured} />
+      {hero ? <OnePiece product={hero} /> : null}
       <PreFooterCta />
       <Footer />
     </>

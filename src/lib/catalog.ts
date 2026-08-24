@@ -185,9 +185,33 @@ export async function getProductsByCategory(
   return all.filter((p) => p.category === category);
 }
 
+/**
+ * Featured products (published, in stock-status, not trashed), most recently
+ * featured first. The homepage uses the first as the "Limited Edition" hero and
+ * the rest for the "Just Dropped" grid.
+ */
+export async function getFeaturedProducts(
+  limit = 12,
+): Promise<CatalogProduct[]> {
+  if (await dbIsEmpty()) return [];
+  const docs = await Product.find({
+    featured: true,
+    active: { $ne: false },
+    status: { $ne: "draft" },
+    trashed: { $ne: true },
+  })
+    .sort({ updatedAt: -1 })
+    .limit(limit)
+    .lean<IProduct[]>();
+  return docs.map(fromDoc);
+}
+
 export async function getFeaturedProduct(): Promise<CatalogProduct | null> {
+  const featured = await getFeaturedProducts(1);
+  if (featured[0]) return featured[0];
+  // Fallback so the hero still shows something before anything is featured.
   const all = await getAllProducts();
-  return all.find((p) => p.featured) ?? all.find((p) => p.category === "one-piece") ?? all[0] ?? null;
+  return all.find((p) => p.category === "one-piece") ?? all[0] ?? null;
 }
 
 /** Active products for the given slugs, in the order the slugs were given. */
