@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Wallet,
+  Rocket,
 } from "lucide-react";
 
 const nav = [
@@ -25,6 +26,7 @@ const nav = [
   { label: "Customers", href: "/admin/customers", icon: Users },
   { label: "Coupons", href: "/admin/coupons", icon: TicketPercent },
   { label: "Finance", href: "/admin/finance", icon: Wallet },
+  { label: "Release log", href: "/admin/releases", icon: Rocket },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
