@@ -65,12 +65,25 @@ export const releases: Release[] = [
   },
   {
     date: "2026-08-18",
-    title: "Online store launch",
-    tag: "launch",
+    title: "Online store added (started taking payments)",
+    tag: "feature",
     items: [
+      "Turned the brand website into a working shop.",
       "Customers can create accounts, add to cart, check out, and pay with Paystack.",
       "Admin dashboard to manage orders.",
-      "New footer and featured section; email and image hosting set up.",
+      "Refreshed footer and featured section; email and image hosting set up.",
+    ],
+  },
+  {
+    date: "2026-05-12",
+    title: "Becca's Knotique website launched",
+    tag: "launch",
+    items: [
+      "The original brand website went live: homepage with a hero, featured pieces, Our Story, the crochet process, and reviews.",
+      "Product showcase and detail pages, plus a 'most viewed' chart.",
+      "About, Our Story, Contact, and legal pages.",
+      "The handmade look, custom fonts, and page animations.",
+      "Built from March 2026. (At this stage the site showed the collection; online payments came later.)",
     ],
   },
 ];
