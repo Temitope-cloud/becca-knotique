@@ -58,17 +58,10 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     oldPrice: product?.oldPrice?.toString() ?? "",
     description: product?.description ?? "",
     longDescription: product?.longDescription ?? "",
-    sizes: (product?.sizes ?? []).join(", "),
-    sizePrices: (product?.sizePrices ?? [])
-      .map((sp) => `${sp.size}:${sp.price}`)
-      .join(", "),
     colors: (product?.colors ?? []).join(", "),
     stockCount: product?.stockCount?.toString() ?? "10",
     materialCost: product?.materialCost?.toString() ?? "",
     packagingCost: product?.packagingCost?.toString() ?? "",
-    sizeMaterialCosts: (product?.sizeMaterialCosts ?? [])
-      .map((sc) => `${sc.size}:${sc.cost}`)
-      .join(", "),
     measurementFields: (product?.measurementFields ?? [])
       .map((m) => [m.label, m.unit ?? "", m.guide ?? ""].join(" | "))
       .join("\n"),
@@ -117,25 +110,7 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       description: form.description.trim(),
       longDescription: form.longDescription.trim() || undefined,
       images,
-      sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
-      sizePrices: form.sizePrices
-        .split(",")
-        .map((pair) => pair.trim())
-        .filter(Boolean)
-        .map((pair) => {
-          const [size, price] = pair.split(":").map((x) => x.trim());
-          return { size, price: Number(price) };
-        })
-        .filter((sp) => sp.size && Number.isFinite(sp.price) && sp.price > 0),
-      sizeMaterialCosts: form.sizeMaterialCosts
-        .split(",")
-        .map((pair) => pair.trim())
-        .filter(Boolean)
-        .map((pair) => {
-          const [size, cost] = pair.split(":").map((x) => x.trim());
-          return { size, cost: Number(cost) };
-        })
-        .filter((sc) => sc.size && Number.isFinite(sc.cost) && sc.cost >= 0),
+      sizes: [],
       measurementFields: form.measurementFields
         .split("\n")
         .map((l) => l.trim())
@@ -337,30 +312,6 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className={label}>Sizes (comma separated)</label>
-            <input
-              value={form.sizes}
-              onChange={set("sizes")}
-              placeholder="S, M, L"
-              className={input}
-            />
-          </div>
-          <div className="sm:col-span-2">
-            <label className={label}>
-              Per-size prices (optional) — overrides base price
-            </label>
-            <input
-              value={form.sizePrices}
-              onChange={set("sizePrices")}
-              placeholder="S:100000, M:100000, L:110000, XL:120000"
-              className={input}
-            />
-            <p className="mt-1 text-xs text-stone-400">
-              Format: SIZE:PRICE, comma separated. Sizes not listed use the base
-              price.
-            </p>
-          </div>
-          <div>
             <label className={label}>Colors (comma separated)</label>
             <input
               value={form.colors}
@@ -390,22 +341,6 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               placeholder="e.g. 1000"
               className={input}
             />
-          </div>
-          <div className="sm:col-span-2">
-            <label className={label}>
-              Per-size material cost (optional) — overrides material cost
-            </label>
-            <input
-              value={form.sizeMaterialCosts}
-              onChange={set("sizeMaterialCosts")}
-              placeholder="S:8000, M:9500, L:11000, XL:13000"
-              className={input}
-            />
-            <p className="mt-1 text-xs text-stone-400">
-              Format: SIZE:COST, comma separated. Bigger sizes use more yarn —
-              set their real cost here so COGS and profit stay accurate. Sizes
-              not listed use the material cost above.
-            </p>
           </div>
           <p className="text-xs text-stone-400 sm:col-span-2">
             Material + packaging cost feed Cost of Goods (COGS) in Finance, so
