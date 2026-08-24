@@ -105,6 +105,34 @@ export default function CartPage() {
                       <p className="mt-0.5 text-xs text-stone-500">
                         {[item.size, item.color].filter(Boolean).join(" · ")}
                       </p>
+                      {item.customColor ? (
+                        <p className="mt-1 text-xs text-stone-500">
+                          <span className="font-medium text-stone-700">
+                            Custom colour:
+                          </span>{" "}
+                          {item.customColor}
+                        </p>
+                      ) : null}
+                      {item.measurements?.length ? (
+                        <p className="mt-1 text-xs text-stone-500">
+                          <span className="font-medium text-stone-700">
+                            Measurements:
+                          </span>{" "}
+                          {item.measurements
+                            .map((m) => `${m.label} ${m.value}`)
+                            .join(", ")}
+                        </p>
+                      ) : null}
+                      {item.referenceImage ? (
+                        <a
+                          href={item.referenceImage}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1 inline-block text-xs font-medium text-stone-600 underline underline-offset-2 hover:text-stone-900"
+                        >
+                          Reference image attached
+                        </a>
+                      ) : null}
                     </div>
                     <button
                       type="button"

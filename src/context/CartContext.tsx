@@ -18,6 +18,12 @@ export interface CartItem {
   quantity: number;
   size?: string;
   color?: string;
+  /** Made-to-measure values the customer supplied, e.g. Bust = 92cm. */
+  measurements?: { label: string; value: string }[];
+  /** Free-text custom colour request. */
+  customColor?: string;
+  /** URL of an uploaded reference image. */
+  referenceImage?: string;
 }
 
 export interface AppliedCoupon {
@@ -34,7 +40,17 @@ interface CartContextValue {
   updateQuantity: (key: string, quantity: number) => void;
   clearCart: () => void;
   /** Unique key for a line (product + variant). */
-  lineKey: (item: Pick<CartItem, "productId" | "size" | "color">) => string;
+  lineKey: (
+    item: Pick<
+      CartItem,
+      | "productId"
+      | "size"
+      | "color"
+      | "measurements"
+      | "customColor"
+      | "referenceImage"
+    >,
+  ) => string;
   hydrated: boolean;
   // Coupon (applied on the cart page, carried through to checkout)
   coupon: AppliedCoupon | null;
@@ -49,8 +65,33 @@ const COUPON_KEY = "bk-coupon";
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-function makeKey(item: Pick<CartItem, "productId" | "size" | "color">): string {
-  return [item.productId, item.size ?? "", item.color ?? ""].join("::");
+/** Signature for the custom (made-to-measure / custom colour) part of a line. */
+function variantSig(
+  item: Pick<CartItem, "measurements" | "customColor" | "referenceImage">,
+): string {
+  const m = item.measurements?.length
+    ? item.measurements.map((x) => `${x.label}=${x.value}`).join("|")
+    : "";
+  return [item.customColor ?? "", item.referenceImage ?? "", m].join("~");
+}
+
+function makeKey(
+  item: Pick<
+    CartItem,
+    | "productId"
+    | "size"
+    | "color"
+    | "measurements"
+    | "customColor"
+    | "referenceImage"
+  >,
+): string {
+  return [
+    item.productId,
+    item.size ?? "",
+    item.color ?? "",
+    variantSig(item),
+  ].join("::");
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {

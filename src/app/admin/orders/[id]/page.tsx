@@ -52,19 +52,53 @@ export default async function AdminOrderDetail({
             <h2 className="font-semibold text-stone-900">Items</h2>
             <ul className="mt-4 divide-y divide-stone-100">
               {order.items.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-center justify-between gap-3 py-3 text-sm"
-                >
-                  <span className="text-stone-700">
-                    {item.name}
-                    {item.size ? ` · ${item.size}` : ""}
-                    {item.color ? ` · ${item.color}` : ""}
-                    <span className="text-stone-400"> × {item.quantity}</span>
-                  </span>
-                  <span className="font-medium text-stone-900">
-                    {formatNaira(item.price * item.quantity)}
-                  </span>
+                <li key={i} className="py-3 text-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-stone-700">
+                      {item.name}
+                      {item.size ? ` · ${item.size}` : ""}
+                      {item.color ? ` · ${item.color}` : ""}
+                      <span className="text-stone-400"> × {item.quantity}</span>
+                    </span>
+                    <span className="font-medium text-stone-900">
+                      {formatNaira(item.price * item.quantity)}
+                    </span>
+                  </div>
+                  {item.customColor ||
+                  item.measurements?.length ||
+                  item.referenceImage ? (
+                    <div className="mt-2 space-y-1 rounded-lg border border-amber-200 bg-amber-50/60 px-3 py-2 text-xs text-stone-700">
+                      <p className="font-semibold tracking-wide text-amber-800 uppercase">
+                        Custom order
+                      </p>
+                      {item.customColor ? (
+                        <p>
+                          <span className="font-medium">Colour:</span>{" "}
+                          {item.customColor}
+                        </p>
+                      ) : null}
+                      {item.measurements?.length ? (
+                        <ul className="space-y-0.5">
+                          {item.measurements.map((m, mi) => (
+                            <li key={mi}>
+                              <span className="font-medium">{m.label}:</span>{" "}
+                              {m.value}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                      {item.referenceImage ? (
+                        <a
+                          href={item.referenceImage}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block font-medium text-emerald-700 underline underline-offset-2"
+                        >
+                          View reference image →
+                        </a>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </li>
               ))}
             </ul>

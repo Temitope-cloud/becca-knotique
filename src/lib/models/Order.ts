@@ -17,6 +17,12 @@ export interface IOrderItem {
   quantity: number;
   size?: string;
   color?: string;
+  /** Made-to-measure values the customer supplied, e.g. Bust = 92cm. */
+  measurements?: { label: string; value: string }[];
+  /** Free-text custom colour request (overrides/augments `color`). */
+  customColor?: string;
+  /** URL of a reference image the customer attached. */
+  referenceImage?: string;
 }
 
 export interface IOrder {
@@ -60,6 +66,17 @@ const OrderItemSchema = new Schema<IOrderItem>(
     quantity: { type: Number, required: true, min: 1 },
     size: { type: String },
     color: { type: String },
+    measurements: {
+      type: [
+        new Schema<{ label: string; value: string }>(
+          { label: String, value: String },
+          { _id: false },
+        ),
+      ],
+      default: undefined,
+    },
+    customColor: { type: String },
+    referenceImage: { type: String },
   },
   { _id: false },
 );

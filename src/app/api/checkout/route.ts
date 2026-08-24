@@ -34,6 +34,17 @@ const checkoutSchema = z.object({
         size: z.string().optional(),
         color: z.string().optional(),
         quantity: z.number().int().min(1).max(20),
+        measurements: z
+          .array(
+            z.object({
+              label: z.string().max(60),
+              value: z.string().max(60),
+            }),
+          )
+          .max(12)
+          .optional(),
+        customColor: z.string().max(200).optional(),
+        referenceImage: z.string().url().max(600).optional(),
       }),
     )
     .min(1, "Your cart is empty."),
@@ -96,6 +107,9 @@ export async function POST(request: Request) {
       quantity: line.quantity,
       size: line.size,
       color: line.color,
+      measurements: line.measurements?.length ? line.measurements : undefined,
+      customColor: line.customColor || undefined,
+      referenceImage: line.referenceImage || undefined,
     });
   }
 

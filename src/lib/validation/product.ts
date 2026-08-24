@@ -14,6 +14,20 @@ export const productSchema = z.object({
   sizePrices: z
     .array(z.object({ size: z.string().min(1), price: z.number().min(0) }))
     .default([]),
+  sizeMaterialCosts: z
+    .array(z.object({ size: z.string().min(1), cost: z.number().min(0) }))
+    .default([]),
+  measurementFields: z
+    .array(
+      z.object({
+        label: z.string().min(1).max(60),
+        unit: z.string().max(12).optional(),
+        guide: z.string().max(24).optional(),
+      }),
+    )
+    .max(12)
+    .default([]),
+  allowCustomColor: z.boolean().default(false),
   description: z.string().max(2000).default(""),
   longDescription: z.string().max(6000).optional(),
   images: z.array(z.string().url()).default([]),

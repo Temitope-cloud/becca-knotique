@@ -18,3 +18,14 @@ export function priceForSize(
   const match = sizePrices.find((sp) => sp.size === size);
   return match && typeof match.price === "number" ? match.price : basePrice;
 }
+
+/** Resolve a product's unit material cost for a chosen size (falls back to base). */
+export function materialCostForSize(
+  baseCost: number,
+  sizeMaterialCosts: { size: string; cost: number }[] | undefined,
+  size: string | undefined,
+): number {
+  if (!size || !sizeMaterialCosts?.length) return baseCost;
+  const match = sizeMaterialCosts.find((sc) => sc.size === size);
+  return match && typeof match.cost === "number" ? match.cost : baseCost;
+}

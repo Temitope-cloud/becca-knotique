@@ -4,6 +4,19 @@ export interface IProductInfo {
   label: string;
 }
 
+/**
+ * A measurement the customer can supply for a made-to-measure order. Defined
+ * per product so a dress can ask for bust/waist/hips while a cap asks only for
+ * head circumference. `guide` names the illustrated "how to measure" diagram.
+ */
+export interface IMeasurementField {
+  label: string;
+  /** Unit shown next to the input, e.g. "cm" or "in". Defaults to "cm". */
+  unit?: string;
+  /** Key of the diagram to show ("head", "bust", "waist", …). Optional. */
+  guide?: string;
+}
+
 export interface IProduct {
   _id: string;
   name: string;
@@ -16,6 +29,10 @@ export interface IProduct {
   /** Optional absolute price override per size (e.g. XL costs more). */
   sizePrices: { size: string; price: number }[];
   currency: "NGN";
+  /** Measurement fields offered for made-to-measure orders (per product). */
+  measurementFields: IMeasurementField[];
+  /** Let customers request a custom colour and attach a reference image. */
+  allowCustomColor: boolean;
   description: string;
   longDescription?: string;
   image?: string;
@@ -34,6 +51,8 @@ export interface IProduct {
   /** COGS inputs (NGN) — direct material and packaging cost per unit. */
   materialCost?: number;
   packagingCost?: number;
+  /** Optional per-size material cost override (bigger sizes use more yarn). */
+  sizeMaterialCosts: { size: string; cost: number }[];
   /** "published" shows on the storefront; "draft" is saved but hidden. */
   status: "published" | "draft";
   /** soft delete */
@@ -63,6 +82,16 @@ const ProductSchema = new Schema<IProduct>(
       default: [],
     },
     currency: { type: String, default: "NGN" },
+    measurementFields: {
+      type: [
+        new Schema<IMeasurementField>(
+          { label: String, unit: String, guide: String },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
+    allowCustomColor: { type: Boolean, default: false },
     description: { type: String, default: "" },
     longDescription: { type: String },
     image: { type: String },
@@ -83,6 +112,15 @@ const ProductSchema = new Schema<IProduct>(
     active: { type: Boolean, default: true, index: true },
     materialCost: { type: Number, min: 0, default: 0 },
     packagingCost: { type: Number, min: 0, default: 0 },
+    sizeMaterialCosts: {
+      type: [
+        new Schema<{ size: string; cost: number }>(
+          { size: String, cost: Number },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
     status: {
       type: String,
       enum: ["published", "draft"],
