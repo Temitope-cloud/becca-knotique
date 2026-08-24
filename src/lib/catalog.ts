@@ -29,6 +29,8 @@ export interface CatalogProduct {
   rating?: number;
   inStock: boolean;
   stockCount?: number;
+  madeToOrder: boolean;
+  leadTime?: string;
   materialCost?: number;
   packagingCost?: number;
   tags: string[];
@@ -73,6 +75,8 @@ function fromDoc(doc: IProduct): CatalogProduct {
     rating: doc.rating,
     inStock: doc.inStock !== false,
     stockCount: doc.stockCount,
+    madeToOrder: !!doc.madeToOrder,
+    leadTime: doc.leadTime,
     materialCost: doc.materialCost,
     packagingCost: doc.packagingCost,
     tags: doc.tags ?? [],
@@ -112,6 +116,8 @@ function fromStatic(p: (typeof staticProducts)[number]): CatalogProduct {
     rating: p.rating,
     inStock: p.inStock !== false,
     stockCount: p.stockCount,
+    madeToOrder: false,
+    leadTime: undefined,
     tags: p.tags ?? [],
     infos: (p.infos ?? []).map((i) => ({ label: i.label })),
     featured: false,

@@ -9,19 +9,20 @@ import { createOrderFinanceEntries } from "@/lib/finance";
 
 /** Reduce stock levels and bump coupon usage once, when an order is paid. */
 async function applyPaidSideEffects(order: IOrder): Promise<void> {
+  // Only ready-made products track stock. Made-to-order items are crocheted
+  // per order, so they never decrement or go out of stock.
   await Promise.allSettled(
     order.items.map((item) =>
       Product.updateOne(
-        { slug: item.slug },
+        { slug: item.slug, madeToOrder: { $ne: true } },
         {
           $inc: { stockCount: -item.quantity },
         },
       ),
     ),
   );
-  // Any product that dropped to/below zero is marked out of stock.
   await Product.updateMany(
-    { stockCount: { $lte: 0 } },
+    { stockCount: { $lte: 0 }, madeToOrder: { $ne: true } },
     { $set: { inStock: false } },
   );
   if (order.couponCode) {

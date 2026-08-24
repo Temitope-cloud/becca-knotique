@@ -206,6 +206,8 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
                 measurementFields: product.measurementFields,
                 allowCustomColor: product.allowCustomColor,
                 inStock: product.inStock,
+                madeToOrder: product.madeToOrder,
+                leadTime: product.leadTime,
               }}
             />
 

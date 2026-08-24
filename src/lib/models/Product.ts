@@ -44,6 +44,10 @@ export interface IProduct {
   rating?: number;
   inStock: boolean;
   stockCount?: number;
+  /** true = crocheted after the customer orders (no fixed stock). */
+  madeToOrder: boolean;
+  /** how long a made-to-order (or ready-made) item takes, e.g. "2 to 3 weeks". */
+  leadTime?: string;
   tags: string[];
   infos: IProductInfo[];
   featured: boolean;
@@ -103,6 +107,8 @@ const ProductSchema = new Schema<IProduct>(
     rating: { type: Number, min: 0, max: 5 },
     inStock: { type: Boolean, default: true },
     stockCount: { type: Number, min: 0 },
+    madeToOrder: { type: Boolean, default: false },
+    leadTime: { type: String },
     tags: { type: [String], default: [] },
     infos: {
       type: [new Schema<IProductInfo>({ label: String }, { _id: false })],

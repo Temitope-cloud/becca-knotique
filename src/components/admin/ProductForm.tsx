@@ -30,6 +30,8 @@ export interface ProductInput {
   sizes: string[];
   colors: string[];
   stockCount?: number;
+  madeToOrder?: boolean;
+  leadTime?: string;
   materialCost?: number;
   packagingCost?: number;
   inStock: boolean;
@@ -63,6 +65,8 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
     longDescription: product?.longDescription ?? "",
     colors: (product?.colors ?? []).join(", "),
     stockCount: product?.stockCount?.toString() ?? "10",
+    madeToOrder: product?.madeToOrder ?? false,
+    leadTime: product?.leadTime ?? "",
     materialCost: product?.materialCost?.toString() ?? "",
     packagingCost: product?.packagingCost?.toString() ?? "",
     allowCustomColor: product?.allowCustomColor ?? false,
@@ -121,7 +125,13 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
       })),
       allowCustomColor: form.allowCustomColor,
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
-      stockCount: form.stockCount ? Number(form.stockCount) : undefined,
+      stockCount: form.madeToOrder
+        ? undefined
+        : form.stockCount
+          ? Number(form.stockCount)
+          : undefined,
+      madeToOrder: form.madeToOrder,
+      leadTime: form.leadTime.trim() || undefined,
       materialCost: form.materialCost ? Number(form.materialCost) : undefined,
       packagingCost: form.packagingCost
         ? Number(form.packagingCost)
@@ -292,15 +302,52 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
               className={input}
             />
           </div>
+          <div className="sm:col-span-2">
+            <label className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                checked={form.madeToOrder}
+                onChange={set("madeToOrder")}
+                className="mt-0.5 h-4 w-4 rounded border-stone-300"
+              />
+              <span className="text-sm">
+                <span className="font-medium text-stone-800">
+                  Made to order
+                </span>
+                <span className="text-stone-400">
+                  {" "}
+                  &mdash; crocheted after the customer orders. No fixed stock, and
+                  it never shows as sold out.
+                </span>
+              </span>
+            </label>
+          </div>
+          {!form.madeToOrder ? (
+            <div>
+              <label className={label}>Stock count</label>
+              <input
+                type="number"
+                min="0"
+                value={form.stockCount}
+                onChange={set("stockCount")}
+                className={input}
+              />
+            </div>
+          ) : null}
           <div>
-            <label className={label}>Stock count</label>
+            <label className={label}>Lead time (optional)</label>
             <input
-              type="number"
-              min="0"
-              value={form.stockCount}
-              onChange={set("stockCount")}
+              value={form.leadTime}
+              onChange={set("leadTime")}
+              placeholder="e.g. 2 to 3 weeks"
               className={input}
             />
+            <p className="mt-1 text-xs text-stone-400">
+              {form.madeToOrder
+                ? "How long it takes to make and deliver."
+                : "How long delivery takes."}{" "}
+              Shown to customers.
+            </p>
           </div>
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">

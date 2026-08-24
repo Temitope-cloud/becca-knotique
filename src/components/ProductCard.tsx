@@ -24,7 +24,8 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
 
   const cover = product.images?.[0] ?? product.image ?? "";
   const hover = product.hoverImage ?? product.images?.[1];
-  const soldOut = product.inStock === false;
+  // Made-to-order pieces are crocheted per order, so they never sell out.
+  const soldOut = product.inStock === false && !product.madeToOrder;
   const wished = has(product.slug);
   const discount =
     product.oldPrice && product.oldPrice > product.price
@@ -81,6 +82,10 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
         {soldOut ? (
           <span className="absolute inset-x-0 bottom-0 bg-stone-900/80 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase">
             Sold out
+          </span>
+        ) : product.madeToOrder ? (
+          <span className="absolute inset-x-0 bottom-0 bg-emerald-600/85 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase backdrop-blur">
+            Made to order
           </span>
         ) : null}
       </Link>

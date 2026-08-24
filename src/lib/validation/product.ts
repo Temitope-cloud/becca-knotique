@@ -34,6 +34,8 @@ export const productSchema = z.object({
   sizes: z.array(z.string()).default([]),
   colors: z.array(z.string()).default([]),
   stockCount: z.number().min(0).optional(),
+  madeToOrder: z.boolean().default(false),
+  leadTime: z.string().max(80).optional(),
   materialCost: z.number().min(0).optional(),
   packagingCost: z.number().min(0).optional(),
   inStock: z.boolean().default(true),

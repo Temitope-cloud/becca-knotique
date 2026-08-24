@@ -3,7 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CldUploadWidget } from "next-cloudinary";
-import { Check, ShoppingBag, ArrowRight, ImagePlus, X } from "lucide-react";
+import {
+  Check,
+  ShoppingBag,
+  ArrowRight,
+  ImagePlus,
+  X,
+  Scissors,
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira, priceForSize } from "@/lib/money";
 import Tooltip from "@/components/ui/Tooltip";
@@ -28,6 +35,8 @@ export interface PurchaseProduct {
   measurementFields?: MeasurementField[];
   allowCustomColor?: boolean;
   inStock?: boolean;
+  madeToOrder?: boolean;
+  leadTime?: string;
 }
 
 // NEXT_PUBLIC_* values are inlined at build time. When absent, the Cloudinary
@@ -175,7 +184,8 @@ export default function ProductPurchasePanel({
   const [referenceImage, setReferenceImage] = useState("");
   const [manualImageUrl, setManualImageUrl] = useState("");
 
-  const soldOut = product.inStock === false;
+  // Made-to-order pieces are crocheted per order, so they never sell out.
+  const soldOut = product.inStock === false && !product.madeToOrder;
   const unitPrice = priceForSize(product.price, product.sizePrices, size);
   const discount =
     product.oldPrice && product.oldPrice > unitPrice
@@ -252,6 +262,27 @@ export default function ProductPurchasePanel({
             Save {discount}%
           </span>
         ) : null}
+      </div>
+
+      {/* availability */}
+      <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-emerald-200/70 bg-emerald-50/60 px-3.5 py-2.5 text-sm">
+        <Scissors className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
+        <p className="text-stone-700">
+          {product.madeToOrder ? (
+            <>
+              <span className="font-semibold text-stone-900">
+                Made to order
+              </span>{" "}
+              just for you.
+              {product.leadTime ? ` Ready in about ${product.leadTime}.` : ""}
+            </>
+          ) : (
+            <>
+              <span className="font-semibold text-stone-900">Ready to ship.</span>
+              {product.leadTime ? ` Delivery in about ${product.leadTime}.` : ""}
+            </>
+          )}
+        </p>
       </div>
 
       {product.sizes?.length ? (

@@ -48,6 +48,8 @@ export default async function EditProductPage({
           colors: product.colors,
           stockCount: product.stockCount,
           inStock: product.inStock,
+          madeToOrder: product.madeToOrder,
+          leadTime: product.leadTime,
           materialCost: product.materialCost,
           packagingCost: product.packagingCost,
           featured: product.featured,
