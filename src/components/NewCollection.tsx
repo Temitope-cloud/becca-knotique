@@ -66,11 +66,15 @@ const NewCollection = ({ products }: { products: CatalogProduct[] }) => {
             const hoverImage = item.hoverImage ?? item.images?.[1];
 
             return (
-                <Link key={item.slug || idx} href={`/products/${item.slug}`}>
+                <Link
+                  key={item.slug || idx}
+                  href={`/products/${item.slug}`}
+                  className="block h-full"
+                >
                   <article
                     data-aos="zoom-in-down"
                     data-aos-delay={idx * 90}
-                    className="group/card relative overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_-28px_rgba(0,0,0,0.42)]"
+                    className="group/card relative flex h-full flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white p-3 shadow-[0_20px_60px_-34px_rgba(0,0,0,0.45)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_26px_65px_-28px_rgba(0,0,0,0.42)]"
                   >
                     <div
                       className="pointer-events-none absolute top-4 left-4 z-10 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-stone-700 uppercase shadow-sm"
@@ -101,12 +105,12 @@ const NewCollection = ({ products }: { products: CatalogProduct[] }) => {
                       />
                     </div>
 
-                    <div className="mt-5 flex items-start justify-between gap-4 px-1 pb-1">
+                    <div className="mt-5 flex flex-1 items-start justify-between gap-4 px-1 pb-1">
                       <div className="min-w-0">
-                        <h3 className="text-xl font-semibold tracking-tight text-stone-900">
+                        <h3 className="line-clamp-2 min-h-[3.5rem] text-xl font-semibold tracking-tight text-stone-900">
                           {item.name}
                         </h3>
-                        <p className="mt-1 text-sm leading-relaxed text-stone-600">
+                        <p className="mt-1 line-clamp-1 min-h-[1.25rem] text-sm leading-relaxed text-stone-600">
                           {item.subtitle}
                         </p>
                       </div>
