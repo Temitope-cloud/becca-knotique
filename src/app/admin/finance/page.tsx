@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Info } from "lucide-react";
 import { requireAdmin } from "@/lib/admin-auth";
+import Tooltip from "@/components/ui/Tooltip";
 import { computeOverview, type FinanceOverview } from "@/lib/finance";
 import { formatNaira } from "@/lib/money";
 import FinanceTabs from "@/components/admin/finance/FinanceTabs";
@@ -132,17 +133,69 @@ export default async function FinanceOverviewPage({
     },
   ];
 
-  const breakdown: { label: string; value: string; sign?: "in" | "out" }[] = [
-    { label: "Gross revenue", value: money(o.grossRevenue), sign: "in" },
-    { label: "Refunds", value: money(o.refunds), sign: "out" },
-    { label: "Paystack fees", value: money(o.paystackFees), sign: "out" },
-    { label: "Net revenue", value: money(o.netRevenue) },
-    { label: "Cost of goods (COGS)", value: money(o.cogs), sign: "out" },
-    { label: "Gross profit", value: money(o.grossProfit) },
-    { label: "Operating expenses", value: money(o.operatingExpenses), sign: "out" },
-    { label: "Owner salary", value: money(o.ownerSalary), sign: "out" },
-    { label: "Tax provision (estimate)", value: money(o.taxProvision), sign: "out" },
-    { label: "Net profit", value: money(o.netProfit) },
+  const breakdown: {
+    label: string;
+    value: string;
+    sign?: "in" | "out";
+    hint: string;
+  }[] = [
+    {
+      label: "Gross revenue",
+      value: money(o.grossRevenue),
+      sign: "in",
+      hint: "All the money customers paid, before any costs are taken out.",
+    },
+    {
+      label: "Refunds",
+      value: money(o.refunds),
+      sign: "out",
+      hint: "Money paid back to customers for returns or cancellations.",
+    },
+    {
+      label: "Paystack fees",
+      value: money(o.paystackFees),
+      sign: "out",
+      hint: "What Paystack charged to process the payments.",
+    },
+    {
+      label: "Net revenue",
+      value: money(o.netRevenue),
+      hint: "Revenue left after refunds. This is your real sales figure.",
+    },
+    {
+      label: "Cost of goods (COGS)",
+      value: money(o.cogs),
+      sign: "out",
+      hint: "What it cost to make the items sold — yarn, materials, packaging.",
+    },
+    {
+      label: "Gross profit",
+      value: money(o.grossProfit),
+      hint: "Net revenue minus the cost of making the items. Before running costs.",
+    },
+    {
+      label: "Operating expenses",
+      value: money(o.operatingExpenses),
+      sign: "out",
+      hint: "Costs of running the business — data, transport, ads, tools, etc.",
+    },
+    {
+      label: "Owner salary",
+      value: money(o.ownerSalary),
+      sign: "out",
+      hint: "What you paid yourself for your work. Not the same as profit.",
+    },
+    {
+      label: "Tax provision (estimate)",
+      value: money(o.taxProvision),
+      sign: "out",
+      hint: "Money set aside for tax. An estimate to confirm with an accountant.",
+    },
+    {
+      label: "Net profit",
+      value: money(o.netProfit),
+      hint: "What the business actually made after everything above.",
+    },
   ];
 
   return (
@@ -218,7 +271,12 @@ export default async function FinanceOverviewPage({
                     strong ? "font-semibold text-stone-900" : "text-stone-600"
                   }`}
                 >
-                  <span>{b.label}</span>
+                  <span className="flex items-center gap-1.5">
+                    {b.label}
+                    <Tooltip label={b.hint} wide>
+                      <Info className="h-3.5 w-3.5 text-stone-400" />
+                    </Tooltip>
+                  </span>
                   <span
                     className={
                       b.sign === "out"

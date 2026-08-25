@@ -258,9 +258,11 @@ export default function ProductPurchasePanel({
           </span>
         ) : null}
         {discount ? (
-          <span className="rounded-full bg-emerald-700/10 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-800 uppercase">
-            Save {discount}%
-          </span>
+          <Tooltip label={`${discount}% off the original price`}>
+            <span className="rounded-full bg-emerald-700/10 px-3 py-1 text-xs font-semibold tracking-wide text-emerald-800 uppercase">
+              Save {discount}%
+            </span>
+          </Tooltip>
         ) : null}
       </div>
 

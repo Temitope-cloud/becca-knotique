@@ -4,6 +4,7 @@ import { Plus, Package, Star, Trash2 } from "lucide-react";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getAllProducts, type CatalogProduct } from "@/lib/catalog";
 import { formatNaira } from "@/lib/money";
+import Tooltip from "@/components/ui/Tooltip";
 import TrashRowActions from "@/components/admin/TrashRowActions";
 
 type Filter = "all" | "featured" | "draft" | "hidden" | "trash";
@@ -171,10 +172,12 @@ export default async function AdminProductsPage({
                         <span className="flex items-center gap-1.5 font-medium text-stone-900">
                           {p.name}
                           {p.featured && !isTrash ? (
-                            <Star
-                              className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400"
-                              aria-label="Featured"
-                            />
+                            <Tooltip label="Featured on the homepage">
+                              <Star
+                                className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400"
+                                aria-label="Featured"
+                              />
+                            </Tooltip>
                           ) : null}
                         </span>
                       </div>

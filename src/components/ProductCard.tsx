@@ -80,11 +80,17 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
           </span>
         ) : null}
         {soldOut ? (
-          <span className="absolute inset-x-0 bottom-0 bg-stone-900/80 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase">
+          <span
+            title="Currently unavailable"
+            className="absolute inset-x-0 bottom-0 bg-stone-900/80 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase"
+          >
             Sold out
           </span>
         ) : product.madeToOrder ? (
-          <span className="absolute inset-x-0 bottom-0 bg-emerald-600/85 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase backdrop-blur">
+          <span
+            title="We crochet this one just for you after you order."
+            className="absolute inset-x-0 bottom-0 bg-emerald-600/85 py-1.5 text-center text-[11px] font-semibold tracking-wide text-white uppercase backdrop-blur"
+          >
             Made to order
           </span>
         ) : null}
