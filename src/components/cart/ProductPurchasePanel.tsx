@@ -271,15 +271,18 @@ export default function ProductPurchasePanel({
           {product.madeToOrder ? (
             <>
               <span className="font-semibold text-stone-900">
-                Made to order
+                Made to order.
               </span>{" "}
-              just for you.
-              {product.leadTime ? ` Ready in about ${product.leadTime}.` : ""}
+              {product.leadTime
+                ? `We crochet it just for you — about ${product.leadTime} to make.`
+                : "We crochet it just for you after you order."}
             </>
           ) : (
             <>
-              <span className="font-semibold text-stone-900">Ready to ship.</span>
-              {product.leadTime ? ` Delivery in about ${product.leadTime}.` : ""}
+              <span className="font-semibold text-stone-900">Ready now.</span>{" "}
+              {product.leadTime
+                ? `Already made, ships in about ${product.leadTime}.`
+                : "Already made and ready to ship."}
             </>
           )}
         </p>
