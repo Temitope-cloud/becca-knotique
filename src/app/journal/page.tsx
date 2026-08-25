@@ -40,7 +40,7 @@ export default async function JournalPage() {
           Stories, styling & care
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-stone-600 sm:text-base">
-          Notes from the studio — how we make our pieces, how to wear them, and
+          Notes from the studio. How we make our pieces, how to wear them, and
           how to keep them looking beautiful.
         </p>
       </section>
@@ -52,7 +52,7 @@ export default async function JournalPage() {
               No posts yet
             </p>
             <p className="mt-1 text-sm text-stone-500">
-              Check back soon — the first story is on its way.
+              Check back soon. The first story is on its way.
             </p>
           </div>
         ) : (
