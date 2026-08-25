@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllProducts } from "@/lib/catalog";
+import { getPublishedPosts } from "@/lib/blog";
 
 const baseUrl = "https://www.beccasknotique.com";
 
@@ -18,6 +19,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
   } catch (error) {
     console.error("[sitemap] could not load products:", error);
+  }
+
+  let postEntries: MetadataRoute.Sitemap = [];
+  try {
+    const posts = await getPublishedPosts();
+    postEntries = posts.map((post) => ({
+      url: `${baseUrl}/journal/${post.slug}`,
+      lastModified: new Date(post.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  } catch (error) {
+    console.error("[sitemap] could not load posts:", error);
   }
 
   return [
@@ -40,6 +54,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.75,
     },
     ...productEntries,
+    {
+      url: `${baseUrl}/journal`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...postEntries,
     {
       url: `${baseUrl}/about`,
       lastModified: new Date(),

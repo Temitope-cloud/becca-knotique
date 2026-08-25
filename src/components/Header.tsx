@@ -13,6 +13,7 @@ const MENUS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
   { label: "Featured", href: "/#featured" },
+  { label: "Journal", href: "/journal" },
   { label: "About", href: "/about" },
   {
     label: "Contact",

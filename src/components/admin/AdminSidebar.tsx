@@ -17,6 +17,7 @@ import {
   X,
   Wallet,
   Rocket,
+  Newspaper,
 } from "lucide-react";
 
 const nav = [
@@ -25,6 +26,7 @@ const nav = [
   { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
   { label: "Customers", href: "/admin/customers", icon: Users },
   { label: "Coupons", href: "/admin/coupons", icon: TicketPercent },
+  { label: "Journal", href: "/admin/journal", icon: Newspaper },
   { label: "Finance", href: "/admin/finance", icon: Wallet },
   { label: "Release log", href: "/admin/releases", icon: Rocket },
   { label: "Settings", href: "/admin/settings", icon: Settings },

@@ -4,14 +4,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, RotateCcw, Trash2 } from "lucide-react";
 
-export default function TrashRowActions({ id }: { id: string }) {
+export default function TrashRowActions({
+  id,
+  endpoint = "/api/admin/products",
+  label = "product",
+}: {
+  id: string;
+  endpoint?: string;
+  label?: string;
+}) {
   const router = useRouter();
   const [busy, setBusy] = useState<"restore" | "delete" | null>(null);
 
   async function restore() {
     setBusy("restore");
     try {
-      const res = await fetch(`/api/admin/products/${id}`, {
+      const res = await fetch(`${endpoint}/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "restore" }),
@@ -23,15 +31,11 @@ export default function TrashRowActions({ id }: { id: string }) {
   }
 
   async function remove() {
-    if (
-      !confirm(
-        "Permanently delete this product? This cannot be undone.",
-      )
-    )
+    if (!confirm(`Permanently delete this ${label}? This cannot be undone.`))
       return;
     setBusy("delete");
     try {
-      const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
+      const res = await fetch(`${endpoint}/${id}`, { method: "DELETE" });
       if (res.ok) router.refresh();
     } finally {
       setBusy(null);

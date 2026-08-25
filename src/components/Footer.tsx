@@ -24,6 +24,7 @@ const footerMenus = [
     label: "Explore",
     links: [
       { label: "Home", href: "/" },
+      { label: "Journal", href: "/journal" },
       { label: "About", href: "/about" },
       { label: "Our Story", href: "/our-story" },
       { label: "Contact", href: "/contact" },

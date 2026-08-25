@@ -14,9 +14,11 @@ export interface Release {
 export const releases: Release[] = [
   {
     date: "2026-08-25",
-    title: "Made-to-order products & helpful tooltips",
+    title: "The Journal, made-to-order products & helpful tooltips",
     tag: "feature",
     items: [
+      "New Journal (blog) with a proper writing editor: write posts with headings, bold, lists, quotes, links and images, save drafts, publish, and move posts to trash.",
+      "Readers get a clean Journal page and article pages, linked from the top menu and footer, and every published post is added to the sitemap for Google.",
       "Products can be marked 'Made to order' (crocheted after you order) or ready-made. Made-to-order items never run out of stock and show their make time.",
       "Clearer product wording: it now says whether the wait is for making the piece or just delivering it.",
       "Added helpful hover tooltips across the store, including plain-English explanations of every figure on the Finance page.",
