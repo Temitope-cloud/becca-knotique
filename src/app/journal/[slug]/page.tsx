@@ -144,7 +144,7 @@ export default async function JournalPostPage({
             Every item is handmade with care. Browse the shop and treat yourself.
           </p>
           <Link
-            href="/shop"
+            href="/products"
             className="mt-5 inline-flex rounded-xl bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
           >
             Shop the collection

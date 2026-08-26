@@ -12,7 +12,6 @@ import { useCart } from "@/context/CartContext";
 const MENUS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
-  { label: "Featured", href: "/#featured" },
   { label: "Journal", href: "/journal" },
   { label: "About", href: "/about" },
   {
@@ -82,7 +81,7 @@ const Header = () => {
     "block border-b border-white/10 py-4 text-2xl font-light tracking-wide text-white transition-colors hover:text-emerald-300 sm:text-3xl";
 
   const navLinkClass =
-    "whitespace-nowrap text-[15px] font-light tracking-wide text-white transition-colors hover:text-white/90";
+    "whitespace-nowrap text-[17px] font-normal tracking-wide text-white transition-colors hover:text-white/90";
 
   return (
     <>
