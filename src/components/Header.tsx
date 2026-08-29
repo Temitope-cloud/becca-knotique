@@ -30,6 +30,13 @@ const Header = () => {
 
   const closeMenu = () => setMenuClicked(false);
 
+  // Always close the mobile menu on navigation — including browser back/forward,
+  // which don't fire the in-menu link handlers. Otherwise the body scroll lock
+  // below could stay on and leave the next page unable to scroll.
+  useEffect(() => {
+    setMenuClicked(false);
+  }, [pathname]);
+
   useEffect(() => {
     if (!menuRef.current) return;
 

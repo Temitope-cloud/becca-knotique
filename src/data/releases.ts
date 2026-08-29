@@ -24,9 +24,11 @@ export const releases: Release[] = [
   },
   {
     date: "2026-08-29",
-    title: "Stock & draft fixes, menu tidy-up",
+    title: "Stock, draft & order-tracking fixes",
     tag: "fix",
     items: [
+      "Order tracking now requires the correct email that matches the order number, so no one can look up an order with just the number. The email is filled in automatically when you're signed in.",
+      "Fixed a rare case where opening the mobile menu and then using the browser's back button could leave a page unable to scroll.",
       "Ready-made products now correctly sell out when their stock reaches 0: the page shows 'Sold out' and the buy buttons are disabled, even if the 'In stock' toggle was left on. This is also enforced at checkout, so an out-of-stock item can never be ordered.",
       "Added a gentle 'Only N left' note when a ready-made item is running low, and the quantity picker won't let a customer add more than are in stock.",
       "Draft products are now fully hidden from customers: their product page returns 'not found' and they cannot be added to cart or bought, even with a direct link. As the admin, you can still open the page to preview it (with a clear 'Admin preview' notice).",

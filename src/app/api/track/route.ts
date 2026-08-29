@@ -1,24 +1,31 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
 
 export const runtime = "nodejs";
 
 /**
- * Order lookup for the tracking page. To avoid orders being enumerable by
- * reference alone, the caller must EITHER supply the matching email OR be signed
- * in as the order's owner. Returns only what the timeline needs.
+ * Order lookup for the tracking page. An order is only revealed when BOTH the
+ * order number AND its matching email are supplied — so orders can't be
+ * enumerated by number alone, and a wrong email never returns someone's order.
+ * (Signed-in customers see all their orders on the account page instead.)
  */
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const input =
     typeof body?.reference === "string" ? body.reference.trim() : "";
-  const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+  const email =
+    typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
 
   if (!input) {
     return NextResponse.json(
       { found: false, error: "Enter your order number." },
+      { status: 400 },
+    );
+  }
+  if (!email) {
+    return NextResponse.json(
+      { found: false, error: "Enter the email used for the order." },
       { status: 400 },
     );
   }
@@ -32,15 +39,9 @@ export async function POST(request: Request) {
     ],
   }).lean<IOrder>();
 
-  const session = await auth();
-  const ownsByAuth =
-    !!session?.user &&
-    !!order &&
-    (session.user.email?.toLowerCase() === order.email ||
-      String(order.user ?? "") === session.user.id);
-  const ownsByEmail = !!order && !!email && email === order.email;
-
-  if (!order || (!ownsByAuth && !ownsByEmail)) {
+  // The email must match the order's email — the shared secret that proves
+  // ownership. A missing order and a wrong email look identical to the caller.
+  if (!order || email !== (order.email || "").toLowerCase()) {
     return NextResponse.json({
       found: false,
       error: "No order found with that number and email.",
