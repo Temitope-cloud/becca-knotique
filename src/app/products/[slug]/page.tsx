@@ -10,6 +10,9 @@ import {
   type CatalogProduct,
 } from "@/lib/catalog";
 import { getAdminSession } from "@/lib/admin-auth";
+import { isSoldOut } from "@/lib/stock";
+import { SITE_URL, absoluteUrl, breadcrumbSchema } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductRevisitNudge from "@/components/ProductRevisitNudge";
@@ -21,8 +24,6 @@ import ShareButton from "@/components/ShareButton";
 type ProductDetailsProps = {
   params: Promise<{ slug: string }>;
 };
-
-const SITE_URL = "https://www.beccasknotique.com";
 
 const formatPrice = (value: number) => `₦${value.toLocaleString()}`;
 
@@ -40,11 +41,6 @@ function galleryImages(product: CatalogProduct): string[] {
   if (product.images?.length) return product.images;
   if (product.image) return [product.image];
   return [];
-}
-
-function absoluteUrl(path: string): string {
-  if (path.startsWith("http")) return path;
-  return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
 export async function generateMetadata({
@@ -125,7 +121,13 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
     )
     .slice(0, 3);
 
-  const inStock = product.inStock !== false;
+  const soldOut = isSoldOut(product);
+  // Give search engines a concrete price validity window (one year out).
+  const priceValidUntil = new Date(
+    Date.now() + 365 * 24 * 60 * 60 * 1000,
+  )
+    .toISOString()
+    .slice(0, 10);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -133,6 +135,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
     "@id": `${SITE_URL}/products/${product.slug}#product`,
     url: `${SITE_URL}/products/${product.slug}`,
     name: product.name,
+    sku: product.slug,
     description: truncateMeta(product.longDescription ?? product.description, 480),
     image: gallery.length
       ? gallery.map(absoluteUrl)
@@ -147,19 +150,25 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
       url: `${SITE_URL}/products/${product.slug}`,
       priceCurrency: product.currency ?? "NGN",
       price: product.price.toString(),
-      availability: inStock
-        ? ("https://schema.org/InStock" as const)
-        : ("https://schema.org/OutOfStock" as const),
+      priceValidUntil,
+      availability: soldOut
+        ? ("https://schema.org/OutOfStock" as const)
+        : ("https://schema.org/InStock" as const),
       itemCondition: "https://schema.org/NewCondition",
+      seller: { "@id": `${SITE_URL}/#organization` },
     },
   };
 
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Products", path: "/products" },
+    { name: product.name, path: `/products/${product.slug}` },
+  ]);
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
-      />
+      <JsonLd data={productJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <ProductViewTracker slug={product.slug} />
       <main className="relative min-h-screen w-full bg-stone-50 pb-16">
       <div

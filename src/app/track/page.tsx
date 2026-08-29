@@ -5,6 +5,7 @@ import TrackClient from "./TrackClient";
 export const metadata: Metadata = {
   title: "Track your order",
   description: "Check the status of your Becca's Knotique order.",
+  robots: { index: false, follow: false },
 };
 
 export default function TrackPage() {

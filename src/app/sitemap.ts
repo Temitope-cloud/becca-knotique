@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllProducts } from "@/lib/catalog";
 import { getPublishedPosts } from "@/lib/blog";
-
-const baseUrl = "https://www.beccasknotique.com";
+import { SITE_URL as baseUrl } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Product URLs need the DB. If it's unreachable at build time (e.g. env vars
@@ -52,6 +51,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.75,
+    },
+    {
+      url: `${baseUrl}/trending`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
     },
     ...productEntries,
     {

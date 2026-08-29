@@ -14,6 +14,16 @@ export interface Release {
 export const releases: Release[] = [
   {
     date: "2026-08-29",
+    title: "Search engine (SEO) groundwork",
+    tag: "improvement",
+    items: [
+      "Added rich 'structured data' across the site so Google understands the brand, products (with price and availability), articles, and breadcrumbs — the groundwork for rich results and a brand panel.",
+      "Search engines are now steered away from private pages (cart, checkout, account, admin) and pointed at the sitemap, which now includes the shop, journal, and trending pages.",
+      "Added a spot to plug in the Google Search Console verification code, an app manifest, and a working product search link, and fixed the site to use one consistent web address everywhere.",
+    ],
+  },
+  {
+    date: "2026-08-29",
     title: "Stock & draft fixes, menu tidy-up",
     tag: "fix",
     items: [

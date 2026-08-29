@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import ProductsPageClient from "./ProductsPageClient";
 import { getAllProducts } from "@/lib/catalog";
+import { SITE_URL, breadcrumbSchema } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -44,14 +46,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
   const products = await getAllProducts();
   const itemListElements = products
     .filter((p) => p.slug && p.name)
     .map((product, index) => ({
       "@type": "ListItem" as const,
       position: index + 1,
-      url: `https://www.beccasknotique.com/products/${product.slug}`,
+      url: `${SITE_URL}/products/${product.slug}`,
       name: product.name,
     }));
 
@@ -60,7 +67,7 @@ export default async function ProductsPage() {
     "@type": "CollectionPage",
     name: "Becca's Knotique — crochet products",
     description: listingDescription,
-    url: "https://www.beccasknotique.com/products",
+    url: `${SITE_URL}/products`,
     numberOfItems: itemListElements.length,
     mainEntity: {
       "@type": "ItemList",
@@ -68,15 +75,16 @@ export default async function ProductsPage() {
     },
   };
 
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Products", path: "/products" },
+  ]);
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(collectionJsonLd),
-        }}
-      />
-      <ProductsPageClient products={products} />
+      <JsonLd data={collectionJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
+      <ProductsPageClient products={products} initialQuery={q ?? ""} />
     </>
   );
 }

@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { getPublishedPosts } from "@/lib/blog";
+import { SITE_URL, SITE_NAME, breadcrumbSchema } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -30,8 +32,31 @@ function formatDate(iso: string): string {
 export default async function JournalPage() {
   const posts = await getPublishedPosts();
 
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${SITE_URL}/journal#blog`,
+    name: `The ${SITE_NAME} Journal`,
+    url: `${SITE_URL}/journal`,
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    blogPost: posts.slice(0, 20).map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      url: `${SITE_URL}/journal/${p.slug}`,
+      datePublished: p.publishedAt ?? p.createdAt,
+      image: p.coverImage || undefined,
+    })),
+  };
+
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Journal", path: "/journal" },
+  ]);
+
   return (
     <main className="min-h-screen w-full bg-white pb-20">
+      <JsonLd data={blogJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <section className="mx-auto w-full max-w-5xl px-4 pt-14 text-center sm:px-6 sm:pt-20">
         <p className="text-xs font-semibold tracking-[0.28em] text-emerald-700 uppercase">
           The Journal

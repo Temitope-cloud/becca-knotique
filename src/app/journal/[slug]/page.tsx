@@ -5,12 +5,10 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getPublishedPostBySlug } from "@/lib/blog";
 import { PROSE_CLASS } from "@/lib/prose";
+import { SITE_URL, SITE_NAME, breadcrumbSchema } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-  "https://beccasknotique.com";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-NG", {
@@ -75,14 +73,17 @@ export default async function JournalPostPage({
     dateModified: post.updatedAt,
     author: {
       "@type": "Organization",
-      name: post.author || "Becca's Knotique",
+      name: post.author || SITE_NAME,
     },
-    publisher: {
-      "@type": "Organization",
-      name: "Becca's Knotique",
-    },
+    publisher: { "@id": `${SITE_URL}/#organization` },
     mainEntityOfPage: `${SITE_URL}/journal/${post.slug}`,
   };
+
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Journal", path: "/journal" },
+    { name: post.title, path: `/journal/${post.slug}` },
+  ]);
 
   return (
     <main className="min-h-screen w-full bg-white pb-24">
@@ -152,10 +153,8 @@ export default async function JournalPostPage({
         </div>
       </article>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
     </main>
   );
 }

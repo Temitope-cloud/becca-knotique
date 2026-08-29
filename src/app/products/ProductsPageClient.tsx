@@ -98,8 +98,10 @@ function RecentlyViewed({ products }: { products: CatalogProduct[] }) {
 
 export default function ProductsPageClient({
   products,
+  initialQuery = "",
 }: {
   products: CatalogProduct[];
+  initialQuery?: string;
 }) {
   const valid = useMemo(
     () => products.filter((p) => p.slug && p.name && p.active !== false),
@@ -118,7 +120,7 @@ export default function ProductsPageClient({
   const [category, setCategory] = useState("all");
   const [price, setPrice] = useState("all");
   const [sort, setSort] = useState("featured");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
 
   const filtered = useMemo(() => {
     let list = [...valid];
