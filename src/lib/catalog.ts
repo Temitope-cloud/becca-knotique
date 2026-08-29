@@ -162,6 +162,15 @@ export async function getAllProducts(opts?: {
   return docs.map(fromDoc);
 }
 
+/**
+ * Whether a product may be shown to shoppers: published, active, not trashed.
+ * The listing queries already filter on this; use it to gate the single-product
+ * detail page and checkout, which look products up directly by slug/id.
+ */
+export function isStorefrontVisible(p: CatalogProduct): boolean {
+  return p.active !== false && p.status !== "draft" && !p.trashed;
+}
+
 export async function getProductBySlug(
   slug: string,
 ): Promise<CatalogProduct | null> {

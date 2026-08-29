@@ -13,6 +13,16 @@ export interface Release {
  */
 export const releases: Release[] = [
   {
+    date: "2026-08-29",
+    title: "Draft products hidden from shoppers & menu tidy-up",
+    tag: "fix",
+    items: [
+      "Draft products are now fully hidden from customers: their product page returns 'not found' and they cannot be added to cart or bought, even with a direct link. As the admin, you can still open the page to preview it (with a clear 'Admin preview' notice).",
+      "Removed 'Featured' from the top menu and made the menu links a little larger.",
+      "The 'Shop the collection' button on journal posts now goes to the products page.",
+    ],
+  },
+  {
     date: "2026-08-25",
     title: "The Journal, made-to-order products & helpful tooltips",
     tag: "feature",

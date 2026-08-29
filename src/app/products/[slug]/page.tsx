@@ -6,8 +6,10 @@ import { ArrowLeft, ShieldCheck, Sparkles, Truck } from "lucide-react";
 import {
   getAllProducts,
   getProductBySlug,
+  isStorefrontVisible,
   type CatalogProduct,
 } from "@/lib/catalog";
+import { getAdminSession } from "@/lib/admin-auth";
 import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
 import ProductRevisitNudge from "@/components/ProductRevisitNudge";
@@ -105,6 +107,13 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
     notFound();
   }
 
+  // Drafts, hidden, and trashed products are not for shoppers. Let a signed-in
+  // admin still open the page to preview it; everyone else gets a 404.
+  const adminPreview = !isStorefrontVisible(product);
+  if (adminPreview && !(await getAdminSession())) {
+    notFound();
+  }
+
   const validProducts = await getAllProducts();
 
   const gallery = galleryImages(product);
@@ -159,6 +168,13 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
       />
 
       <section className="relative mx-auto w-full max-w-7xl px-4 pt-12 sm:px-6 md:pt-16">
+        {adminPreview ? (
+          <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <span className="font-semibold">Admin preview.</span> This product is
+            not published, so shoppers cannot see or buy it. Only you can view
+            this page.
+          </div>
+        ) : null}
         <Link
           href="/products"
           className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-xs font-semibold tracking-[0.12em] text-stone-700 uppercase transition hover:border-stone-300"

@@ -5,7 +5,11 @@ import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrderItem } from "@/lib/models/Order";
 import { Coupon, computeCouponDiscount } from "@/lib/models/Coupon";
-import { getProductById, getProductBySlug } from "@/lib/catalog";
+import {
+  getProductById,
+  getProductBySlug,
+  isStorefrontVisible,
+} from "@/lib/catalog";
 import { priceForSize } from "@/lib/money";
 import { nextOrderNumber } from "@/lib/models/Counter";
 import { getSettings, shippingFeeFor } from "@/lib/settings";
@@ -92,7 +96,7 @@ export async function POST(request: Request) {
     const product =
       (line.slug ? await getProductBySlug(line.slug) : null) ??
       (line.productId ? await getProductById(line.productId) : null);
-    if (!product) {
+    if (!product || !isStorefrontVisible(product)) {
       return NextResponse.json(
         { error: "A product in your cart is no longer available." },
         { status: 400 },
