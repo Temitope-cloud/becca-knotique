@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatNaira, priceForSize } from "@/lib/money";
+import { isSoldOut, unitsLeft } from "@/lib/stock";
 import Tooltip from "@/components/ui/Tooltip";
 import MeasureGuideButton from "@/components/MeasureGuide";
 
@@ -35,6 +36,7 @@ export interface PurchaseProduct {
   measurementFields?: MeasurementField[];
   allowCustomColor?: boolean;
   inStock?: boolean;
+  stockCount?: number;
   madeToOrder?: boolean;
   leadTime?: string;
 }
@@ -185,7 +187,12 @@ export default function ProductPurchasePanel({
   const [manualImageUrl, setManualImageUrl] = useState("");
 
   // Made-to-order pieces are crocheted per order, so they never sell out.
-  const soldOut = product.inStock === false && !product.madeToOrder;
+  const soldOut = isSoldOut(product);
+  const remaining = unitsLeft(product);
+  const lowStock =
+    !soldOut && remaining !== null && remaining <= 3 ? remaining : null;
+  // Cap how many can be added when stock is limited.
+  const maxQty = remaining !== null ? Math.min(20, Math.max(1, remaining)) : 20;
   const unitPrice = priceForSize(product.price, product.sizePrices, size);
   const discount =
     product.oldPrice && product.oldPrice > unitPrice
@@ -267,28 +274,40 @@ export default function ProductPurchasePanel({
       </div>
 
       {/* availability */}
-      <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-emerald-200/70 bg-emerald-50/60 px-3.5 py-2.5 text-sm">
-        <Scissors className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
-        <p className="text-stone-700">
-          {product.madeToOrder ? (
-            <>
-              <span className="font-semibold text-stone-900">
-                Made to order.
-              </span>{" "}
-              {product.leadTime
-                ? `We crochet it just for you — about ${product.leadTime} to make.`
-                : "We crochet it just for you after you order."}
-            </>
-          ) : (
-            <>
-              <span className="font-semibold text-stone-900">Ready now.</span>{" "}
-              {product.leadTime
-                ? `Already made, ships in about ${product.leadTime}.`
-                : "Already made and ready to ship."}
-            </>
-          )}
-        </p>
-      </div>
+      {soldOut ? (
+        <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-sm">
+          <Scissors className="mt-0.5 h-4 w-4 shrink-0 text-rose-600" />
+          <p className="text-stone-700">
+            <span className="font-semibold text-rose-700">Sold out.</span> This
+            piece is currently unavailable. Check back soon or message us to
+            request one.
+          </p>
+        </div>
+      ) : (
+        <div className="mb-6 flex items-start gap-2.5 rounded-xl border border-emerald-200/70 bg-emerald-50/60 px-3.5 py-2.5 text-sm">
+          <Scissors className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" />
+          <p className="text-stone-700">
+            {product.madeToOrder ? (
+              <>
+                <span className="font-semibold text-stone-900">
+                  Made to order.
+                </span>{" "}
+                {product.leadTime
+                  ? `We crochet it just for you — about ${product.leadTime} to make.`
+                  : "We crochet it just for you after you order."}
+              </>
+            ) : (
+              <>
+                <span className="font-semibold text-stone-900">Ready now.</span>{" "}
+                {product.leadTime
+                  ? `Already made, ships in about ${product.leadTime}.`
+                  : "Already made and ready to ship."}
+                {lowStock ? ` Only ${lowStock} left.` : ""}
+              </>
+            )}
+          </p>
+        </div>
+      )}
 
       {product.sizes?.length ? (
         <div className="mb-4">
@@ -530,7 +549,7 @@ export default function ProductPurchasePanel({
           </span>
           <button
             type="button"
-            onClick={() => setQuantity((q) => Math.min(20, q + 1))}
+            onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
             className="px-3 py-2 text-lg leading-none text-stone-700 hover:bg-stone-100"
             aria-label="Increase quantity"
           >

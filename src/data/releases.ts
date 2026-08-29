@@ -14,9 +14,11 @@ export interface Release {
 export const releases: Release[] = [
   {
     date: "2026-08-29",
-    title: "Draft products hidden from shoppers & menu tidy-up",
+    title: "Stock & draft fixes, menu tidy-up",
     tag: "fix",
     items: [
+      "Ready-made products now correctly sell out when their stock reaches 0: the page shows 'Sold out' and the buy buttons are disabled, even if the 'In stock' toggle was left on. This is also enforced at checkout, so an out-of-stock item can never be ordered.",
+      "Added a gentle 'Only N left' note when a ready-made item is running low, and the quantity picker won't let a customer add more than are in stock.",
       "Draft products are now fully hidden from customers: their product page returns 'not found' and they cannot be added to cart or bought, even with a direct link. As the admin, you can still open the page to preview it (with a clear 'Admin preview' notice).",
       "Removed 'Featured' from the top menu and made the menu links a little larger.",
       "The 'Shop the collection' button on journal posts now goes to the products page.",

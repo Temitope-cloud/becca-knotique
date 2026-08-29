@@ -10,6 +10,7 @@ import {
   getProductBySlug,
   isStorefrontVisible,
 } from "@/lib/catalog";
+import { canFulfill, isSoldOut, unitsLeft } from "@/lib/stock";
 import { priceForSize } from "@/lib/money";
 import { nextOrderNumber } from "@/lib/models/Counter";
 import { getSettings, shippingFeeFor } from "@/lib/settings";
@@ -100,6 +101,22 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "A product in your cart is no longer available." },
         { status: 400 },
+      );
+    }
+    // Never sell more than we have. Made-to-order items are unlimited.
+    if (isSoldOut(product)) {
+      return NextResponse.json(
+        { error: `"${product.name}" is sold out.` },
+        { status: 409 },
+      );
+    }
+    if (!canFulfill(product, line.quantity)) {
+      const left = unitsLeft(product) ?? 0;
+      return NextResponse.json(
+        {
+          error: `Only ${left} of "${product.name}" left. Please lower the quantity.`,
+        },
+        { status: 409 },
       );
     }
     orderItems.push({

@@ -8,6 +8,7 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { formatNaira } from "@/lib/money";
+import { isSoldOut } from "@/lib/stock";
 import Tooltip from "@/components/ui/Tooltip";
 
 function prettyCategory(c: string) {
@@ -25,7 +26,7 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
   const cover = product.images?.[0] ?? product.image ?? "";
   const hover = product.hoverImage ?? product.images?.[1];
   // Made-to-order pieces are crocheted per order, so they never sell out.
-  const soldOut = product.inStock === false && !product.madeToOrder;
+  const soldOut = isSoldOut(product);
   const wished = has(product.slug);
   const discount =
     product.oldPrice && product.oldPrice > product.price
