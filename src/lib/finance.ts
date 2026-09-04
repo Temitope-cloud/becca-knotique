@@ -82,12 +82,19 @@ export async function createOrderFinanceEntries(order: IOrder): Promise<void> {
     cogs += unit * item.quantity;
   }
 
+  // Revenue is the cash actually received via Paystack. When part of the order
+  // was paid with store credit, that portion was already expensed as a refund
+  // when the credit was issued, so we don't count it as new cash here.
+  const cashRevenue = Math.round(
+    order.amount - (order.storeCreditApplied ?? 0),
+  );
+
   const entries: Array<Partial<IFinanceTransaction>> = [
     {
       date: order.paidAt ?? new Date(),
       description: `Order ${ref}`,
       type: "revenue",
-      amount: Math.round(order.amount),
+      amount: Math.max(0, cashRevenue),
       reference: ref,
       source: "order",
       order: orderId as unknown as IFinanceTransaction["order"],

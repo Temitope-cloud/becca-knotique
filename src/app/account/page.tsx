@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Package, ShieldCheck, Heart } from "lucide-react";
+import { Package, ShieldCheck, Heart, Wallet } from "lucide-react";
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { formatNaira } from "@/lib/money";
+import { getStoreCredit, listStoreCreditEntries } from "@/lib/store-credit";
 import SignOutButton from "@/components/auth/SignOutButton";
 
 export const metadata: Metadata = {
@@ -37,6 +38,17 @@ export default async function AccountPage() {
   }
 
   const orders = await getOrders(session.user.id, session.user.email ?? "");
+  const [storeCredit, creditEntries] = await Promise.all([
+    getStoreCredit(session.user.id),
+    listStoreCreditEntries(session.user.id, 6),
+  ]);
+
+  const creditReasonLabel: Record<string, string> = {
+    refund: "Refund credit",
+    spend: "Used on an order",
+    reversal: "Credit returned",
+    adjustment: "Adjustment",
+  };
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
@@ -67,6 +79,58 @@ export default async function AccountPage() {
           <SignOutButton />
         </div>
       </div>
+
+      {storeCredit > 0 || creditEntries.length > 0 ? (
+        <section className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-white">
+                <Wallet className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-sm text-stone-600">Store credit balance</p>
+                <p className="text-2xl font-semibold text-stone-900">
+                  {formatNaira(storeCredit)}
+                </p>
+              </div>
+            </div>
+            {storeCredit > 0 ? (
+              <Link
+                href="/products"
+                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
+              >
+                Shop with credit
+              </Link>
+            ) : null}
+          </div>
+
+          {creditEntries.length > 0 ? (
+            <ul className="mt-4 divide-y divide-emerald-100 border-t border-emerald-100 pt-2 text-sm">
+              {creditEntries.map((e) => (
+                <li
+                  key={e._id}
+                  className="flex items-center justify-between py-2"
+                >
+                  <span className="text-stone-600">
+                    {creditReasonLabel[e.reason] ?? e.reason}
+                    {e.orderRef ? (
+                      <span className="text-stone-400"> · {e.orderRef}</span>
+                    ) : null}
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      e.amount >= 0 ? "text-emerald-700" : "text-stone-500"
+                    }`}
+                  >
+                    {e.amount >= 0 ? "+" : "−"}
+                    {formatNaira(Math.abs(e.amount))}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
+      ) : null}
 
       <section className="mt-10">
         <h2 className="text-xl font-semibold text-stone-900">Order history</h2>
@@ -134,6 +198,18 @@ export default async function AccountPage() {
                     {formatNaira(order.amount)}
                   </span>
                 </div>
+                {order.refundedAmount ? (
+                  <div className="mt-2 flex items-center justify-between rounded-lg bg-rose-50 px-3 py-2 text-sm">
+                    <span className="font-medium text-rose-700">
+                      {order.refundStatus === "full"
+                        ? "Refunded"
+                        : "Partially refunded"}
+                    </span>
+                    <span className="font-semibold text-rose-700">
+                      {formatNaira(order.refundedAmount)}
+                    </span>
+                  </div>
+                ) : null}
                 <div className="mt-3 text-right">
                   <Link
                     href={`/track?ref=${encodeURIComponent(order.orderNumber ?? order.reference)}`}

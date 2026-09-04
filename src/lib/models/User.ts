@@ -14,6 +14,8 @@ export interface IUser {
   role: UserRole;
   phone?: string;
   wishlist: string[];
+  /** store credit balance in NGN */
+  storeCredit: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +41,7 @@ const UserSchema = new Schema<IUser>(
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
     phone: { type: String },
     wishlist: { type: [String], default: [] },
+    storeCredit: { type: Number, default: 0, min: 0 },
   },
   { timestamps: true },
 );

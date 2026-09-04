@@ -1,6 +1,15 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import {
+  Check,
+  RefreshCcw,
+  X,
+  Clock,
+  CreditCard,
+  Mail,
+  Ruler,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Refund Policy",
@@ -14,121 +23,239 @@ export const metadata: Metadata = {
     description:
       "Understand return windows, handmade item rules, and refund timelines for Becca's Knotique orders.",
     url: "/legal/refund-policy",
-    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg"],
+    images: [
+      "https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg",
+    ],
   },
 };
 
-const RefundPolicy = () => {
-  const highlights = [
-    {
-      title: "Request Window",
-      detail: "Contact us within 7 days of delivery for return support.",
-    },
-    {
-      title: "Handmade Items",
-      detail:
-        "Because each piece is made by hand, custom orders are non-refundable once production starts.",
-    },
-    {
-      title: "Refund Timeline",
-      detail:
-        "Approved refunds are processed to your original payment method within 5-10 business days.",
-    },
-  ];
+const highlights = [
+  {
+    Icon: Clock,
+    title: "Report quickly",
+    detail:
+      "Tell us within 48 hours if an item arrives damaged, wrong, or not as described.",
+  },
+  {
+    Icon: Ruler,
+    title: "Made-to-order",
+    detail:
+      "Custom and made-to-measure pieces can't be refunded for a change of mind once we start making them.",
+  },
+  {
+    Icon: RefreshCcw,
+    title: "We'll make it right",
+    detail:
+      "If the fault is ours, you'll get a refund, replacement, or store credit — your choice.",
+  },
+];
 
-  const policySections = [
-    {
-      title: "1. Eligibility for Returns",
-      body: "To be eligible for a return, your item must be unused, in its original condition, and returned with any tags or packaging included. Please reach out before sending anything back so we can guide the process.",
+const fullRefund = [
+  "Your item arrives damaged or faulty.",
+  "You received the wrong item, colour, or size versus what you ordered.",
+  "Your order never arrives or is lost in transit.",
+  "We can't make your piece (for example we run out of the yarn) — you get a full refund.",
+  "The item is significantly not as described.",
+];
+
+const storeCredit = [
+  "Fit isn't right on a made-to-measure piece you gave measurements for — we'll offer an alteration or a discounted remake.",
+  "You changed your mind on a ready-made, unworn item within 7 days — returned in original condition for store credit, or a refund minus delivery.",
+];
+
+const noRefund = [
+  "Change of mind on a custom or made-to-order piece once production has started (cancel within 24 hours for a full refund).",
+  "Worn accessories such as earrings, for hygiene reasons.",
+  "Items returned used, washed, or without their original packaging.",
+];
+
+const Section = ({
+  accent,
+  Icon,
+  title,
+  intro,
+  items,
+}: {
+  accent: "emerald" | "amber" | "rose";
+  Icon: React.ElementType;
+  title: string;
+  intro: string;
+  items: string[];
+}) => {
+  const styles = {
+    emerald: {
+      border: "border-emerald-200",
+      chip: "bg-emerald-100 text-emerald-700",
+      dot: "text-emerald-600",
     },
-    {
-      title: "2. Non-Returnable Items",
-      body: "Custom-made or personalized pieces cannot be returned unless they arrive damaged or we sent the wrong item. For hygiene reasons, worn accessories are also non-returnable.",
+    amber: {
+      border: "border-amber-200",
+      chip: "bg-amber-100 text-amber-800",
+      dot: "text-amber-600",
     },
-    {
-      title: "3. Damaged or Incorrect Orders",
-      body: "If your order arrives damaged or incorrect, email us within 48 hours of delivery with your order number and clear photos. We will offer a replacement, store credit, or refund based on the issue.",
+    rose: {
+      border: "border-rose-200",
+      chip: "bg-rose-100 text-rose-700",
+      dot: "text-rose-500",
     },
-    {
-      title: "4. Return Shipping",
-      body: "Customers are responsible for return shipping costs unless the return is due to our error. We recommend a trackable shipping method, as we are not responsible for lost returns.",
-    },
-    {
-      title: "5. Cancellations",
-      body: "Orders may be cancelled within 24 hours of purchase if production has not begun. After this window, handmade production and material prep may already be in progress.",
-    },
-  ];
+  }[accent];
 
   return (
-    <main className="bg-linear-to-b from-[#fff8f5] via-white to-[#fffaf7] px-4 py-14 sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-6xl">
-        <section className="rounded-3xl border border-[#f0d8d2] bg-white/90 p-8 shadow-sm sm:p-10">
-          <p className="text-sm font-semibold tracking-[0.2em] text-[#a34f3e] uppercase">
+    <article
+      className={`rounded-2xl border ${styles.border} bg-white p-6 shadow-sm sm:p-7`}
+    >
+      <div className="flex items-center gap-3">
+        <span
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${styles.chip}`}
+        >
+          <Icon className="h-4.5 w-4.5" />
+        </span>
+        <h2 className="text-lg font-semibold text-stone-900 sm:text-xl">
+          {title}
+        </h2>
+      </div>
+      <p className="mt-3 text-sm leading-relaxed text-stone-600 sm:text-base">
+        {intro}
+      </p>
+      <ul className="mt-4 space-y-2.5">
+        {items.map((item) => (
+          <li key={item} className="flex gap-2.5 text-sm text-stone-700">
+            <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${styles.dot}`} />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+};
+
+const RefundPolicy = () => {
+  return (
+    <main className="bg-linear-to-b from-emerald-50/60 via-white to-white px-4 py-14 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-5xl">
+        {/* hero */}
+        <section className="rounded-3xl border border-stone-200 bg-white/90 p-8 shadow-sm sm:p-10">
+          <p className="text-xs font-semibold tracking-[0.22em] text-emerald-700 uppercase">
             Legal
           </p>
-          <h1 className="font-apparel mt-3 text-4xl leading-tight font-medium text-gray-900 sm:text-5xl">
-            Refund Policy
+          <h1 className="font-apparel mt-3 text-4xl leading-tight text-stone-900 sm:text-5xl">
+            Refund & Return Policy
           </h1>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
-            We want every Becca&apos;s Knotique order to feel special. If
-            something isn&apos;t right, this policy explains when refunds,
-            returns, and replacements are possible in a clear and fair way.
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-stone-600 sm:text-lg">
+            Every piece is made by hand, often to your exact measurements. This
+            policy explains — in plain language — when we refund, when we offer
+            store credit or a remake, and when a sale is final, so you always
+            know where you stand.
           </p>
         </section>
 
-        <section className="mt-8 grid gap-4 md:grid-cols-3">
-          {highlights.map((item) => (
+        {/* highlights */}
+        <section className="mt-6 grid gap-4 sm:grid-cols-3">
+          {highlights.map(({ Icon, title, detail }) => (
             <article
-              key={item.title}
-              className="rounded-2xl border border-[#f4e3df] bg-white p-5 shadow-sm"
+              key={title}
+              className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm"
             >
-              <h2 className="text-lg font-semibold text-gray-900">{item.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600 sm:text-base">
-                {item.detail}
+              <Icon className="h-5 w-5 text-emerald-600" />
+              <h2 className="mt-3 font-semibold text-stone-900">{title}</h2>
+              <p className="mt-1.5 text-sm leading-relaxed text-stone-600">
+                {detail}
               </p>
             </article>
           ))}
         </section>
 
-        <section className="mt-8 space-y-4">
-          {policySections.map((section) => (
-            <article
-              key={section.title}
-              className="rounded-2xl border border-[#f4e3df] bg-white p-6 shadow-sm sm:p-7"
-            >
-              <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
-                {section.title}
+        {/* the three clear categories */}
+        <section className="mt-6 space-y-4">
+          <Section
+            accent="emerald"
+            Icon={Check}
+            title="When you get a full refund"
+            intro="If something is wrong on our side, we cover it completely. Email us within 48 hours of delivery with your order number and clear photos."
+            items={fullRefund}
+          />
+          <Section
+            accent="amber"
+            Icon={RefreshCcw}
+            title="Store credit, exchange, or remake"
+            intro="For these cases we'll usually offer store credit, an exchange, or a remake rather than a cash refund."
+            items={storeCredit}
+          />
+          <Section
+            accent="rose"
+            Icon={X}
+            title="What can't be refunded"
+            intro="Because our pieces are handmade to order and can't simply be re-sold, these are final."
+            items={noRefund}
+          />
+        </section>
+
+        {/* how refunds are paid */}
+        <section className="mt-6 grid gap-4 md:grid-cols-2">
+          <article className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-7">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-700">
+                <CreditCard className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="text-lg font-semibold text-stone-900">
+                How refunds are paid
               </h2>
-              <p className="mt-3 text-base leading-relaxed text-gray-700">
-                {section.body}
-              </p>
-            </article>
-          ))}
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-stone-600">
+              Approved refunds go back to your original payment method through
+              Paystack within 5–10 business days, or instantly as store credit
+              you can spend on your next order. Store credit is the fastest
+              option and never expires.
+            </p>
+          </article>
+          <article className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-7">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-100 text-stone-700">
+                <Clock className="h-4.5 w-4.5" />
+              </span>
+              <h2 className="text-lg font-semibold text-stone-900">
+                Cancellations & return shipping
+              </h2>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-stone-600">
+              You can cancel for a full refund within 24 hours of ordering, as
+              long as we haven&apos;t started making your piece. For approved
+              returns, you cover return shipping unless the fault is ours —
+              please use a trackable service.
+            </p>
+          </article>
         </section>
 
-        <section className="mt-8 rounded-2xl border border-[#ecd0c9] bg-[#fff4ef] p-6 sm:p-8">
-          <h2 className="text-2xl font-semibold text-gray-900">Need help?</h2>
-          <p className="mt-2 max-w-2xl text-base leading-relaxed text-gray-700">
-            For any return or refund request, include your order number and a
-            short description of your concern so we can assist you quickly.
+        {/* contact */}
+        <section className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-6 sm:p-8">
+          <h2 className="text-xl font-semibold text-stone-900 sm:text-2xl">
+            Need help with an order?
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-700 sm:text-base">
+            Send your order number and a short description (with photos if it
+            arrived damaged or wrong) and we&apos;ll sort it out quickly.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Link
+            <a
               href="mailto:beccasknotique@gmail.com"
-              className="rounded-full bg-[#a34f3e] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#8d4334]"
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
             >
-              Email Support
-            </Link>
+              <Mail className="h-4 w-4" /> Email support
+            </a>
             <Link
               href="/contact"
-              className="rounded-full border border-[#a34f3e] px-5 py-2.5 text-sm font-semibold text-[#a34f3e] transition hover:bg-[#a34f3e] hover:text-white"
+              className="inline-flex items-center rounded-full border border-emerald-600 px-5 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-600 hover:text-white"
             >
-              Contact Page
+              Contact page
+            </Link>
+            <Link
+              href="/track"
+              className="inline-flex items-center rounded-full border border-stone-300 px-5 py-2.5 text-sm font-semibold text-stone-700 transition hover:bg-stone-100"
+            >
+              Track an order
             </Link>
           </div>
-          <p className="mt-4 text-xs text-gray-500">
-            Last updated: April 2026
-          </p>
+          <p className="mt-5 text-xs text-stone-500">Last updated: September 2026</p>
         </section>
       </div>
     </main>

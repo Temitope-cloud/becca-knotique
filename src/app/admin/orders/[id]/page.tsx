@@ -5,7 +5,9 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { formatNaira } from "@/lib/money";
+import { paystackRefundable } from "@/lib/refunds";
 import OrderStatusControls from "@/components/admin/OrderStatusControls";
+import RefundPanel from "@/components/admin/RefundPanel";
 
 export default async function AdminOrderDetail({
   params,
@@ -113,10 +115,22 @@ export default async function AdminOrderDetail({
                   <span>−{formatNaira(order.discount)}</span>
                 </div>
               ) : null}
+              {order.storeCreditApplied ? (
+                <div className="flex justify-between text-emerald-700">
+                  <span>Store credit used</span>
+                  <span>−{formatNaira(order.storeCreditApplied)}</span>
+                </div>
+              ) : null}
               <div className="flex justify-between pt-1 text-base font-semibold text-stone-900">
                 <span>Total</span>
                 <span>{formatNaira(order.amount)}</span>
               </div>
+              {order.refundedAmount ? (
+                <div className="flex justify-between text-rose-600">
+                  <span>Refunded</span>
+                  <span>−{formatNaira(order.refundedAmount)}</span>
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -152,14 +166,33 @@ export default async function AdminOrderDetail({
           </div>
         </div>
 
-        {/* status controls */}
-        <div className="rounded-2xl border border-stone-200 bg-white p-5">
-          <h2 className="mb-4 font-semibold text-stone-900">Update status</h2>
-          <OrderStatusControls
-            reference={order.reference}
-            status={order.status}
-            fulfillmentStatus={order.fulfillmentStatus ?? "unfulfilled"}
-          />
+        {/* status controls + refunds */}
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-stone-200 bg-white p-5">
+            <h2 className="mb-4 font-semibold text-stone-900">Update status</h2>
+            <OrderStatusControls
+              reference={order.reference}
+              status={order.status}
+              fulfillmentStatus={order.fulfillmentStatus ?? "unfulfilled"}
+            />
+          </div>
+
+          {order.status === "paid" ? (
+            <RefundPanel
+              reference={order.orderNumber ?? order.reference}
+              amount={order.amount}
+              refundedAmount={order.refundedAmount ?? 0}
+              refunds={(order.refunds ?? []).map((r) => ({
+                amount: r.amount,
+                reason: r.reason,
+                method: r.method,
+                note: r.note,
+                createdAt: new Date(r.createdAt).toISOString(),
+              }))}
+              hasCustomer={!!order.user}
+              paystackRefundable={paystackRefundable(order)}
+            />
+          ) : null}
         </div>
       </div>
     </div>

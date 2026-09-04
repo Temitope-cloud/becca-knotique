@@ -25,6 +25,17 @@ export const releases: Release[] = [
   },
   {
     date: "2026-08-29",
+    title: "Refunds & store credit",
+    tag: "feature",
+    items: [
+      "New admin refund tool on each paid order: refund to the customer's card (via Paystack), as store credit, or record a manual/cash refund. Partial refunds are supported, and every refund is recorded in Finance automatically.",
+      "Store credit: customers can be refunded as credit that shows on their account and is spent automatically at checkout — it can even cover a whole order with no card payment. Store credit avoids Paystack's per-refund fee and keeps money in the business.",
+      "Customers now see their store credit balance, credit history, and each order's refund status on their account page.",
+      "Redesigned the Refund Policy page to the brand look with clear, categorised conditions: full refund when the fault is ours, store credit or a remake for fit and change-of-mind, and what's final.",
+    ],
+  },
+  {
+    date: "2026-08-29",
     title: "Search engine (SEO) groundwork",
     tag: "improvement",
     items: [

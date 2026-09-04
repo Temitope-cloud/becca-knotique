@@ -34,6 +34,8 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [shippingCfg, setShippingCfg] = useState({ fee: 0, threshold: 0 });
+  const [storeCredit, setStoreCredit] = useState(0);
+  const [applyCredit, setApplyCredit] = useState(true);
 
   useEffect(() => {
     fetch("/api/store-settings")
@@ -61,6 +63,18 @@ export default function CheckoutPage() {
     if (hydrated && items.length === 0) router.replace("/cart");
   }, [hydrated, items.length, router]);
 
+  // Load the signed-in customer's store credit balance.
+  useEffect(() => {
+    if (!session?.user) {
+      setStoreCredit(0);
+      return;
+    }
+    fetch("/api/account/store-credit")
+      .then((r) => r.json())
+      .then((d) => setStoreCredit(Number(d.balance) || 0))
+      .catch(() => {});
+  }, [session]);
+
   function update(field: keyof typeof form) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -73,6 +87,8 @@ export default function CheckoutPage() {
       ? shippingCfg.fee
       : 0;
   const total = Math.max(0, subtotal - discount) + shipping;
+  const creditApplied = applyCredit ? Math.min(storeCredit, total) : 0;
+  const amountToPay = Math.max(0, total - creditApplied);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -85,6 +101,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           email: form.email,
           couponCode: coupon?.code,
+          useStoreCredit: applyCredit,
           customer: { name: form.name, phone: form.phone },
           shipping: {
             address: form.address,
@@ -108,6 +125,11 @@ export default function CheckoutPage() {
       if (!res.ok) {
         setError(data?.error || "Could not start checkout.");
         setLoading(false);
+        return;
+      }
+      // Store credit covered the whole order — skip Paystack.
+      if (data.paid) {
+        window.location.href = `/order/callback?reference=${encodeURIComponent(data.reference)}`;
         return;
       }
       window.location.href = data.authorizationUrl;
@@ -323,7 +345,36 @@ export default function CheckoutPage() {
               <span>Total</span>
               <span>{formatNaira(total)}</span>
             </div>
+            {creditApplied > 0 ? (
+              <>
+                <div className="flex justify-between text-emerald-700">
+                  <span>Store credit</span>
+                  <span>−{formatNaira(creditApplied)}</span>
+                </div>
+                <div className="flex justify-between border-t border-stone-100 pt-2 text-base font-semibold text-stone-900">
+                  <span>To pay now</span>
+                  <span>{formatNaira(amountToPay)}</span>
+                </div>
+              </>
+            ) : null}
           </div>
+
+          {storeCredit > 0 ? (
+            <label className="mt-4 flex cursor-pointer items-start gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50/60 px-3.5 py-3">
+              <input
+                type="checkbox"
+                checked={applyCredit}
+                onChange={(e) => setApplyCredit(e.target.checked)}
+                className="mt-0.5 h-4 w-4 accent-emerald-600"
+              />
+              <span className="text-sm text-stone-700">
+                <span className="font-semibold text-stone-900">
+                  Use store credit
+                </span>{" "}
+                — you have {formatNaira(storeCredit)} available.
+              </span>
+            </label>
+          ) : null}
 
           <p className="mt-3 text-xs text-stone-400">
             Have a coupon?{" "}
@@ -352,7 +403,9 @@ export default function CheckoutPage() {
             ) : (
               <Lock className="h-4 w-4" />
             )}
-            Pay {formatNaira(total)}
+            {amountToPay > 0
+              ? `Pay ${formatNaira(amountToPay)}`
+              : "Place order with store credit"}
             {!loading ? <ArrowRight className="h-4 w-4" /> : null}
           </button>
 

@@ -6,6 +6,19 @@ export type FulfillmentStatus =
   | "processing"
   | "shipped"
   | "delivered";
+export type RefundMethod = "store_credit" | "paystack" | "manual";
+export type RefundStatus = "none" | "partial" | "full";
+
+export interface IRefund {
+  /** amount refunded in NGN */
+  amount: number;
+  reason: string;
+  method: RefundMethod;
+  note?: string;
+  /** admin email that recorded it */
+  by?: string;
+  createdAt: Date;
+}
 
 export interface IOrderItem {
   productId: string;
@@ -52,6 +65,14 @@ export interface IOrder {
   };
   paidAt?: Date | null;
   paystack?: Record<string, unknown>;
+  /** store credit applied to this order at checkout (NGN) */
+  storeCreditApplied?: number;
+  /** whether the applied store credit has actually been deducted from the balance */
+  storeCreditSpent?: boolean;
+  /** total refunded so far (NGN) */
+  refundedAmount: number;
+  refundStatus: RefundStatus;
+  refunds: IRefund[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -118,6 +139,35 @@ const OrderSchema = new Schema<IOrder>(
     },
     paidAt: { type: Date, default: null },
     paystack: { type: Schema.Types.Mixed },
+    storeCreditApplied: { type: Number, default: 0 },
+    storeCreditSpent: { type: Boolean, default: false },
+    refundedAmount: { type: Number, default: 0 },
+    refundStatus: {
+      type: String,
+      enum: ["none", "partial", "full"],
+      default: "none",
+      index: true,
+    },
+    refunds: {
+      type: [
+        new Schema<IRefund>(
+          {
+            amount: { type: Number, required: true },
+            reason: { type: String, required: true },
+            method: {
+              type: String,
+              enum: ["store_credit", "paystack", "manual"],
+              required: true,
+            },
+            note: { type: String },
+            by: { type: String },
+            createdAt: { type: Date, default: Date.now },
+          },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
   },
   { timestamps: true },
 );

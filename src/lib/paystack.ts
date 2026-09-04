@@ -92,3 +92,41 @@ export async function paystackVerify(
     raw: json.data,
   };
 }
+
+export interface PaystackRefundResult {
+  status: string; // Paystack refund status, e.g. "pending" | "processed"
+  raw: Record<string, unknown>;
+}
+
+/**
+ * Create a refund on Paystack for a transaction. Omit `amountNaira` for a full
+ * refund; pass it for a partial one. Paystack processes refunds asynchronously,
+ * so a successful call typically returns a "pending" status.
+ */
+export async function paystackRefund(
+  transactionReference: string,
+  amountNaira?: number,
+): Promise<PaystackRefundResult> {
+  const res = await fetch(`${PAYSTACK_BASE}/refund`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${secretKey()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      transaction: transactionReference,
+      ...(amountNaira ? { amount: nairaToKobo(amountNaira) } : {}),
+    }),
+    cache: "no-store",
+  });
+
+  const json = await res.json();
+  if (!res.ok || !json.status) {
+    throw new Error(json?.message || "Failed to create Paystack refund");
+  }
+
+  return {
+    status: json.data?.status ?? "pending",
+    raw: json.data ?? {},
+  };
+}

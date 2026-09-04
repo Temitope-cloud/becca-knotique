@@ -15,12 +15,15 @@ import { priceForSize } from "@/lib/money";
 import { nextOrderNumber } from "@/lib/models/Counter";
 import { getSettings, shippingFeeFor } from "@/lib/settings";
 import { paystackInitialize } from "@/lib/paystack";
+import { getStoreCredit } from "@/lib/store-credit";
+import { markOrderPaid } from "@/lib/orders";
 
 export const runtime = "nodejs";
 
 const checkoutSchema = z.object({
   email: z.string().email().optional(),
   couponCode: z.string().optional(),
+  useStoreCredit: z.boolean().optional(),
   customer: z.object({
     name: z.string().min(2).max(80),
     phone: z.string().min(7).max(20),
@@ -161,6 +164,14 @@ export async function POST(request: Request) {
   const shippingFee = shippingFeeFor(settings, subtotal);
   const amount = Math.max(0, subtotal - discount) + shippingFee;
 
+  // Store credit (signed-in customers only). Applied up to the order total.
+  let storeCreditApplied = 0;
+  if (parsed.data.useStoreCredit && session?.user?.id) {
+    const balance = await getStoreCredit(session.user.id);
+    storeCreditApplied = Math.min(balance, amount);
+  }
+  const amountToPay = Math.max(0, amount - storeCreditApplied);
+
   const reference = `bk_${Date.now()}_${randomUUID().slice(0, 8)}`;
 
   try {
@@ -176,15 +187,22 @@ export async function POST(request: Request) {
       couponCode: appliedCoupon,
       shippingFee,
       amount,
+      storeCreditApplied,
       currency: "NGN",
       status: "pending",
       customer,
       shipping,
     });
 
+    // Store credit covers the whole order — no card payment needed.
+    if (amountToPay <= 0) {
+      await markOrderPaid(reference);
+      return NextResponse.json({ paid: true, reference });
+    }
+
     const { authorizationUrl } = await paystackInitialize({
       email,
-      amountNaira: amount,
+      amountNaira: amountToPay,
       reference,
       callbackUrl: `${baseUrl(request)}/order/callback`,
       metadata: { reference, customerName: customer.name, phone: customer.phone },

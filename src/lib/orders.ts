@@ -6,6 +6,29 @@ import { Coupon } from "@/lib/models/Coupon";
 import { paystackVerify } from "@/lib/paystack";
 import { sendOrderEmails } from "@/lib/email";
 import { createOrderFinanceEntries } from "@/lib/finance";
+import { spendStoreCredit } from "@/lib/store-credit";
+
+/**
+ * Deduct any store credit the customer chose to apply, exactly once. Done at
+ * payment-confirmation time so abandoned/failed orders never lose credit.
+ */
+async function applyStoreCredit(order: IOrder): Promise<void> {
+  const applied = order.storeCreditApplied ?? 0;
+  if (applied <= 0 || order.storeCreditSpent || !order.user) return;
+  const ok = await spendStoreCredit(String(order.user), applied, {
+    orderRef: order.orderNumber ?? order.reference,
+    description: `Paid with store credit — ${order.orderNumber ?? order.reference}`,
+  });
+  await Order.updateOne(
+    { reference: order.reference },
+    ok
+      ? { $set: { storeCreditSpent: true } }
+      : // Balance no longer covers it (rare race): record that none was applied.
+        { $set: { storeCreditSpent: true, storeCreditApplied: 0 } },
+  );
+  if (ok) order.storeCreditSpent = true;
+  else order.storeCreditApplied = 0;
+}
 
 /** Reduce stock levels and bump coupon usage once, when an order is paid. */
 async function applyPaidSideEffects(order: IOrder): Promise<void> {
@@ -55,6 +78,7 @@ export async function markOrderPaid(
 
   const fresh = await Order.findOne({ reference }).lean<IOrder>();
   if (fresh) {
+    await applyStoreCredit(fresh); // may adjust fresh.storeCreditApplied
     await applyPaidSideEffects(fresh);
     await createOrderFinanceEntries(fresh);
     await sendOrderEmails(fresh);
