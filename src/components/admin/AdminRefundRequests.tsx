@@ -35,15 +35,16 @@ export default function AdminRefundRequests({
 
   if (requests.length === 0) return null;
 
-  async function act(id: string, action: "approve" | "decline") {
+  async function act(r: RequestRow, action: "approve" | "decline") {
+    const id = r.id;
     setError(null);
+    // Mirror the input's shown default when the field hasn't been edited.
+    const defaultAmount = Math.min(r.amount, refundable);
     const payload =
       action === "approve"
         ? {
             action,
-            amount: Math.round(
-              Number(amounts[id] ?? Math.min(refundable, 0) ?? 0),
-            ),
+            amount: Math.round(Number(amounts[id] ?? defaultAmount)),
             method: methods[id] ?? (hasCustomer ? "store_credit" : "paystack"),
             note: notes[id] || undefined,
           }
@@ -183,7 +184,7 @@ export default function AdminRefundRequests({
             <div className="mt-3 flex gap-2">
               <button
                 type="button"
-                onClick={() => act(r.id, "approve")}
+                onClick={() => act(r, "approve")}
                 disabled={busy !== null}
                 className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60"
               >
@@ -196,7 +197,7 @@ export default function AdminRefundRequests({
               </button>
               <button
                 type="button"
-                onClick={() => act(r.id, "decline")}
+                onClick={() => act(r, "decline")}
                 disabled={busy !== null}
                 className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-700 transition hover:bg-stone-100 disabled:opacity-60"
               >
