@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/lib/admin-auth";
-import { getProductById } from "@/lib/catalog";
+import { getProductById, getCategories } from "@/lib/catalog";
 import ProductForm from "@/components/admin/ProductForm";
 
 export default async function EditProductPage({
@@ -14,6 +14,7 @@ export default async function EditProductPage({
   const { id } = await params;
   const product = await getProductById(id);
   if (!product) notFound();
+  const categories = await getCategories();
 
   return (
     <div className="px-5 py-8 sm:px-8">
@@ -27,6 +28,7 @@ export default async function EditProductPage({
         Edit product
       </h1>
       <ProductForm
+        categories={categories}
         product={{
           id: product.id,
           name: product.name,

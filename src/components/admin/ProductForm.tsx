@@ -40,17 +40,28 @@ export interface ProductInput {
   status?: "published" | "draft";
 }
 
-const categories = [
+const DEFAULT_CATEGORIES = [
   "one-piece",
   "new-collection",
   "accessories",
   "bags",
-  "",
 ];
 
-export default function ProductForm({ product }: { product?: ProductInput }) {
+export default function ProductForm({
+  product,
+  categories = [],
+}: {
+  product?: ProductInput;
+  /** Categories already in use, suggested in the form (a new one can be typed). */
+  categories?: string[];
+}) {
   const router = useRouter();
   const editing = Boolean(product?.id);
+
+  // Existing categories + defaults, de-duped, as type-ahead suggestions.
+  const categorySuggestions = Array.from(
+    new Set([...DEFAULT_CATEGORIES, ...categories].filter(Boolean)),
+  ).sort();
 
   const [form, setForm] = useState({
     name: product?.name ?? "",
@@ -216,13 +227,22 @@ export default function ProductForm({ product }: { product?: ProductInput }) {
           </div>
           <div>
             <label className={label}>Category</label>
-            <select value={form.category} onChange={set("category")} className={input}>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c || "uncategorized"}
-                </option>
+            <input
+              value={form.category}
+              onChange={set("category")}
+              list="bk-category-suggestions"
+              placeholder="Type a new one or pick an existing"
+              className={input}
+            />
+            <datalist id="bk-category-suggestions">
+              {categorySuggestions.map((c) => (
+                <option key={c} value={c} />
               ))}
-            </select>
+            </datalist>
+            <p className="mt-1 text-xs text-stone-400">
+              Pick a suggestion or type a new category — it appears in the shop
+              filters automatically.
+            </p>
           </div>
           <div>
             <label className={label}>Made for</label>
