@@ -32,12 +32,13 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"
         className="object-cover"
+        draggable={false}
         priority={activeImage === safeImages[0]}
       />
 
       <div className="absolute inset-x-0 bottom-0 z-20 px-2 pt-10 pb-3 sm:px-3 sm:pb-4">
         <ul
-          className="-mx-1 flex touch-pan-x list-none flex-col gap-2 overflow-x-auto overflow-y-hidden px-1 pb-1 [scrollbar-width:thin] max-md:snap-x max-md:snap-mandatory sm:justify-center sm:gap-3 md:mx-0 md:flex-wrap md:justify-center md:overflow-x-visible md:px-0"
+          className="-mx-1 flex list-none flex-col gap-2 overflow-x-auto overflow-y-hidden px-1 pb-1 [scrollbar-width:thin] max-md:snap-x max-md:snap-mandatory sm:justify-center sm:gap-3 md:mx-0 md:flex-wrap md:justify-center md:overflow-x-visible md:px-0"
           aria-label="Product gallery thumbnails"
         >
           {safeImages.map((img, index) => (
@@ -62,6 +63,7 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
                   aria-hidden
                   width={96}
                   height={96}
+                  draggable={false}
                   className="h-full w-full object-cover"
                 />
               </button>
