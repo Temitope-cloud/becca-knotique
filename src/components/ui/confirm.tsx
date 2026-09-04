@@ -116,10 +116,13 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
       </AlertDialog.Root>
 
       <style>{`
+        /* Centering uses Tailwind's translate utilities (the CSS 'translate'
+           property), so animate opacity + the standalone 'scale' property here —
+           animating 'transform' would fight the centering and slide the box. */
         @keyframes bk-confirm-overlay-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes bk-confirm-content-in {
-          from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
-          to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+          from { opacity: 0; scale: 0.96; }
+          to { opacity: 1; scale: 1; }
         }
         .bk-confirm-overlay[data-state="open"] { animation: bk-confirm-overlay-in 0.15s ease-out; }
         .bk-confirm-content[data-state="open"] { animation: bk-confirm-content-in 0.18s ease-out; }
