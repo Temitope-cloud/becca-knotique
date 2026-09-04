@@ -8,7 +8,6 @@ import type { CatalogProduct } from "@/lib/catalog";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { formatNaira } from "@/lib/money";
-import Tooltip from "@/components/ui/Tooltip";
 
 function prettyCategory(c: string) {
   return c
@@ -85,21 +84,20 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
         ) : null}
       </Link>
 
-      {/* wishlist heart */}
+      {/* wishlist heart — feedback comes from the toast, so no tooltip here
+          (a hover tooltip sticks open and clips on touch devices). */}
       <span className="absolute top-3 right-3">
-        <Tooltip label={wished ? "Remove from wishlist" : "Save to wishlist"}>
-          <button
-            type="button"
-            onClick={() => toggle(product.slug)}
-            aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
-            aria-pressed={wished}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-stone-600 shadow-sm backdrop-blur transition hover:text-rose-600"
-          >
-            <Heart
-              className={`h-4 w-4 ${wished ? "fill-rose-500 text-rose-500" : ""}`}
-            />
-          </button>
-        </Tooltip>
+        <button
+          type="button"
+          onClick={() => toggle(product.slug)}
+          aria-label={wished ? "Remove from wishlist" : "Save to wishlist"}
+          aria-pressed={wished}
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-stone-600 shadow-sm backdrop-blur transition hover:text-rose-600"
+        >
+          <Heart
+            className={`h-4 w-4 ${wished ? "fill-rose-500 text-rose-500" : ""}`}
+          />
+        </button>
       </span>
 
       <div className="flex flex-1 flex-col p-3.5">
