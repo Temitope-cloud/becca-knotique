@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, X } from "lucide-react";
 import { formatNaira } from "@/lib/money";
+import { useConfirm } from "@/components/ui/confirm";
 
 interface RequestRow {
   id: string;
@@ -25,6 +26,7 @@ export default function AdminRefundRequests({
   hasCustomer: boolean;
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [amounts, setAmounts] = useState<Record<string, string>>({});
@@ -53,12 +55,12 @@ export default function AdminRefundRequests({
         setError("Enter an amount to approve.");
         return;
       }
-      if (
-        !confirm(
-          `Approve and refund ${formatNaira(amt)} for this request?`,
-        )
-      )
-        return;
+      const ok = await confirm({
+        title: "Approve refund?",
+        description: `Approve and refund ${formatNaira(amt)} for this request.`,
+        confirmText: "Approve & refund",
+      });
+      if (!ok) return;
     }
 
     setBusy(`${action}:${id}`);

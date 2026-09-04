@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, RotateCcw } from "lucide-react";
 import { formatNaira } from "@/lib/money";
+import { useConfirm } from "@/components/ui/confirm";
 
 interface RefundRecord {
   amount: number;
@@ -44,6 +45,7 @@ export default function RefundPanel({
   paystackRefundable: number;
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const refundable = Math.max(0, amount - refundedAmount);
 
   const [open, setOpen] = useState(false);
@@ -67,12 +69,12 @@ export default function RefundPanel({
       setError(`You can refund at most ${formatNaira(refundable)}.`);
       return;
     }
-    if (
-      !confirm(
-        `Refund ${formatNaira(amt)} via ${METHOD_LABELS[method]} for order ${reference}?`,
-      )
-    )
-      return;
+    const ok = await confirm({
+      title: "Issue refund?",
+      description: `Refund ${formatNaira(amt)} via ${METHOD_LABELS[method]} for order ${reference}.`,
+      confirmText: "Refund",
+    });
+    if (!ok) return;
     setBusy(true);
     try {
       const res = await fetch(
