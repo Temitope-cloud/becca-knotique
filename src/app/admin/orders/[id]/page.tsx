@@ -5,9 +5,11 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { formatNaira } from "@/lib/money";
-import { paystackRefundable } from "@/lib/refunds";
+import { paystackRefundable, totalRefundable } from "@/lib/refunds";
+import { RefundRequest, type IRefundRequest } from "@/lib/models/RefundRequest";
 import OrderStatusControls from "@/components/admin/OrderStatusControls";
 import RefundPanel from "@/components/admin/RefundPanel";
+import AdminRefundRequests from "@/components/admin/AdminRefundRequests";
 
 export default async function AdminOrderDetail({
   params,
@@ -20,6 +22,13 @@ export default async function AdminOrderDetail({
   const order = await Order.findOne({ reference: id }).lean<IOrder>();
 
   if (!order) notFound();
+
+  const pendingRequests = await RefundRequest.find({
+    order: order._id,
+    status: "pending",
+  })
+    .sort({ createdAt: -1 })
+    .lean<IRefundRequest[]>();
 
   return (
     <div className="px-5 py-8 sm:px-8">
@@ -176,6 +185,22 @@ export default async function AdminOrderDetail({
               fulfillmentStatus={order.fulfillmentStatus ?? "unfulfilled"}
             />
           </div>
+
+          {order.status === "paid" && pendingRequests.length > 0 ? (
+            <AdminRefundRequests
+              requests={pendingRequests.map((r) => ({
+                id: r._id.toString(),
+                amount: r.amount,
+                reason: r.reason,
+                note: r.note,
+                photos: r.photos ?? [],
+                email: r.email,
+                createdAt: new Date(r.createdAt).toISOString(),
+              }))}
+              refundable={totalRefundable(order)}
+              hasCustomer={!!order.user}
+            />
+          ) : null}
 
           {order.status === "paid" ? (
             <RefundPanel

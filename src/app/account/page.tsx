@@ -7,7 +7,10 @@ import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { formatNaira } from "@/lib/money";
 import { getStoreCredit, listStoreCreditEntries } from "@/lib/store-credit";
+import { totalRefundable } from "@/lib/refunds";
+import { RefundRequest, type IRefundRequest } from "@/lib/models/RefundRequest";
 import SignOutButton from "@/components/auth/SignOutButton";
+import RefundRequestForm from "@/components/account/RefundRequestForm";
 
 export const metadata: Metadata = {
   title: "My account",
@@ -38,10 +41,24 @@ export default async function AccountPage() {
   }
 
   const orders = await getOrders(session.user.id, session.user.email ?? "");
-  const [storeCredit, creditEntries] = await Promise.all([
+  const [storeCredit, creditEntries, refundReqs] = await Promise.all([
     getStoreCredit(session.user.id),
     listStoreCreditEntries(session.user.id, 6),
+    RefundRequest.find({
+      $or: [
+        { user: session.user.id },
+        { email: (session.user.email ?? "").toLowerCase() },
+      ],
+    })
+      .sort({ createdAt: -1 })
+      .lean<IRefundRequest[]>(),
   ]);
+
+  // Latest request per order reference (for status + eligibility).
+  const requestByOrder = new Map<string, IRefundRequest>();
+  for (const r of refundReqs) {
+    if (!requestByOrder.has(r.orderReference)) requestByOrder.set(r.orderReference, r);
+  }
 
   const creditReasonLabel: Record<string, string> = {
     refund: "Refund credit",
@@ -210,6 +227,39 @@ export default async function AccountPage() {
                     </span>
                   </div>
                 ) : null}
+
+                {/* Refund request: show status, or offer to request one. */}
+                {(() => {
+                  const req = requestByOrder.get(order.reference);
+                  if (req?.status === "pending") {
+                    return (
+                      <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                        Refund request under review.
+                      </p>
+                    );
+                  }
+                  if (req?.status === "declined") {
+                    return (
+                      <p className="mt-3 rounded-lg bg-stone-100 px-3 py-2 text-sm text-stone-600">
+                        Refund request declined
+                        {req.adminNote ? `: ${req.adminNote}` : "."}
+                      </p>
+                    );
+                  }
+                  // Approved requests are reflected by the refund badge above.
+                  if (
+                    !req &&
+                    order.status === "paid" &&
+                    totalRefundable(order) > 0
+                  ) {
+                    return (
+                      <RefundRequestForm
+                        orderRef={order.orderNumber ?? order.reference}
+                      />
+                    );
+                  }
+                  return null;
+                })()}
                 <div className="mt-3 text-right">
                   <Link
                     href={`/track?ref=${encodeURIComponent(order.orderNumber ?? order.reference)}`}

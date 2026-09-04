@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin-auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
+import { RefundRequest } from "@/lib/models/RefundRequest";
 import { formatNaira } from "@/lib/money";
 
 const statusStyles: Record<string, string> = {
@@ -35,6 +36,18 @@ export default async function AdminOrdersPage({
     .sort({ createdAt: -1 })
     .limit(300)
     .lean<IOrder[]>();
+
+  // Which of these orders have a pending refund request?
+  const pendingReqOrderIds = new Set(
+    (
+      await RefundRequest.find({
+        status: "pending",
+        order: { $in: orders.map((o) => o._id) },
+      })
+        .select("order")
+        .lean<{ order: { toString(): string } }[]>()
+    ).map((r) => r.order.toString()),
+  );
 
   return (
     <div className="px-5 py-8 sm:px-8">
@@ -116,6 +129,11 @@ export default async function AdminOrdersPage({
                     >
                       {o.status}
                     </span>
+                    {pendingReqOrderIds.has(o._id.toString()) ? (
+                      <span className="mt-1 block w-fit rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
+                        Refund requested
+                      </span>
+                    ) : null}
                   </td>
                   <td className="px-4 py-3">
                     <span
