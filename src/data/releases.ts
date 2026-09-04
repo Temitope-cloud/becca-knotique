@@ -13,6 +13,17 @@ export interface Release {
  */
 export const releases: Release[] = [
   {
+    date: "2026-09-04",
+    title: "Wishlist feedback, custom categories & editable release log",
+    tag: "improvement",
+    items: [
+      "Saving to your wishlist now shows a clear pop-up confirmation ('Saved to wishlist'), and we removed a stray label that could appear cut-off on phones.",
+      "You can now add your own product categories from the admin — just type a new one and it appears in the shop filters automatically.",
+      "This release log is now stored in the database and edited right here in the admin, instead of being fixed in code.",
+      "Made the sitemap resilient so a temporary database hiccup can no longer fail a deployment.",
+    ],
+  },
+  {
     date: "2026-08-29",
     title: "Search engine (SEO) groundwork",
     tag: "improvement",
