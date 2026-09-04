@@ -49,6 +49,27 @@ export async function PATCH(
     hoverImage: data.images[1] ?? null,
   };
 
+  // The form submits the whole product, so an optional field left blank means
+  // "clear it". Absent fields must be $unset, otherwise a removed value (e.g. a
+  // deleted compare-at price) would linger in the database.
+  const OPTIONAL_FIELDS = [
+    "oldPrice",
+    "subtitle",
+    "longDescription",
+    "stockCount",
+    "leadTime",
+    "materialCost",
+    "packagingCost",
+  ] as const;
+  const unset: Record<string, ""> = {};
+  const raw = data as Record<string, unknown>;
+  for (const field of OPTIONAL_FIELDS) {
+    if (raw[field] === undefined) {
+      unset[field] = "";
+      delete update[field];
+    }
+  }
+
   // Only change slug if one was explicitly provided and it's free.
   if (data.slug) {
     const slug = slugify(data.slug);
@@ -64,7 +85,10 @@ export async function PATCH(
     delete update.slug;
   }
 
-  const result = await Product.updateOne({ _id: id }, { $set: update });
+  const ops: Record<string, unknown> = { $set: update };
+  if (Object.keys(unset).length) ops.$unset = unset;
+
+  const result = await Product.updateOne({ _id: id }, ops);
   if (result.matchedCount === 0) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
