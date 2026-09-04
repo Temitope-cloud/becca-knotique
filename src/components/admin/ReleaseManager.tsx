@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2, Plus, Pencil, X } from "lucide-react";
 import type { ReleaseRow, ReleaseTag } from "@/lib/releases";
+import { useConfirm } from "@/components/ui/confirm";
 
 const TAGS: ReleaseTag[] = ["feature", "improvement", "fix", "launch"];
 
@@ -55,6 +56,7 @@ export default function ReleaseManager({
   releases: ReleaseRow[];
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [form, setForm] = useState<FormState>(emptyForm());
   const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -122,7 +124,13 @@ export default function ReleaseManager({
   }
 
   async function remove(id: string) {
-    if (!confirm("Delete this release entry?")) return;
+    const ok = await confirm({
+      title: "Delete release entry",
+      description: "This removes the entry from the release log. This cannot be undone.",
+      confirmText: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
     await fetch(`/api/admin/releases/${id}`, { method: "DELETE" });
     if (editingId === id) resetForm();
     router.refresh();

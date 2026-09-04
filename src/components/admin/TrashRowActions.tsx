@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, RotateCcw, Trash2 } from "lucide-react";
+import { useConfirm } from "@/components/ui/confirm";
 
 export default function TrashRowActions({
   id,
@@ -14,6 +15,7 @@ export default function TrashRowActions({
   label?: string;
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [busy, setBusy] = useState<"restore" | "delete" | null>(null);
 
   async function restore() {
@@ -31,8 +33,13 @@ export default function TrashRowActions({
   }
 
   async function remove() {
-    if (!confirm(`Permanently delete this ${label}? This cannot be undone.`))
-      return;
+    const ok = await confirm({
+      title: `Permanently delete ${label}`,
+      description: `This permanently deletes the ${label}. This cannot be undone.`,
+      confirmText: "Delete permanently",
+      destructive: true,
+    });
+    if (!ok) return;
     setBusy("delete");
     try {
       const res = await fetch(`${endpoint}/${id}`, { method: "DELETE" });

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, FileText, Trash2 } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import RichTextEditor from "./RichTextEditor";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface BlogInput {
   id?: string;
@@ -23,6 +24,7 @@ type SaveStatus = "published" | "draft";
 
 export default function BlogForm({ post }: { post?: BlogInput }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const editing = Boolean(post?.id);
   const isDraft = post?.status !== "published";
 
@@ -89,7 +91,13 @@ export default function BlogForm({ post }: { post?: BlogInput }) {
 
   async function handleTrash() {
     if (!editing) return;
-    if (!confirm("Move this post to trash? You can restore it later.")) return;
+    const ok = await confirm({
+      title: "Move to trash",
+      description: "This moves the post to trash. You can restore it later.",
+      confirmText: "Move to trash",
+      destructive: true,
+    });
+    if (!ok) return;
     setDeleting(true);
     try {
       const res = await fetch(`/api/admin/blog/${post!.id}`, {

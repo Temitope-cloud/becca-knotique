@@ -7,6 +7,7 @@ import ImageUploader from "./ImageUploader";
 import MeasurementFieldsInput, {
   type MeasurementField,
 } from "./MeasurementFieldsInput";
+import { useConfirm } from "@/components/ui/confirm";
 
 type SaveStatus = "published" | "draft";
 
@@ -56,6 +57,7 @@ export default function ProductForm({
   categories?: string[];
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const editing = Boolean(product?.id);
 
   // Existing categories + defaults, de-duped, as type-ahead suggestions.
@@ -184,7 +186,13 @@ export default function ProductForm({
 
   async function handleTrash() {
     if (!editing) return;
-    if (!confirm("Move this product to trash? You can restore it later.")) return;
+    const ok = await confirm({
+      title: "Move to trash",
+      description: "This moves the product to trash. You can restore it later.",
+      confirmText: "Move to trash",
+      destructive: true,
+    });
+    if (!ok) return;
     setDeleting(true);
     try {
       const res = await fetch(`/api/admin/products/${product!.id}`, {

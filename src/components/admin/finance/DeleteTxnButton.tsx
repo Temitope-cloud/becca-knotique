@@ -3,13 +3,21 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2 } from "lucide-react";
+import { useConfirm } from "@/components/ui/confirm";
 
 export default function DeleteTxnButton({ id }: { id: string }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [busy, setBusy] = useState(false);
 
   async function remove() {
-    if (!confirm("Delete this ledger entry?")) return;
+    const ok = await confirm({
+      title: "Delete ledger entry",
+      description: "This permanently deletes the ledger entry. This cannot be undone.",
+      confirmText: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/finance/transactions/${id}`, {

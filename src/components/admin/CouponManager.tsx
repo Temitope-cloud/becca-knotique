@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Trash2, Plus } from "lucide-react";
 import { formatNaira } from "@/lib/money";
+import { useConfirm } from "@/components/ui/confirm";
 
 export interface CouponRow {
   id: string;
@@ -19,6 +20,7 @@ export interface CouponRow {
 
 export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [form, setForm] = useState({
     code: "",
     type: "percentage",
@@ -74,7 +76,13 @@ export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
   }
 
   async function remove(id: string) {
-    if (!confirm("Delete this coupon?")) return;
+    const ok = await confirm({
+      title: "Delete coupon",
+      description: "This permanently deletes the coupon. This cannot be undone.",
+      confirmText: "Delete",
+      destructive: true,
+    });
+    if (!ok) return;
     await fetch(`/api/admin/coupons/${id}`, { method: "DELETE" });
     router.refresh();
   }
