@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -50,28 +51,36 @@ function ToolbarButton({
 }
 
 function Toolbar({ editor }: { editor: Editor }) {
-  const setLink = () => {
-    const prev = editor.getAttributes("link").href as string | undefined;
-    const url = window.prompt("Link URL", prev ?? "https://");
-    if (url === null) return;
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-    editor
-      .chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: url })
-      .run();
+  // In-app prompt (no native window.prompt). `kind` picks link vs image.
+  const [prompt, setPrompt] = useState<{
+    kind: "link" | "image";
+    value: string;
+  } | null>(null);
+
+  const openLink = () => {
+    const prev = (editor.getAttributes("link").href as string | undefined) ?? "";
+    setPrompt({ kind: "link", value: prev || "https://" });
   };
 
-  const addImage = () => {
-    const url = window.prompt("Image URL (Cloudinary or any https link)");
-    if (url) editor.chain().focus().setImage({ src: url }).run();
+  const openImage = () => setPrompt({ kind: "image", value: "https://" });
+
+  const applyPrompt = () => {
+    if (!prompt) return;
+    const url = prompt.value.trim();
+    if (prompt.kind === "link") {
+      if (!url) {
+        editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      } else {
+        editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+      }
+    } else if (url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+    setPrompt(null);
   };
 
   return (
+    <>
     <div className="flex flex-wrap items-center gap-1 border-b border-stone-200 bg-stone-50 p-1.5">
       <ToolbarButton
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -135,10 +144,10 @@ function Toolbar({ editor }: { editor: Editor }) {
         <Quote className="h-4 w-4" />
       </ToolbarButton>
       <span className="mx-1 h-5 w-px bg-stone-200" />
-      <ToolbarButton onClick={setLink} active={editor.isActive("link")} label="Link">
+      <ToolbarButton onClick={openLink} active={editor.isActive("link")} label="Link">
         <LinkIcon className="h-4 w-4" />
       </ToolbarButton>
-      <ToolbarButton onClick={addImage} label="Image">
+      <ToolbarButton onClick={openImage} label="Image">
         <ImageIcon className="h-4 w-4" />
       </ToolbarButton>
       <span className="mx-1 h-5 w-px bg-stone-200" />
@@ -155,6 +164,54 @@ function Toolbar({ editor }: { editor: Editor }) {
         <Redo2 className="h-4 w-4" />
       </ToolbarButton>
     </div>
+
+    {prompt ? (
+      <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/40 p-4">
+        <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-5 shadow-xl">
+          <h3 className="text-sm font-semibold text-stone-900">
+            {prompt.kind === "link" ? "Add a link" : "Add an image"}
+          </h3>
+          <p className="mt-1 text-xs text-stone-500">
+            {prompt.kind === "link"
+              ? "Paste a web address. Leave empty to remove the link."
+              : "Paste an image URL (Cloudinary or any https link)."}
+          </p>
+          <input
+            autoFocus
+            type="url"
+            value={prompt.value}
+            onChange={(e) => setPrompt({ ...prompt, value: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                applyPrompt();
+              } else if (e.key === "Escape") {
+                setPrompt(null);
+              }
+            }}
+            placeholder="https://"
+            className="mt-3 w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm outline-none focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10"
+          />
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setPrompt(null)}
+              className="rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-100"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={applyPrompt}
+              className="rounded-xl bg-stone-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-stone-800"
+            >
+              {prompt.kind === "link" ? "Add link" : "Add image"}
+            </button>
+          </div>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }
 
