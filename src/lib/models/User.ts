@@ -16,6 +16,9 @@ export interface IUser {
   wishlist: string[];
   /** store credit balance in NGN */
   storeCredit: number;
+  /** sha256 of the active password-reset token (raw token is emailed, never stored) */
+  resetTokenHash?: string;
+  resetTokenExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,6 +45,8 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String },
     wishlist: { type: [String], default: [] },
     storeCredit: { type: Number, default: 0, min: 0 },
+    resetTokenHash: { type: String, select: false },
+    resetTokenExpires: { type: Date, select: false },
   },
   { timestamps: true },
 );

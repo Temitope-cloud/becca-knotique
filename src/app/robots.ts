@@ -18,6 +18,8 @@ export default function robots(): MetadataRoute.Robots {
           "/order",
           "/login",
           "/signup",
+          "/forgot-password",
+          "/reset-password",
           "/track",
         ],
       },

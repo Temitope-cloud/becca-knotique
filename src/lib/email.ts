@@ -72,6 +72,50 @@ function shell(title: string, body: string): string {
   </div>`;
 }
 
+/**
+ * Sends a password-reset link. Returns true if an email was actually sent
+ * (i.e. Resend is configured), so the caller can fall back to logging the link
+ * in development.
+ */
+export async function sendPasswordResetEmail(
+  to: string,
+  name: string,
+  link: string,
+): Promise<boolean> {
+  const resend = getResend();
+  if (!resend) return false; // not configured — caller logs the link in dev
+
+  try {
+    await resend.emails.send({
+      from: fromAddress(),
+      to,
+      subject: "Reset your Becca's Knotique password",
+      html: shell(
+        "Reset your password",
+        `<p style="color:#57534e;font-size:14px;line-height:1.6;">
+           Hi ${name || "there"}, we got a request to reset your password.
+           Tap the button below to choose a new one. This link expires in 1 hour.
+         </p>
+         <p style="margin:24px 0;">
+           <a href="${link}"
+              style="display:inline-block;background:#059669;color:#fff;text-decoration:none;
+                     font-weight:600;font-size:14px;padding:12px 22px;border-radius:12px;">
+             Reset password
+           </a>
+         </p>
+         <p style="color:#a8a29e;font-size:12px;line-height:1.6;">
+           If you didn&apos;t ask for this, you can safely ignore this email and your
+           password stays the same.
+         </p>`,
+      ),
+    });
+    return true;
+  } catch (error) {
+    console.error("[email] sendPasswordResetEmail error:", error);
+    return false;
+  }
+}
+
 /** Sends the customer receipt + the owner notification for a paid order. */
 export async function sendOrderEmails(order: IOrder): Promise<void> {
   const resend = getResend();
