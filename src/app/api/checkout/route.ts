@@ -11,6 +11,7 @@ import {
   isStorefrontVisible,
 } from "@/lib/catalog";
 import { canFulfill, isSoldOut, unitsLeft } from "@/lib/stock";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { priceForSize } from "@/lib/money";
 import { nextOrderNumber } from "@/lib/models/Counter";
 import { getSettings, shippingFeeFor } from "@/lib/settings";
@@ -71,6 +72,17 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  const limited = await rateLimit("checkout", clientIp(request), {
+    limit: 15,
+    windowMs: 10 * 60 * 1000,
+  });
+  if (!limited.ok) {
+    return NextResponse.json(
+      { error: "Too many checkout attempts. Please wait a moment and try again." },
+      { status: 429 },
+    );
   }
 
   const parsed = checkoutSchema.safeParse(body);

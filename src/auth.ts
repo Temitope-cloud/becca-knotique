@@ -4,6 +4,7 @@ import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
+import { rateLimit } from "@/lib/rate-limit";
 
 function isAdminEmail(email?: string | null): boolean {
   const admin = process.env.ADMIN_EMAIL?.toLowerCase();
@@ -32,6 +33,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           ? String(credentials.password)
           : "";
         if (!email || !password) return null;
+
+        // Throttle password guessing against a specific account.
+        const limited = await rateLimit("login", email, {
+          limit: 10,
+          windowMs: 15 * 60 * 1000,
+        });
+        if (!limited.ok) return null;
 
         await connectToDatabase();
         const user = await User.findOne({ email }).select("+password");

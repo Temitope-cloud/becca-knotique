@@ -11,6 +11,7 @@ import { totalRefundable } from "@/lib/refunds";
 import { RefundRequest, type IRefundRequest } from "@/lib/models/RefundRequest";
 import SignOutButton from "@/components/auth/SignOutButton";
 import RefundRequestForm from "@/components/account/RefundRequestForm";
+import DeleteAccountButton from "@/components/account/DeleteAccountButton";
 
 export const metadata: Metadata = {
   title: "My account",
@@ -273,6 +274,27 @@ export default async function AccountPage() {
           </ul>
         )}
       </section>
+
+      {session.user.role !== "admin" ? (
+        <section className="mt-12 rounded-2xl border border-stone-200 bg-white p-5 sm:p-6">
+          <h2 className="text-base font-semibold text-stone-900">
+            Delete account
+          </h2>
+          <p className="mt-1 max-w-xl text-sm text-stone-600">
+            Permanently close your account and remove your profile. Your past
+            orders stay on our records for tax and accounting, but are no longer
+            linked to you. Any store credit is forfeited. This cannot be undone.
+          </p>
+          <div className="mt-4">
+            <DeleteAccountButton
+              storeCredit={storeCredit}
+              pendingRefunds={
+                refundReqs.filter((r) => r.status === "pending").length
+              }
+            />
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

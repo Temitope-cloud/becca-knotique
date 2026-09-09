@@ -4,6 +4,7 @@ import { z } from "zod";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { sendPasswordResetEmail } from "@/lib/email";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -17,6 +18,13 @@ export async function POST(request: Request) {
   // emails have accounts (account enumeration).
   const generic = NextResponse.json({ ok: true });
   if (!parsed.success) return generic;
+
+  // Stop someone spamming reset emails at an address.
+  const limited = await rateLimit("forgot-password", clientIp(request), {
+    limit: 5,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (!limited.ok) return generic; // silently drop; response stays generic
 
   const email = parsed.data.email.toLowerCase().trim();
   await connectToDatabase();
