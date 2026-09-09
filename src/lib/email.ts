@@ -16,9 +16,35 @@ function getResend(): Resend | null {
   return new Resend(key);
 }
 
-function fromAddress(): string {
-  // e.g. "Becca's Knotique <orders@yourdomain.com>"
-  return process.env.EMAIL_FROM || "Becca's Knotique <onboarding@resend.dev>";
+/** Email categories, each sent from its own role mailbox. */
+type Sender = "orders" | "support" | "hello" | "security" | "notifications";
+
+const SENDER_NAMES: Record<Sender, string> = {
+  orders: "Becca's Knotique Orders",
+  support: "Becca's Knotique Support",
+  hello: "Becca's Knotique",
+  security: "Becca's Knotique Security",
+  notifications: "Becca's Knotique",
+};
+
+/** The verified sending domain. Derived from EMAIL_FROM if present. */
+function emailDomain(): string {
+  if (process.env.EMAIL_DOMAIN) return process.env.EMAIL_DOMAIN;
+  const m = process.env.EMAIL_FROM?.match(/@([^>\s]+?)>?$/);
+  return m?.[1] ?? "beccasknotique.com";
+}
+
+/**
+ * From-address for a category. Uses a role mailbox on the verified domain
+ * (orders@, support@, security@, notifications@, hello@) so customers can tell
+ * what an email is about and replies land in the right place. All addresses
+ * work off the single verified domain, no per-address setup needed.
+ * Set EMAIL_FROM to force one sender for everything (useful for testing before
+ * the domain is verified).
+ */
+function fromFor(sender: Sender): string {
+  if (process.env.EMAIL_FROM) return process.env.EMAIL_FROM;
+  return `${SENDER_NAMES[sender]} <${sender}@${emailDomain()}>`;
 }
 
 function adminAddress(): string | null {
@@ -95,12 +121,13 @@ async function sendMail(opts: {
   subject: string;
   title: string;
   body: string;
+  sender?: Sender;
 }): Promise<boolean> {
   const resend = getResend();
   if (!resend) return false;
   try {
     await resend.emails.send({
-      from: fromAddress(),
+      from: fromFor(opts.sender ?? "hello"),
       to: opts.to,
       subject: opts.subject,
       html: shell(opts.title, opts.body),
@@ -131,7 +158,7 @@ export async function sendPasswordResetEmail(
 
   try {
     await resend.emails.send({
-      from: fromAddress(),
+      from: fromFor("security"),
       to,
       subject: "Reset your Becca's Knotique password",
       html: shell(
@@ -165,7 +192,6 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
   const resend = getResend();
   if (!resend) return; // not configured yet — skip silently
 
-  const from = fromAddress();
   const admin = adminAddress();
   const shipping = `${order.shipping.address}, ${order.shipping.city}, ${order.shipping.state}`;
 
@@ -174,7 +200,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
   // Customer receipt
   tasks.push(
     resend.emails.send({
-      from,
+      from: fromFor("orders"),
       to: order.email,
       subject: `Your Becca's Knotique order is confirmed (${order.orderNumber ?? order.reference})`,
       html: shell(
@@ -193,7 +219,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
   if (admin) {
     tasks.push(
       resend.emails.send({
-        from,
+        from: fromFor("notifications"),
         to: admin,
         subject: `New paid order — ${formatNaira(order.amount)} (${order.orderNumber ?? order.reference})`,
         html: shell(
@@ -227,6 +253,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
 export async function sendWelcomeEmail(to: string, name?: string) {
   return sendMail({
     to,
+    sender: "hello",
     subject: "Welcome to Becca's Knotique",
     title: `Welcome, ${name || "friend"}!`,
     body:
@@ -239,6 +266,7 @@ export async function sendWelcomeEmail(to: string, name?: string) {
 export async function sendPasswordChangedEmail(to: string, name?: string) {
   return sendMail({
     to,
+    sender: "security",
     subject: "Your password was changed",
     title: "Your password was changed",
     body:
@@ -250,6 +278,7 @@ export async function sendPasswordChangedEmail(to: string, name?: string) {
 export async function sendAccountDeletedEmail(to: string, name?: string) {
   return sendMail({
     to,
+    sender: "security",
     subject: "Your account has been deleted",
     title: "Your account has been deleted",
     body:
@@ -299,13 +328,20 @@ export async function sendOrderStatusEmail(
   };
 
   const c = copy[stage];
-  return sendMail({ to: order.email, subject: c.subject, title: c.title, body: c.body });
+  return sendMail({
+    to: order.email,
+    sender: "orders",
+    subject: c.subject,
+    title: c.title,
+    body: c.body,
+  });
 }
 
 export async function sendOrderCancelledEmail(order: IOrder) {
   const ref = orderRef(order);
   return sendMail({
     to: order.email,
+    sender: "orders",
     subject: `Your order was cancelled (${ref})`,
     title: "Your order was cancelled",
     body:
@@ -326,6 +362,7 @@ export async function sendRefundRequestReceivedEmail(
 ) {
   return sendMail({
     to,
+    sender: "support",
     subject: `We got your refund request (${ref})`,
     title: "Refund request received",
     body:
@@ -349,6 +386,7 @@ export async function sendRefundProcessedEmail(
         : "We'll arrange the payment with you directly.";
   return sendMail({
     to: order.email,
+    sender: "support",
     subject: `Your refund of ${formatNaira(amount)} (${ref})`,
     title: "Your refund has been processed",
     body:
@@ -366,6 +404,7 @@ export async function sendRefundDeclinedEmail(
 ) {
   return sendMail({
     to,
+    sender: "support",
     subject: `Update on your refund request (${ref})`,
     title: "About your refund request",
     body:
@@ -389,6 +428,7 @@ export async function sendAdminNewRefundRequest(opts: {
   if (!admin) return false;
   return sendMail({
     to: admin,
+    sender: "notifications",
     subject: `Refund request — ${opts.ref}`,
     title: "New refund request to review",
     body:
@@ -414,6 +454,7 @@ export async function sendLowStockAlert(
     .join("");
   return sendMail({
     to: admin,
+    sender: "notifications",
     subject: `Low stock alert (${items.length} item${items.length === 1 ? "" : "s"})`,
     title: "Some items are running low",
     body:
