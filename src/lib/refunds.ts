@@ -4,6 +4,7 @@ import { Order, type IOrder, type RefundMethod } from "@/lib/models/Order";
 import { FinanceTransaction } from "@/lib/models/FinanceTransaction";
 import { paystackRefund } from "@/lib/paystack";
 import { addStoreCredit } from "@/lib/store-credit";
+import { sendRefundProcessedEmail } from "@/lib/email";
 
 export interface RefundInput {
   orderRef: string; // order number or internal reference
@@ -127,6 +128,9 @@ export async function recordRefund(input: RefundInput): Promise<RefundResult> {
     notes: input.reason + (input.note ? ` — ${input.note}` : ""),
     createdBy: input.adminEmail ?? "admin",
   });
+
+  // Let the customer know (no-ops until Resend is configured).
+  await sendRefundProcessedEmail(order.toObject() as IOrder, amount, input.method);
 
   return {
     ok: true,

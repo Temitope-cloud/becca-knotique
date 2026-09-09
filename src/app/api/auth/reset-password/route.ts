@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
+import { sendPasswordChangedEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -44,6 +45,8 @@ export async function POST(request: Request) {
   user.set("resetTokenHash", undefined);
   user.set("resetTokenExpires", undefined);
   await user.save();
+
+  await sendPasswordChangedEmail(user.email, user.name);
 
   return NextResponse.json({ ok: true });
 }

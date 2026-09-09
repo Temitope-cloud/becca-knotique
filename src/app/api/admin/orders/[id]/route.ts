@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminSession } from "@/lib/admin-auth";
 import { connectToDatabase } from "@/lib/db";
-import { Order } from "@/lib/models/Order";
+import { Order, type IOrder } from "@/lib/models/Order";
+import { sendOrderStatusEmail, sendOrderCancelledEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -32,9 +33,33 @@ export async function PATCH(
   if (parsed.data.status === "paid") update.paidAt = new Date();
 
   await connectToDatabase();
-  const result = await Order.updateOne({ reference: id }, { $set: update });
-  if (result.matchedCount === 0) {
+  // Load first so we can tell what actually changed and email only on real
+  // transitions (not when re-saving the same status).
+  const before = await Order.findOne({ reference: id }).lean<IOrder>();
+  if (!before) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  }
+
+  await Order.updateOne({ reference: id }, { $set: update });
+  const after = await Order.findOne({ reference: id }).lean<IOrder>();
+
+  // Notify the customer on meaningful changes (emails no-op until Resend is set).
+  if (after) {
+    const fulfillmentChanged =
+      parsed.data.fulfillmentStatus &&
+      parsed.data.fulfillmentStatus !== before.fulfillmentStatus;
+    if (
+      fulfillmentChanged &&
+      (after.fulfillmentStatus === "processing" ||
+        after.fulfillmentStatus === "shipped" ||
+        after.fulfillmentStatus === "delivered")
+    ) {
+      await sendOrderStatusEmail(after, after.fulfillmentStatus);
+    }
+
+    if (parsed.data.status === "cancelled" && before.status !== "cancelled") {
+      await sendOrderCancelledEmail(after);
+    }
   }
 
   return NextResponse.json({ ok: true });

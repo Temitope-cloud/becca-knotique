@@ -4,8 +4,10 @@ import { Order, type IOrder } from "@/lib/models/Order";
 import { Product } from "@/lib/models/Product";
 import { Coupon } from "@/lib/models/Coupon";
 import { paystackVerify } from "@/lib/paystack";
-import { sendOrderEmails } from "@/lib/email";
+import { sendOrderEmails, sendLowStockAlert } from "@/lib/email";
 import { createOrderFinanceEntries } from "@/lib/finance";
+
+const LOW_STOCK_THRESHOLD = 3;
 import { spendStoreCredit } from "@/lib/store-credit";
 
 /**
@@ -53,6 +55,25 @@ async function applyPaidSideEffects(order: IOrder): Promise<void> {
       { code: order.couponCode },
       { $inc: { timesUsed: 1 } },
     );
+  }
+
+  // Alert the owner about any ready-made items in this order now running low.
+  try {
+    const slugs = order.items.map((i) => i.slug);
+    const low = await Product.find({
+      slug: { $in: slugs },
+      madeToOrder: { $ne: true },
+      stockCount: { $gt: 0, $lte: LOW_STOCK_THRESHOLD },
+    })
+      .select("name slug stockCount")
+      .lean<{ name: string; slug: string; stockCount: number }[]>();
+    if (low.length > 0) {
+      await sendLowStockAlert(
+        low.map((p) => ({ name: p.name, slug: p.slug, stockCount: p.stockCount })),
+      );
+    }
+  } catch (error) {
+    console.error("[orders] low-stock alert error:", error);
   }
 }
 

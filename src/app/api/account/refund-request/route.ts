@@ -5,6 +5,10 @@ import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
 import { RefundRequest } from "@/lib/models/RefundRequest";
 import { totalRefundable } from "@/lib/refunds";
+import {
+  sendRefundRequestReceivedEmail,
+  sendAdminNewRefundRequest,
+} from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -80,9 +84,10 @@ export async function POST(request: Request) {
     );
   }
 
+  const ref = order.orderNumber ?? order.reference;
   await RefundRequest.create({
     order: order._id,
-    orderNumber: order.orderNumber ?? order.reference,
+    orderNumber: ref,
     orderReference: order.reference,
     user: order.user ?? session.user.id,
     email: order.email,
@@ -92,6 +97,17 @@ export async function POST(request: Request) {
     photos: parsed.data.photos ?? [],
     status: "pending",
   });
+
+  // Acknowledge to the customer and alert the owner (no-op until Resend is set).
+  await Promise.allSettled([
+    sendRefundRequestReceivedEmail(order.email, order.customer?.name ?? "", ref),
+    sendAdminNewRefundRequest({
+      ref,
+      customerEmail: order.email,
+      amount: refundable,
+      reason: parsed.data.reason,
+    }),
+  ]);
 
   return NextResponse.json({ ok: true });
 }

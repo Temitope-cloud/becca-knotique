@@ -4,6 +4,7 @@ import { getAdminSession } from "@/lib/admin-auth";
 import { connectToDatabase } from "@/lib/db";
 import { RefundRequest } from "@/lib/models/RefundRequest";
 import { recordRefund } from "@/lib/refunds";
+import { sendRefundDeclinedEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -56,6 +57,12 @@ export async function PATCH(
     req.resolvedBy = adminEmail;
     req.resolvedAt = new Date();
     await req.save();
+    await sendRefundDeclinedEmail(
+      req.email,
+      "",
+      req.orderNumber || req.orderReference,
+      parsed.data.note,
+    );
     return NextResponse.json({ ok: true });
   }
 

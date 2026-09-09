@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { rateLimit } from "@/lib/rate-limit";
+import { sendWelcomeEmail } from "@/lib/email";
 
 function isAdminEmail(email?: string | null): boolean {
   const admin = process.env.ADMIN_EMAIL?.toLowerCase();
@@ -74,6 +75,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             provider: "google",
             role: isAdminEmail(email) ? "admin" : "customer",
           });
+          await sendWelcomeEmail(email, user.name ?? undefined);
         }
       }
       return true;

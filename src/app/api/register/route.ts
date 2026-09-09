@@ -4,6 +4,7 @@ import { z } from "zod";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -70,6 +71,8 @@ export async function POST(request: Request) {
       provider: "credentials",
       role: isAdminEmail(normalizedEmail) ? "admin" : "customer",
     });
+
+    await sendWelcomeEmail(normalizedEmail, name.trim());
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

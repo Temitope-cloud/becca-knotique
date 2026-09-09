@@ -4,6 +4,7 @@ import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { Order } from "@/lib/models/Order";
 import { RefundRequest } from "@/lib/models/RefundRequest";
+import { sendAccountDeletedEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -36,6 +37,10 @@ export async function DELETE() {
   ]);
 
   await User.deleteOne({ _id: userId });
+
+  if (session.user.email) {
+    await sendAccountDeletedEmail(session.user.email, session.user.name ?? undefined);
+  }
 
   return NextResponse.json({ ok: true });
 }
