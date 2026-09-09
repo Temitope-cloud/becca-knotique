@@ -5,6 +5,7 @@ import "./styles/globals.css";
 import "./styles/custom.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -89,6 +90,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <GoogleAnalytics />
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
         {/* <SmoothScroll /> */}
