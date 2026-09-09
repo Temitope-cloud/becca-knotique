@@ -44,7 +44,7 @@ const HeroSection = () => {
             </div>
 
             <div className="absolute bottom-[15%] left-10">
-              <p className="w-full text-white lowercase">founded in 2023</p>
+              <p className="w-full text-white lowercase">founded in 2022</p>
               <h2 className="font-apparel w-full text-8xl font-bold text-white uppercase">
                 Fashion in Crochet
               </h2>
