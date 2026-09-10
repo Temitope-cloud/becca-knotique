@@ -7,13 +7,12 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import CartIcon from "./cart/CartIcon";
+import ShoppingForSelector from "./personalization/ShoppingForSelector";
 import { useCart } from "@/context/CartContext";
 
 const MENUS = [
   { label: "Home", href: "/" },
-  { label: "Women", href: "/products?for=women" },
-  { label: "Men", href: "/products?for=men" },
-  { label: "Shop all", href: "/products" },
+  { label: "Shop", href: "/products" },
   { label: "Journal", href: "/journal" },
   { label: "About", href: "/about" },
   {
@@ -114,6 +113,7 @@ const Header = () => {
         </nav>
 
         <div className="hidden shrink-0 items-center gap-5 lg:flex">
+          <ShoppingForSelector className="text-white" />
           <CartIcon className="text-white transition hover:text-white/80" />
           <Link
             href={session?.user ? "/account" : "/login"}
@@ -204,6 +204,9 @@ const Header = () => {
             </nav>
 
             <div className="mt-auto space-y-3 border-t border-white/10 pt-8">
+              <div className="pb-1">
+                <ShoppingForSelector className="text-white" />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <Link
                   href="/cart"

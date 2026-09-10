@@ -5,7 +5,13 @@ import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-const HeroSection = ({ foundedYear = "2022" }: { foundedYear?: string }) => {
+const HeroSection = ({
+  foundedYear = "2022",
+  eyebrow = null,
+}: {
+  foundedYear?: string;
+  eyebrow?: string | null;
+}) => {
   return (
     <>
       <div className="h-screen w-screen">
@@ -44,9 +50,15 @@ const HeroSection = ({ foundedYear = "2022" }: { foundedYear?: string }) => {
             </div>
 
             <div className="absolute bottom-[15%] left-10">
-              <p className="w-full text-white lowercase">
-                founded in {foundedYear}
-              </p>
+              {eyebrow ? (
+                <p className="mb-1 text-xs tracking-[0.28em] text-white/80 uppercase">
+                  {eyebrow}
+                </p>
+              ) : (
+                <p className="w-full text-white lowercase">
+                  founded in {foundedYear}
+                </p>
+              )}
               <h2 className="font-apparel w-full text-8xl font-bold text-white uppercase">
                 Fashion in Crochet
               </h2>

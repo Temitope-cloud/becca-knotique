@@ -6,17 +6,20 @@ import Header from "./Header";
 import Footer from "./Footer";
 import PreFooterCta from "./PreFooterCta";
 import AnnouncementBanner from "./AnnouncementBanner";
-import AudiencePrompt from "./AudiencePrompt";
+import ShoppingIntro from "./personalization/ShoppingIntro";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+import { ShoppingPreferenceProvider } from "@/context/ShoppingPreferenceContext";
 import type { StoreSettings } from "@/lib/settings";
+import type { ShoppingPreference } from "@/lib/audience";
 
 interface providersProps {
   children: React.ReactNode;
   settings?: StoreSettings;
+  preference?: ShoppingPreference | null;
 }
 
-const Providers = ({ children, settings }: providersProps) => {
+const Providers = ({ children, settings, preference = null }: providersProps) => {
   const pathname = usePathname();
   const Homepage = pathname === "/";
   // Admin has its own chrome — hide the storefront header/footer there.
@@ -34,22 +37,24 @@ const Providers = ({ children, settings }: providersProps) => {
   ].some((p) => pathname.startsWith(p));
   return (
     <SessionProvider>
-      <WishlistProvider>
-        <CartProvider>
-          {!hideChrome && <AnnouncementBanner />}
-          {showChrome && <Header />}
-          {children}
-          {showChrome && !hideCta && <PreFooterCta />}
-          {showChrome && (
-            <Footer
-              instagram={settings?.instagram}
-              tiktok={settings?.tiktok}
-              whatsapp={settings?.whatsapp}
-            />
-          )}
-          {showChrome && !hideCta ? <AudiencePrompt /> : null}
-        </CartProvider>
-      </WishlistProvider>
+      <ShoppingPreferenceProvider initial={preference}>
+        <WishlistProvider>
+          <CartProvider>
+            {!hideChrome && <AnnouncementBanner />}
+            {showChrome && <Header />}
+            {children}
+            {showChrome && !hideCta && <PreFooterCta />}
+            {showChrome && (
+              <Footer
+                instagram={settings?.instagram}
+                tiktok={settings?.tiktok}
+                whatsapp={settings?.whatsapp}
+              />
+            )}
+            {!hideChrome ? <ShoppingIntro /> : null}
+          </CartProvider>
+        </WishlistProvider>
+      </ShoppingPreferenceProvider>
     </SessionProvider>
   );
 };

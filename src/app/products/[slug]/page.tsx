@@ -12,6 +12,12 @@ import {
 import { getAdminSession } from "@/lib/admin-auth";
 import { isSoldOut } from "@/lib/stock";
 import { SITE_URL, absoluteUrl, breadcrumbSchema } from "@/lib/seo";
+import { cookies } from "next/headers";
+import {
+  PREFERENCE_COOKIE,
+  isPreference,
+  sortByPreference,
+} from "@/lib/audience";
 import JsonLd from "@/components/JsonLd";
 import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
@@ -114,12 +120,15 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
 
   const gallery = galleryImages(product);
 
-  const relatedProducts = validProducts
-    .filter(
+  const cookiePref = (await cookies()).get(PREFERENCE_COOKIE)?.value;
+  const preference = isPreference(cookiePref) ? cookiePref : "all";
+  const relatedProducts = sortByPreference(
+    validProducts.filter(
       (item) =>
         item.slug !== product.slug && item.category === product.category,
-    )
-    .slice(0, 3);
+    ),
+    preference,
+  ).slice(0, 3);
 
   const soldOut = isSoldOut(product);
   // Give search engines a concrete price validity window (one year out).

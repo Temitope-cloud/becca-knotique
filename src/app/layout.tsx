@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { cookies } from "next/headers";
 import "./styles/globals.css";
 import "./styles/custom.css";
 import Providers from "@/components/Providers";
@@ -7,6 +8,7 @@ import JsonLd from "@/components/JsonLd";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 import { getSettings } from "@/lib/settings";
+import { PREFERENCE_COOKIE, isPreference } from "@/lib/audience";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +18,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Editorial display font (replaces the previous "apparel" font).
+const playfair = Playfair_Display({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -89,16 +98,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const settings = await getSettings();
+  const cookiePref = (await cookies()).get(PREFERENCE_COOKIE)?.value;
+  const initialPreference = isPreference(cookiePref) ? cookiePref : null;
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <GoogleAnalytics />
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
-        <Providers settings={settings}>{children}</Providers>
+        <Providers settings={settings} preference={initialPreference}>
+          {children}
+        </Providers>
       </body>
     </html>
   );

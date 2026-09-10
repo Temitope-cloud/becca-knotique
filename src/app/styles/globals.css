@@ -169,13 +169,6 @@
 }
 
 @font-face {
-  font-family: "apparel";
-  src: url("/fonts/apparel.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
   font-family: "bylast";
   src: url("/fonts/bylast.woff2") format("woff2");
   font-weight: normal;
@@ -228,7 +221,7 @@
     font-family: "brunson", system-ui, sans-serif;
   }
   .font-apparel {
-    font-family: "apparel", system-ui, sans-serif;
+    font-family: var(--font-display), Georgia, "Times New Roman", serif;
   }
   .font-bylast {
     font-family: "bylast", system-ui, sans-serif;

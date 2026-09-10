@@ -3,6 +3,12 @@ import ProductsPageClient from "./ProductsPageClient";
 import { getAllProducts } from "@/lib/catalog";
 import { SITE_URL, breadcrumbSchema } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
+import { cookies } from "next/headers";
+import {
+  PREFERENCE_COOKIE,
+  isPreference,
+  genderFilterFor,
+} from "@/lib/audience";
 
 export const dynamic = "force-dynamic";
 
@@ -52,6 +58,10 @@ export default async function ProductsPage({
   searchParams: Promise<{ q?: string; for?: string }>;
 }) {
   const { q, for: forAudience } = await searchParams;
+  // Explicit ?for= wins; otherwise default the filter to the saved preference.
+  const cookiePref = (await cookies()).get(PREFERENCE_COOKIE)?.value;
+  const preference = isPreference(cookiePref) ? cookiePref : "all";
+  const initialGender = forAudience ?? genderFilterFor(preference);
   const products = await getAllProducts();
   const itemListElements = products
     .filter((p) => p.slug && p.name)
@@ -87,7 +97,7 @@ export default async function ProductsPage({
       <ProductsPageClient
         products={products}
         initialQuery={q ?? ""}
-        initialGender={forAudience ?? "all"}
+        initialGender={initialGender}
       />
     </>
   );

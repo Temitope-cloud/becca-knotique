@@ -14,6 +14,13 @@ import {
   getFeaturedProducts,
 } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
+import { cookies } from "next/headers";
+import {
+  PREFERENCE_COOKIE,
+  isPreference,
+  sortByPreference,
+  heroEyebrowFor,
+} from "@/lib/audience";
 
 export const dynamic = "force-dynamic";
 
@@ -37,8 +44,12 @@ export default async function Home() {
   // Featured products drive both sections: the most recent one is the
   // "Limited Edition" hero, the rest fill the "Just Dropped" grid.
   const featuredList = await getFeaturedProducts(13);
-  const hero = featuredList[0] ?? (await getFeaturedProduct());
-  const gridProducts = featuredList
+  // Personalize featured ORDER by the shopper's preference (never hides items).
+  const cookiePref = (await cookies()).get(PREFERENCE_COOKIE)?.value;
+  const preference = isPreference(cookiePref) ? cookiePref : "all";
+  const orderedFeatured = sortByPreference(featuredList, preference);
+  const hero = orderedFeatured[0] ?? (await getFeaturedProduct());
+  const gridProducts = orderedFeatured
     .filter((p) => p.id !== hero?.id)
     .slice(0, 12);
   const settings = await getSettings();
@@ -46,7 +57,10 @@ export default async function Home() {
 
   return (
     <>
-      <HeroSection foundedYear={settings.foundedYear} />
+      <HeroSection
+        foundedYear={settings.foundedYear}
+        eyebrow={heroEyebrowFor(preference)}
+      />
       <ShopByAudience covers={audienceCovers} />
       {gridProducts.length > 0 ? (
         <NewCollection products={gridProducts} />

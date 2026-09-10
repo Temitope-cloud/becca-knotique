@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BarChart3,
   Search,
@@ -13,6 +13,8 @@ import type { CatalogProduct } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
 import { readProductViews } from "@/lib/product-views";
 import { formatNaira } from "@/lib/money";
+import { useShoppingPreference } from "@/context/ShoppingPreferenceContext";
+import { genderFilterFor } from "@/lib/audience";
 
 const GENDERS = [
   { value: "all", label: "All" },
@@ -121,6 +123,18 @@ export default function ProductsPageClient({
   const [gender, setGender] = useState(
     ["women", "men", "unisex"].includes(initialGender) ? initialGender : "all",
   );
+
+  // Follow the header "Shopping for" selector when the shopper changes it,
+  // but not on first mount (so an explicit ?for= link is respected).
+  const { preference } = useShoppingPreference();
+  const firstPrefRun = useRef(true);
+  useEffect(() => {
+    if (firstPrefRun.current) {
+      firstPrefRun.current = false;
+      return;
+    }
+    if (preference) setGender(genderFilterFor(preference));
+  }, [preference]);
   const [category, setCategory] = useState("all");
   const [price, setPrice] = useState("all");
   const [sort, setSort] = useState("featured");
