@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 
 export function ParallaxImage({
   src,
@@ -17,40 +12,20 @@ export function ParallaxImage({
   alt: string;
   className?: string;
 }) {
-  const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const image = imageRef.current;
-    const container = containerRef.current;
-    if (!image || !container) return;
-
-    gsap.fromTo(
-      image,
-      { scale: 0.8 }, // Start zoomed in
-      {
-        scale: 2, // End at normal size
-        ease: "none",
-        scrollTrigger: {
-          trigger: container,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      },
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 2]);
 
   return (
     <div ref={containerRef} className="overflow-hidden rounded">
-      <img
-        ref={imageRef}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <motion.img
         src={src}
         alt={alt}
+        style={{ scale }}
         className={`${className} w-full`}
       />
     </div>

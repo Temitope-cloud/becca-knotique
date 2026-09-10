@@ -8,7 +8,7 @@ import Link from "next/link";
 const HeroSection = ({ foundedYear = "2022" }: { foundedYear?: string }) => {
   return (
     <>
-      <div className="h-screen w-screen" data-aos="fade-up">
+      <div className="h-screen w-screen">
         <div className="relative h-full w-full">
           <div className="h-full w-full flex-1">
             <div

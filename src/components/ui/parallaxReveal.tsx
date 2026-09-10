@@ -1,8 +1,11 @@
 "use client";
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
+import React, { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+} from "motion/react";
 
 interface ParallelRevealProps {
   className?: string;
@@ -11,25 +14,19 @@ interface ParallelRevealProps {
 
 const ParallaxReveal = ({ className, src }: ParallelRevealProps) => {
   const imageRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: imageRef,
+    offset: ["start end", "end start"],
+  });
+  const posY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const backgroundPosition = useMotionTemplate`center ${posY}`;
 
-  useEffect(() => {
-    if (imageRef.current) {
-      gsap.to(imageRef.current, {
-        backgroundPosition: "center 100%",
-        ease: "none",
-        scrollTrigger: {
-          trigger: imageRef.current,
-          start: "top 50%",
-          end: "bottom 40%",
-          scrub: true,
-        },
-      });
-    }
-  }, []);
   return (
-    <>
-      <div ref={imageRef} className={`${className} ${src}`} />
-    </>
+    <motion.div
+      ref={imageRef}
+      style={{ backgroundPosition }}
+      className={`${className} ${src}`}
+    />
   );
 };
 

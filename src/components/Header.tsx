@@ -1,8 +1,8 @@
 "use client";
 import { ArrowRight, User } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -24,7 +24,6 @@ const MENUS = [
 
 const Header = () => {
   const [menuClicked, setMenuClicked] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const Homepage = pathname === "/";
   const { data: session } = useSession();
@@ -38,30 +37,6 @@ const Header = () => {
   useEffect(() => {
     setMenuClicked(false);
   }, [pathname]);
-
-  useEffect(() => {
-    if (!menuRef.current) return;
-
-    if (menuClicked) {
-      gsap.fromTo(
-        menuRef.current,
-        { y: "-100%", opacity: 0 },
-        {
-          y: "0%",
-          opacity: 1,
-          duration: 0.55,
-          ease: "power3.out",
-        },
-      );
-    } else {
-      gsap.to(menuRef.current, {
-        y: "-100%",
-        opacity: 0,
-        duration: 0.45,
-        ease: "power2.in",
-      });
-    }
-  }, [menuClicked]);
 
   useEffect(() => {
     if (menuClicked) {
@@ -173,14 +148,22 @@ const Header = () => {
           </span>
         </button>
 
-        <div
-          ref={menuRef}
+        <motion.div
           id="mobile-navigation"
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
-          className={`fixed inset-0 z-40 flex h-dvh w-full -translate-y-full flex-col bg-neutral-950 opacity-0 ${menuClicked ? "pointer-events-auto" : "pointer-events-none"}`}
-          style={{ willChange: "transform, opacity" }}
+          initial={{ y: "-100%", opacity: 0 }}
+          animate={
+            menuClicked
+              ? { y: "0%", opacity: 1 }
+              : { y: "-100%", opacity: 0 }
+          }
+          transition={{
+            duration: menuClicked ? 0.55 : 0.45,
+            ease: menuClicked ? [0.16, 1, 0.3, 1] : [0.7, 0, 0.84, 0],
+          }}
+          className={`fixed inset-0 z-40 flex h-dvh w-full flex-col bg-neutral-950 ${menuClicked ? "pointer-events-auto" : "pointer-events-none"}`}
           onClick={closeMenu}
         >
           <div
@@ -257,7 +240,7 @@ const Header = () => {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </header>
     </>
   );
