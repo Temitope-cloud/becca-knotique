@@ -19,6 +19,10 @@ export interface IUser {
   /** sha256 of the active password-reset token (raw token is emailed, never stored) */
   resetTokenHash?: string;
   resetTokenExpires?: Date;
+  /** set when the user requests deletion; purged 30 days later unless they log back in */
+  deletionScheduledAt?: Date | null;
+  deletionReason?: string;
+  deletionComment?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -47,6 +51,9 @@ const UserSchema = new Schema<IUser>(
     storeCredit: { type: Number, default: 0, min: 0 },
     resetTokenHash: { type: String, select: false },
     resetTokenExpires: { type: Date, select: false },
+    deletionScheduledAt: { type: Date, default: null, index: true },
+    deletionReason: { type: String },
+    deletionComment: { type: String },
   },
   { timestamps: true },
 );

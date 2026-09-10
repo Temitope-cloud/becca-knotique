@@ -281,9 +281,11 @@ export default async function AccountPage() {
             Delete account
           </h2>
           <p className="mt-1 max-w-xl text-sm text-stone-600">
-            Permanently close your account and remove your profile. Your past
-            orders stay on our records for tax and accounting, but are no longer
-            linked to you. Any store credit is forfeited. This cannot be undone.
+            Close your account. You have 30 days to change your mind, just log
+            back in to restore it. After that it&apos;s permanently deleted: your
+            profile is removed and any store credit is forfeited. Past orders
+            stay on our records for tax and accounting, but are no longer linked
+            to you.
           </p>
           <div className="mt-4">
             <DeleteAccountButton

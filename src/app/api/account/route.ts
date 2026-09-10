@@ -2,17 +2,16 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
-import { Order } from "@/lib/models/Order";
-import { RefundRequest } from "@/lib/models/RefundRequest";
-import { AccountDeletionFeedback } from "@/lib/models/AccountDeletionFeedback";
-import { sendAccountDeletedEmail } from "@/lib/email";
+import { DELETION_GRACE_DAYS } from "@/lib/account-deletion";
+import { sendAccountDeletionScheduledEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
 /**
- * Self-serve account deletion. Removes the user's login and personal profile,
- * but KEEPS order records for the business's finance/tax history with the
- * personal link severed (order.user -> null). Store credit is forfeited.
+ * Self-serve account deletion — SOFT delete with a grace period. Marks the
+ * account for deletion and signs the user out; a daily job purges accounts
+ * older than DELETION_GRACE_DAYS. Logging back in before then cancels it and
+ * restores the account (handled in the auth callbacks).
  */
 export async function DELETE(request: Request) {
   const session = await auth();
@@ -28,35 +27,40 @@ export async function DELETE(request: Request) {
     );
   }
 
-  // Optional, anonymous exit feedback.
+  // Optional, anonymous exit feedback (kept on the user, written to the
+  // anonymous feedback log only when the purge actually happens).
   const body = await request.json().catch(() => ({}));
   const reason =
     typeof body?.reason === "string" ? body.reason.trim().slice(0, 60) : "";
   const comment =
     typeof body?.comment === "string" ? body.comment.trim().slice(0, 1000) : "";
 
-  const userId = session.user.id;
   await connectToDatabase();
-
-  // Record the reason before we delete anything (no personal data stored).
-  const hadOrders = (await Order.countDocuments({ user: userId })) > 0;
-  await AccountDeletionFeedback.create({
-    reason: reason || "unspecified",
-    comment: comment || undefined,
-    hadOrders,
-  });
-
-  // Sever the personal link on records we keep for the business.
-  await Promise.allSettled([
-    Order.updateMany({ user: userId }, { $set: { user: null } }),
-    RefundRequest.updateMany({ user: userId }, { $set: { user: null } }),
-  ]);
-
-  await User.deleteOne({ _id: userId });
+  await User.updateOne(
+    { _id: session.user.id },
+    {
+      $set: {
+        deletionScheduledAt: new Date(),
+        deletionReason: reason || "unspecified",
+        deletionComment: comment || undefined,
+      },
+    },
+  );
 
   if (session.user.email) {
-    await sendAccountDeletedEmail(session.user.email, session.user.name ?? undefined);
+    const purgeDate = new Date(
+      Date.now() + DELETION_GRACE_DAYS * 24 * 60 * 60 * 1000,
+    ).toLocaleDateString("en-NG", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    await sendAccountDeletionScheduledEmail(
+      session.user.email,
+      session.user.name ?? undefined,
+      purgeDate,
+    );
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, graceDays: DELETION_GRACE_DAYS });
 }

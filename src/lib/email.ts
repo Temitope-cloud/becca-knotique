@@ -275,6 +275,26 @@ export async function sendPasswordChangedEmail(to: string, name?: string) {
   });
 }
 
+export async function sendAccountDeletionScheduledEmail(
+  to: string,
+  name?: string,
+  purgeDateLabel?: string,
+) {
+  return sendMail({
+    to,
+    sender: "security",
+    subject: "Your account is scheduled for deletion",
+    title: "Your account is scheduled for deletion",
+    body:
+      p(`Hi ${name || "there"}, we've scheduled your Becca's Knotique account for deletion.`) +
+      p(
+        `You have 30 days to change your mind${purgeDateLabel ? ` (until ${purgeDateLabel})` : ""}. Just log back in any time before then and your account will be fully restored, nothing is lost.`,
+      ) +
+      p("After that, your account and profile are permanently deleted.") +
+      muted("If you didn't request this, log in now to cancel it, or contact us at beccasknotique@gmail.com."),
+  });
+}
+
 export async function sendAccountDeletedEmail(to: string, name?: string) {
   return sendMail({
     to,

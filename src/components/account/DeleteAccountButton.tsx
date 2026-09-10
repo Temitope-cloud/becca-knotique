@@ -76,10 +76,17 @@ export default function DeleteAccountButton({
               Delete your account?
             </h3>
             <div className="mt-2 space-y-1.5 text-sm text-stone-600">
-              <p>This permanently deletes your account and sign-in.</p>
+              <p>
+                You&apos;ll be signed out and your account scheduled for deletion.
+              </p>
+              <p className="font-medium text-stone-800">
+                Changed your mind? You have 30 days, just log back in and your
+                account is fully restored.
+              </p>
               {storeCredit > 0 ? (
                 <p className="font-medium text-rose-700">
-                  You will lose your store credit of {formatNaira(storeCredit)}.
+                  Your store credit of {formatNaira(storeCredit)} is lost only if
+                  the deletion completes.
                 </p>
               ) : null}
               {pendingRefunds > 0 ? (
@@ -87,7 +94,7 @@ export default function DeleteAccountButton({
                   You have a refund request still under review.
                 </p>
               ) : null}
-              <p>This cannot be undone.</p>
+              <p>After 30 days it&apos;s permanently deleted.</p>
             </div>
 
             <div className="mt-5">

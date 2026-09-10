@@ -50,6 +50,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) return null;
 
+        // Coming back cancels a pending deletion and restores the account.
+        if (user.deletionScheduledAt) {
+          await User.updateOne(
+            { _id: user._id },
+            {
+              $set: { deletionScheduledAt: null },
+              $unset: { deletionReason: "", deletionComment: "" },
+            },
+          );
+        }
+
         return {
           id: user._id.toString(),
           name: user.name,
@@ -67,7 +78,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!email) return false;
         await connectToDatabase();
         const existing = await User.findOne({ email });
-        if (existing) return true; // known account — just sign in
+        if (existing) {
+          // Coming back cancels a pending deletion and restores the account.
+          if (existing.deletionScheduledAt) {
+            await User.updateOne(
+              { _id: existing._id },
+              {
+                $set: { deletionScheduledAt: null },
+                $unset: { deletionReason: "", deletionComment: "" },
+              },
+            );
+          }
+          return true; // known account — just sign in
+        }
 
         // Unknown account. Only create one if the person explicitly chose
         // "Sign up with Google". Coming from the login button must not
