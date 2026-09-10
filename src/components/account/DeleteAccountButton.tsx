@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { signOut } from "next-auth/react";
 import { Loader2, Trash2 } from "lucide-react";
 import { formatNaira } from "@/lib/money";
@@ -23,10 +24,13 @@ export default function DeleteAccountButton({
   pendingRefunds?: number;
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [reason, setReason] = useState("");
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => setMounted(true), []);
 
   async function confirmDelete() {
     setBusy(true);
@@ -64,7 +68,8 @@ export default function DeleteAccountButton({
         <p className="mt-2 text-sm text-rose-700">{error}</p>
       ) : null}
 
-      {open ? (
+      {open && mounted
+        ? createPortal(
         <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-stone-900">
@@ -127,15 +132,23 @@ export default function DeleteAccountButton({
                 type="button"
                 onClick={confirmDelete}
                 disabled={busy}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-700 disabled:opacity-70"
               >
-                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                Delete my account
+                {busy ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Deleting…
+                  </>
+                ) : (
+                  "Delete my account"
+                )}
               </button>
             </div>
           </div>
-        </div>
-      ) : null}
+        </div>,
+        document.body,
+      )
+        : null}
     </div>
   );
 }
