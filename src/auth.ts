@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
 import { rateLimit } from "@/lib/rate-limit";
@@ -61,22 +62,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // For Google sign-ins, make sure a matching user document exists.
       if (account?.provider === "google") {
         const email = user.email?.toLowerCase();
         if (!email) return false;
         await connectToDatabase();
         const existing = await User.findOne({ email });
-        if (!existing) {
-          await User.create({
-            name: user.name ?? "Customer",
-            email,
-            image: user.image ?? undefined,
-            provider: "google",
-            role: isAdminEmail(email) ? "admin" : "customer",
-          });
-          await sendWelcomeEmail(email, user.name ?? undefined);
+        if (existing) return true; // known account — just sign in
+
+        // Unknown account. Only create one if the person explicitly chose
+        // "Sign up with Google". Coming from the login button must not
+        // silently create an account.
+        const intent = (await cookies()).get("bk_oauth_intent")?.value;
+        if (intent !== "signup") {
+          return "/login?error=NoAccount";
         }
+
+        await User.create({
+          name: user.name ?? "Customer",
+          email,
+          image: user.image ?? undefined,
+          provider: "google",
+          role: isAdminEmail(email) ? "admin" : "customer",
+        });
+        await sendWelcomeEmail(email, user.name ?? undefined);
       }
       return true;
     },

@@ -5,14 +5,23 @@ import { signIn } from "next-auth/react";
 export default function GoogleButton({
   callbackUrl = "/account",
   label = "Continue with Google",
+  intent = "login",
 }: {
   callbackUrl?: string;
   label?: string;
+  /** "login" only signs in existing accounts; "signup" may create one. */
+  intent?: "login" | "signup";
 }) {
+  const start = () => {
+    // Tell the server which button this came from (read in the signIn callback).
+    document.cookie = `bk_oauth_intent=${intent}; path=/; max-age=300; samesite=lax`;
+    signIn("google", { callbackUrl });
+  };
+
   return (
     <button
       type="button"
-      onClick={() => signIn("google", { callbackUrl })}
+      onClick={start}
       className="flex w-full items-center justify-center gap-3 rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm font-semibold text-stone-800 transition hover:bg-stone-50"
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden>

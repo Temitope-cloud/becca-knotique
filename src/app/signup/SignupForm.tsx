@@ -159,7 +159,11 @@ export default function SignupForm() {
         <span className="h-px flex-1 bg-stone-200" />
       </div>
 
-      <GoogleButton callbackUrl={callbackUrl} label="Sign up with Google" />
+      <GoogleButton
+        callbackUrl={callbackUrl}
+        label="Sign up with Google"
+        intent="signup"
+      />
 
       <p className="mt-6 text-center text-sm text-stone-600">
         Already have an account?{" "}
