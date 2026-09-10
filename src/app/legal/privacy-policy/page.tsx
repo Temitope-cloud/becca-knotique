@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Reads editable policy content from settings, so render per request.
+export const dynamic = "force-dynamic";
+
 const PrivacyPolicy = async () => {
   const { policies } = await getSettings();
   if (policies.privacy) {

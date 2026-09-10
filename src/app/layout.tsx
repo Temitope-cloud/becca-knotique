@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import SmoothScroll from "@/components/SmoothScroll";
 import "./styles/globals.css";
 import "./styles/custom.css";
 import Providers from "@/components/Providers";
@@ -99,7 +98,6 @@ export default async function RootLayout({
         <GoogleAnalytics />
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
-        {/* <SmoothScroll /> */}
         <Providers settings={settings}>{children}</Providers>
       </body>
     </html>

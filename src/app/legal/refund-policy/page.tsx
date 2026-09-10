@@ -131,6 +131,8 @@ const Section = ({
   );
 };
 
+export const dynamic = "force-dynamic";
+
 const RefundPolicy = async () => {
   const { policies } = await getSettings();
   if (policies.refund) {

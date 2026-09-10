@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 const DisclaimerPage = async () => {
   const { policies } = await getSettings();
   if (policies.disclaimer) {

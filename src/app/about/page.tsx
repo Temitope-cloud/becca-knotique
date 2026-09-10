@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Reads editable settings (founded year), so render per request.
+export const dynamic = "force-dynamic";
+
 const AboutUs = async () => {
   const { foundedYear } = await getSettings();
   const about = [

@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 const TermsOfService = async () => {
   const { policies } = await getSettings();
   if (policies.terms) {
