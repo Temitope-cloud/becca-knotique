@@ -21,17 +21,44 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-const nav = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
-  { label: "Products", href: "/admin/products", icon: Package },
-  { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
-  { label: "Customers", href: "/admin/customers", icon: Users },
-  { label: "Coupons", href: "/admin/coupons", icon: TicketPercent },
-  { label: "Journal", href: "/admin/journal", icon: Newspaper },
-  { label: "Finance", href: "/admin/finance", icon: Wallet },
-  { label: "Feedback", href: "/admin/feedback", icon: MessageSquare },
-  { label: "Release log", href: "/admin/releases", icon: Rocket },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+const navGroups: {
+  heading?: string;
+  items: {
+    label: string;
+    href: string;
+    icon: typeof LayoutDashboard;
+    exact?: boolean;
+  }[];
+}[] = [
+  {
+    items: [
+      { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
+    ],
+  },
+  {
+    heading: "Store",
+    items: [
+      { label: "Products", href: "/admin/products", icon: Package },
+      { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
+      { label: "Customers", href: "/admin/customers", icon: Users },
+      { label: "Coupons", href: "/admin/coupons", icon: TicketPercent },
+    ],
+  },
+  {
+    heading: "Grow",
+    items: [
+      { label: "Journal", href: "/admin/journal", icon: Newspaper },
+      { label: "Finance", href: "/admin/finance", icon: Wallet },
+      { label: "Feedback", href: "/admin/feedback", icon: MessageSquare },
+    ],
+  },
+  {
+    heading: "System",
+    items: [
+      { label: "Release log", href: "/admin/releases", icon: Rocket },
+      { label: "Settings", href: "/admin/settings", icon: Settings },
+    ],
+  },
 ];
 
 export default function AdminSidebar({ name }: { name?: string | null }) {
@@ -43,24 +70,35 @@ export default function AdminSidebar({ name }: { name?: string | null }) {
 
   const NavLinks = () => (
     <nav className="flex flex-1 flex-col gap-1">
-      {nav.map(({ label, href, icon: Icon, exact }) => {
-        const active = isActive(href, exact);
-        return (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setOpen(false)}
-            className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
-              active
-                ? "bg-stone-900 text-white"
-                : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
-            }`}
-          >
-            <Icon className="h-[18px] w-[18px]" />
-            {label}
-          </Link>
-        );
-      })}
+      {navGroups.map((group, gi) => (
+        <div key={group.heading ?? gi} className={gi > 0 ? "mt-4" : ""}>
+          {group.heading ? (
+            <p className="mb-1 px-3.5 text-[11px] font-semibold tracking-wider text-stone-400 uppercase">
+              {group.heading}
+            </p>
+          ) : null}
+          <div className="flex flex-col gap-1">
+            {group.items.map(({ label, href, icon: Icon, exact }) => {
+              const active = isActive(href, exact);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition ${
+                    active
+                      ? "bg-stone-900 text-white"
+                      : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
+                  }`}
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 
