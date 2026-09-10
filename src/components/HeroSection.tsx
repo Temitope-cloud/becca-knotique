@@ -49,17 +49,15 @@ const HeroSection = ({
               <Header />
             </div>
 
-            <div className="absolute bottom-[15%] left-10">
+            <div className="absolute bottom-[12%] left-6 max-w-[90%] sm:left-10 md:max-w-[60%]">
               {eyebrow ? (
                 <p className="mb-1 text-xs tracking-[0.28em] text-white/80 uppercase">
                   {eyebrow}
                 </p>
               ) : (
-                <p className="w-full text-white lowercase">
-                  founded in {foundedYear}
-                </p>
+                <p className="text-white lowercase">founded in {foundedYear}</p>
               )}
-              <h2 className="font-apparel w-full text-8xl font-bold text-white uppercase">
+              <h2 className="font-apparel text-5xl leading-[0.95] font-semibold text-white uppercase sm:text-6xl md:text-7xl">
                 Fashion in Crochet
               </h2>
             </div>

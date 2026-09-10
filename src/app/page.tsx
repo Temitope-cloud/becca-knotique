@@ -7,12 +7,7 @@ import OurStory from "@/components/OurStory";
 import PreFooterCta from "@/components/PreFooterCta";
 import { AnimatedTestimonial } from "@/components/Testimonial";
 import type { Metadata } from "next";
-import ShopByAudience from "@/components/ShopByAudience";
-import {
-  getAudienceCovers,
-  getFeaturedProduct,
-  getFeaturedProducts,
-} from "@/lib/catalog";
+import { getFeaturedProduct, getFeaturedProducts } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
 import {
@@ -53,7 +48,6 @@ export default async function Home() {
     .filter((p) => p.id !== hero?.id)
     .slice(0, 12);
   const settings = await getSettings();
-  const audienceCovers = await getAudienceCovers();
 
   return (
     <>
@@ -61,7 +55,6 @@ export default async function Home() {
         foundedYear={settings.foundedYear}
         eyebrow={heroEyebrowFor(preference)}
       />
-      <ShopByAudience covers={audienceCovers} />
       {gridProducts.length > 0 ? (
         <NewCollection products={gridProducts} />
       ) : null}

@@ -284,14 +284,3 @@ export async function getBestSellers(limit = 8): Promise<CatalogProduct[]> {
   const slugs = rows.map((r) => r._id).filter(Boolean);
   return getProductsBySlugs(slugs);
 }
-
-/** One representative image per audience (women/men/unisex) for homepage tiles. */
-export async function getAudienceCovers(): Promise<Record<string, string>> {
-  const all = await getAllProducts();
-  const covers: Record<string, string> = {};
-  for (const g of ["women", "men", "unisex"]) {
-    const p = all.find((x) => x.madefor === g && (x.images?.[0] || x.image));
-    if (p) covers[g] = p.images?.[0] ?? p.image ?? "";
-  }
-  return covers;
-}
