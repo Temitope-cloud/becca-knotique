@@ -49,9 +49,9 @@ export const metadata: Metadata = {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; for?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, for: forAudience } = await searchParams;
   const products = await getAllProducts();
   const itemListElements = products
     .filter((p) => p.slug && p.name)
@@ -84,7 +84,11 @@ export default async function ProductsPage({
     <>
       <JsonLd data={collectionJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
-      <ProductsPageClient products={products} initialQuery={q ?? ""} />
+      <ProductsPageClient
+        products={products}
+        initialQuery={q ?? ""}
+        initialGender={forAudience ?? "all"}
+      />
     </>
   );
 }

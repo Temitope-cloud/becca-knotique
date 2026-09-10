@@ -11,7 +11,9 @@ import { useCart } from "@/context/CartContext";
 
 const MENUS = [
   { label: "Home", href: "/" },
-  { label: "Products", href: "/products" },
+  { label: "Women", href: "/products?for=women" },
+  { label: "Men", href: "/products?for=men" },
+  { label: "Shop all", href: "/products" },
   { label: "Journal", href: "/journal" },
   { label: "About", href: "/about" },
   {

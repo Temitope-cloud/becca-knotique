@@ -99,9 +99,11 @@ function RecentlyViewed({ products }: { products: CatalogProduct[] }) {
 export default function ProductsPageClient({
   products,
   initialQuery = "",
+  initialGender = "all",
 }: {
   products: CatalogProduct[];
   initialQuery?: string;
+  initialGender?: string;
 }) {
   const valid = useMemo(
     () => products.filter((p) => p.slug && p.name && p.active !== false),
@@ -116,7 +118,9 @@ export default function ProductsPageClient({
     [valid],
   );
 
-  const [gender, setGender] = useState("all");
+  const [gender, setGender] = useState(
+    ["women", "men", "unisex"].includes(initialGender) ? initialGender : "all",
+  );
   const [category, setCategory] = useState("all");
   const [price, setPrice] = useState("all");
   const [sort, setSort] = useState("featured");

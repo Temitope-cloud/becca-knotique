@@ -6,6 +6,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import PreFooterCta from "./PreFooterCta";
 import AnnouncementBanner from "./AnnouncementBanner";
+import AudiencePrompt from "./AudiencePrompt";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import type { StoreSettings } from "@/lib/settings";
@@ -46,6 +47,7 @@ const Providers = ({ children, settings }: providersProps) => {
               whatsapp={settings?.whatsapp}
             />
           )}
+          {showChrome && !hideCta ? <AudiencePrompt /> : null}
         </CartProvider>
       </WishlistProvider>
     </SessionProvider>
