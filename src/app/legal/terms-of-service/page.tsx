@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSettings } from "@/lib/settings";
+import PolicyOverride from "@/components/PolicyOverride";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -18,7 +20,11 @@ export const metadata: Metadata = {
   },
 };
 
-const TermsOfService = () => {
+const TermsOfService = async () => {
+  const { policies } = await getSettings();
+  if (policies.terms) {
+    return <PolicyOverride title="Terms of Service" html={policies.terms} />;
+  }
   const highlights = [
     {
       title: "Using Our Website",

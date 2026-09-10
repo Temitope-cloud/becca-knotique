@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSettings } from "@/lib/settings";
+import PolicyOverride from "@/components/PolicyOverride";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -18,7 +20,11 @@ export const metadata: Metadata = {
   },
 };
 
-const PrivacyPolicy = () => {
+const PrivacyPolicy = async () => {
+  const { policies } = await getSettings();
+  if (policies.privacy) {
+    return <PolicyOverride title="Privacy Policy" html={policies.privacy} />;
+  }
   const highlights = [
     {
       title: "Data We Collect",

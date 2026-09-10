@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSettings } from "@/lib/settings";
+import PolicyOverride from "@/components/PolicyOverride";
 
 export const metadata: Metadata = {
   title: "Disclaimer",
@@ -18,7 +20,11 @@ export const metadata: Metadata = {
   },
 };
 
-const DisclaimerPage = () => {
+const DisclaimerPage = async () => {
+  const { policies } = await getSettings();
+  if (policies.disclaimer) {
+    return <PolicyOverride title="Disclaimer" html={policies.disclaimer} />;
+  }
   const highlights = [
     {
       title: "Informational Purpose",

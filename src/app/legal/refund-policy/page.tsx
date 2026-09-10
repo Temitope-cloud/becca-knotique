@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getSettings } from "@/lib/settings";
+import PolicyOverride from "@/components/PolicyOverride";
 import {
   Check,
   RefreshCcw,
@@ -129,7 +131,11 @@ const Section = ({
   );
 };
 
-const RefundPolicy = () => {
+const RefundPolicy = async () => {
+  const { policies } = await getSettings();
+  if (policies.refund) {
+    return <PolicyOverride title="Refund Policy" html={policies.refund} />;
+  }
   return (
     <main className="bg-linear-to-b from-emerald-50/60 via-white to-white px-4 py-14 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-5xl">

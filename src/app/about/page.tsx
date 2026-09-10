@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 import ParallaxReveal from "@/components/ui/parallaxReveal";
 import { ParallaxImage } from "@/components/ui/ParallexImage";
+import { getSettings } from "@/lib/settings";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -20,7 +21,8 @@ export const metadata: Metadata = {
   },
 };
 
-const AboutUs = () => {
+const AboutUs = async () => {
+  const { foundedYear } = await getSettings();
   const about = [
     {
       title: "Intro",
@@ -28,7 +30,7 @@ const AboutUs = () => {
     },
     {
       title: "The Story",
-      des: "Founded in 2022, Becca’s Knotique began with a vision — to turn yarn into wearable art. Every stitch, pattern, and design is carefully crafted, not just to look good, but to feel personal.",
+      des: `Founded in ${foundedYear}, Becca’s Knotique began with a vision — to turn yarn into wearable art. Every stitch, pattern, and design is carefully crafted, not just to look good, but to feel personal.`,
       sub: "From scrunchies and accessories to full statement outfits, each piece tells a story of patience, creativity, and attention to detail.",
     },
     {

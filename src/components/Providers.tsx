@@ -8,12 +8,14 @@ import PreFooterCta from "./PreFooterCta";
 import AnnouncementBanner from "./AnnouncementBanner";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
+import type { StoreSettings } from "@/lib/settings";
 
 interface providersProps {
   children: React.ReactNode;
+  settings?: StoreSettings;
 }
 
-const Providers = ({ children }: providersProps) => {
+const Providers = ({ children, settings }: providersProps) => {
   const pathname = usePathname();
   const Homepage = pathname === "/";
   // Admin has its own chrome — hide the storefront header/footer there.
@@ -37,7 +39,13 @@ const Providers = ({ children }: providersProps) => {
           {showChrome && <Header />}
           {children}
           {showChrome && !hideCta && <PreFooterCta />}
-          {showChrome && <Footer />}
+          {showChrome && (
+            <Footer
+              instagram={settings?.instagram}
+              tiktok={settings?.tiktok}
+              whatsapp={settings?.whatsapp}
+            />
+          )}
         </CartProvider>
       </WishlistProvider>
     </SessionProvider>

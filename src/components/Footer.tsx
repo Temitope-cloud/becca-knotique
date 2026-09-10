@@ -41,26 +41,21 @@ const footerMenus = [
   },
 ];
 
-const socials = [
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/beccasknotique/",
-    Icon: IconBrandInstagram,
-  },
-  {
-    label: "TikTok",
-    href: "https://www.tiktok.com/@beccas_knotique/",
-    Icon: IconBrandTiktok,
-  },
-  {
-    label: "WhatsApp",
-    href: "https://wa.me/2348029086678",
-    Icon: IconBrandWhatsapp,
-  },
-];
-
-const Footer = () => {
+const Footer = ({
+  instagram = "https://www.instagram.com/beccasknotique/",
+  tiktok = "https://www.tiktok.com/@beccas_knotique/",
+  whatsapp = "https://wa.me/2348029086678",
+}: {
+  instagram?: string;
+  tiktok?: string;
+  whatsapp?: string;
+}) => {
   const year = new Date().getFullYear();
+  const socials = [
+    { label: "Instagram", href: instagram, Icon: IconBrandInstagram },
+    { label: "TikTok", href: tiktok, Icon: IconBrandTiktok },
+    { label: "WhatsApp", href: whatsapp, Icon: IconBrandWhatsapp },
+  ].filter((s) => s.href);
   const footerRef = useRef<HTMLElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);

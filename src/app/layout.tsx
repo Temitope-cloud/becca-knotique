@@ -7,6 +7,7 @@ import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
+import { getSettings } from "@/lib/settings";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,15 +19,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const title = settings.metaTitle;
+  const description = settings.metaDescription;
+  const ogImage =
+    "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png";
+  return {
   metadataBase: new URL("https://www.beccasknotique.com"),
   title: {
-    default: "Becca's Knotique | Handmade Crochet Fashion",
-    template: "%s | Becca's Knotique",
+    default: title,
+    template: `%s | ${settings.storeName}`,
   },
-  description:
-    "Discover handmade crochet fashion, statement pieces, and custom designs crafted with care by Becca's Knotique.",
-  applicationName: "Becca's Knotique",
+  description,
+  applicationName: settings.storeName,
   keywords: [
     "Becca's Knotique",
     "crochet fashion",
@@ -39,13 +45,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://www.beccasknotique.com",
-    siteName: "Becca's Knotique",
-    title: "Becca's Knotique | Handmade Crochet Fashion",
-    description:
-      "Handmade crochet pieces and custom fashion crafted with creativity, quality, and personality.",
+    siteName: settings.storeName,
+    title,
+    description,
     images: [
       {
-        url: "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png",
+        url: ogImage,
         width: 1200,
         height: 630,
         alt: "Handmade crochet designs by Becca's Knotique",
@@ -54,10 +59,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Becca's Knotique | Handmade Crochet Fashion",
-    description:
-      "Explore handmade crochet fashion and custom statement pieces by Becca's Knotique.",
-    images: ["https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png"],
+    title,
+    description,
+    images: [ogImage],
   },
   alternates: {
     canonical: "/",
@@ -77,13 +81,15 @@ export const metadata: Metadata = {
     ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
     : undefined,
   category: "shopping",
-};
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
   return (
     <html
       lang="en"
@@ -94,7 +100,7 @@ export default function RootLayout({
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
         {/* <SmoothScroll /> */}
-        <Providers>{children}</Providers>
+        <Providers settings={settings}>{children}</Providers>
       </body>
     </html>
   );

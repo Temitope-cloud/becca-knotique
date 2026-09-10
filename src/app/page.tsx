@@ -8,6 +8,7 @@ import PreFooterCta from "@/components/PreFooterCta";
 import { AnimatedTestimonial } from "@/components/Testimonial";
 import type { Metadata } from "next";
 import { getFeaturedProduct, getFeaturedProducts } from "@/lib/catalog";
+import { getSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -35,10 +36,11 @@ export default async function Home() {
   const gridProducts = featuredList
     .filter((p) => p.id !== hero?.id)
     .slice(0, 12);
+  const settings = await getSettings();
 
   return (
     <>
-      <HeroSection />
+      <HeroSection foundedYear={settings.foundedYear} />
       {gridProducts.length > 0 ? (
         <NewCollection products={gridProducts} />
       ) : null}

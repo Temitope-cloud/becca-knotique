@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-const HeroSection = () => {
+const HeroSection = ({ foundedYear = "2022" }: { foundedYear?: string }) => {
   return (
     <>
       <div className="h-screen w-screen" data-aos="fade-up">
@@ -44,7 +44,9 @@ const HeroSection = () => {
             </div>
 
             <div className="absolute bottom-[15%] left-10">
-              <p className="w-full text-white lowercase">founded in 2022</p>
+              <p className="w-full text-white lowercase">
+                founded in {foundedYear}
+              </p>
               <h2 className="font-apparel w-full text-8xl font-bold text-white uppercase">
                 Fashion in Crochet
               </h2>
