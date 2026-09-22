@@ -14,7 +14,8 @@ import { canFulfill, isSoldOut, unitsLeft } from "@/lib/stock";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { priceForSize } from "@/lib/money";
 import { nextOrderNumber } from "@/lib/models/Counter";
-import { getSettings, shippingFeeFor } from "@/lib/settings";
+import { getSettings } from "@/lib/settings";
+import { deliveryQuoteFor } from "@/lib/delivery";
 import { paystackInitialize } from "@/lib/paystack";
 import { getStoreCredit } from "@/lib/store-credit";
 import { markOrderPaid } from "@/lib/orders";
@@ -173,7 +174,11 @@ export async function POST(request: Request) {
   }
 
   const settings = await getSettings();
-  const shippingFee = shippingFeeFor(settings, subtotal);
+  const quote = await deliveryQuoteFor(settings, shipping.city, shipping.state, subtotal);
+  if (!quote.available) {
+    return NextResponse.json({ error: "We could not quote delivery for this location yet. Please contact us before placing your order." }, { status: 400 });
+  }
+  const shippingFee = quote.fee;
   const amount = Math.max(0, subtotal - discount) + shippingFee;
 
   // Store credit (signed-in customers only). Applied up to the order total.

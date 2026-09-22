@@ -10,6 +10,7 @@ import {
   ShoppingBag,
   Users,
   TicketPercent,
+  Truck,
   Settings,
   LogOut,
   Store,
@@ -43,6 +44,7 @@ const navGroups: {
       { label: "Orders", href: "/admin/orders", icon: ShoppingBag },
       { label: "Customers", href: "/admin/customers", icon: Users },
       { label: "Coupons", href: "/admin/coupons", icon: TicketPercent },
+      { label: "Delivery zones", href: "/admin/delivery", icon: Truck },
     ],
   },
   {

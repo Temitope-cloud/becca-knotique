@@ -34,6 +34,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [shippingCfg, setShippingCfg] = useState({ fee: 0, threshold: 0 });
+  const [quote, setQuote] = useState<{ fee: number; eta: string; available: boolean } | null>(null);
   const [storeCredit, setStoreCredit] = useState(0);
   const [applyCredit, setApplyCredit] = useState(true);
 
@@ -48,6 +49,17 @@ export default function CheckoutPage() {
       )
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const city = form.city.trim();
+    const state = form.state.trim();
+    if (city.length < 2 || state.length < 2) { setQuote(null); return; }
+    const timer = window.setTimeout(() => {
+      fetch("/api/delivery-quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ city, state, subtotal }) })
+        .then((r) => r.ok ? r.json() : null).then(setQuote).catch(() => setQuote(null));
+    }, 450);
+    return () => window.clearTimeout(timer);
+  }, [form.city, form.state, subtotal]);
 
   useEffect(() => {
     if (session?.user) {
@@ -81,11 +93,12 @@ export default function CheckoutPage() {
   }
 
   const discount = coupon?.discount ?? 0;
-  const shipping =
+  const fallbackShipping =
     shippingCfg.fee > 0 &&
     (shippingCfg.threshold <= 0 || subtotal < shippingCfg.threshold)
       ? shippingCfg.fee
       : 0;
+  const shipping = quote?.available ? quote.fee : fallbackShipping;
   const total = Math.max(0, subtotal - discount) + shipping;
   const creditApplied = applyCredit ? Math.min(storeCredit, total) : 0;
   const amountToPay = Math.max(0, total - creditApplied);
@@ -185,6 +198,7 @@ export default function CheckoutPage() {
                   className={inputClass}
                 />
               </div>
+              {quote ? <p className={`sm:col-span-2 text-sm ${quote.available ? "text-emerald-700" : "text-rose-700"}`}>{quote.available ? `Delivery: ${formatNaira(quote.fee)}${quote.eta ? ` · ${quote.eta}` : ""}` : quote.eta}</p> : <p className="sm:col-span-2 text-sm text-stone-400">Enter your city and state to see delivery.</p>}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
                   Email
