@@ -21,10 +21,11 @@ import {
   Newspaper,
   MessageSquare,
   Mail,
+  ChevronDown,
 } from "lucide-react";
 
 const navGroups: {
-  heading?: string;
+  heading?: "Store" | "Grow" | "System";
   items: {
     label: string;
     href: string;
@@ -68,20 +69,44 @@ const navGroups: {
 export default function AdminSidebar({ name }: { name?: string | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [openGroups, setOpenGroups] = useState<string[]>(() =>
+    navGroups
+      .filter((group) =>
+        group.heading &&
+        group.items.some(({ href, exact }) =>
+          exact ? pathname === href : pathname === href || pathname.startsWith(href + "/"),
+        ),
+      )
+      .map((group) => group.heading as string),
+  );
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
 
   const NavLinks = () => (
     <nav className="flex flex-1 flex-col gap-1">
-      {navGroups.map((group, gi) => (
+      {navGroups.map((group, gi) => {
+        const expanded = !group.heading || openGroups.includes(group.heading);
+        return (
         <div key={group.heading ?? gi} className={gi > 0 ? "mt-4" : ""}>
           {group.heading ? (
-            <p className="mb-1 px-3.5 text-[11px] font-semibold tracking-wider text-stone-400 uppercase">
+            <button
+              type="button"
+              onClick={() =>
+                setOpenGroups((groups) =>
+                  groups.includes(group.heading as string)
+                    ? groups.filter((heading) => heading !== group.heading)
+                    : [...groups, group.heading as string],
+                )
+              }
+              aria-expanded={expanded}
+              className="mb-1 flex w-full items-center justify-between rounded-lg px-3.5 py-2 text-[11px] font-semibold tracking-wider text-stone-400 uppercase transition hover:bg-stone-100 hover:text-stone-700"
+            >
               {group.heading}
-            </p>
+              <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+            </button>
           ) : null}
-          <div className="flex flex-col gap-1">
+          {expanded ? <div className="flex flex-col gap-1">
             {group.items.map(({ label, href, icon: Icon, exact }) => {
               const active = isActive(href, exact);
               return (
@@ -100,9 +125,9 @@ export default function AdminSidebar({ name }: { name?: string | null }) {
                 </Link>
               );
             })}
-          </div>
+          </div> : null}
         </div>
-      ))}
+      )})}
     </nav>
   );
 
