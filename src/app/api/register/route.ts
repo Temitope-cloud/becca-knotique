@@ -12,6 +12,7 @@ const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters.").max(80),
   email: z.string().email("Please enter a valid email."),
   password: z.string().min(8, "Password must be at least 8 characters."),
+  marketingOptIn: z.boolean().optional().default(false),
 });
 
 function isAdminEmail(email: string): boolean {
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, email, password } = parsed.data;
+  const { name, email, password, marketingOptIn } = parsed.data;
   const normalizedEmail = email.toLowerCase().trim();
 
   try {
@@ -70,6 +71,7 @@ export async function POST(request: Request) {
       password: hashed,
       provider: "credentials",
       role: isAdminEmail(normalizedEmail) ? "admin" : "customer",
+      marketingOptIn,
     });
 
     await sendWelcomeEmail(normalizedEmail, name.trim());

@@ -139,6 +139,27 @@ async function sendMail(opts: {
   }
 }
 
+/** Sends one consented marketing message. Callers must enforce consent. */
+export async function sendMarketingEmail(opts: {
+  to: string;
+  subject: string;
+  previewText?: string;
+  content: string;
+}): Promise<boolean> {
+  const escapeHtml = (value: string) =>
+    value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
+  const preview = opts.previewText
+    ? `<p style="color:#a8a29e;font-size:12px;margin:0 0 16px;">${escapeHtml(opts.previewText)}</p>`
+    : "";
+  return sendMail({
+    to: opts.to,
+    subject: opts.subject,
+    title: opts.subject,
+    sender: "hello",
+    body: `${preview}<div style="color:#57534e;font-size:14px;line-height:1.7;white-space:pre-line;">${escapeHtml(opts.content)}</div><p style="color:#a8a29e;font-size:12px;line-height:1.6;margin:20px 0 0;">You are receiving this because you opted in to Becca's Knotique updates. You can change your preferences from your account.</p>`,
+  });
+}
+
 function orderRef(order: Pick<IOrder, "orderNumber" | "reference">): string {
   return order.orderNumber ?? order.reference;
 }

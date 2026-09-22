@@ -19,6 +19,7 @@ import {
   Rocket,
   Newspaper,
   MessageSquare,
+  Mail,
 } from "lucide-react";
 
 const navGroups: {
@@ -50,6 +51,7 @@ const navGroups: {
       { label: "Journal", href: "/admin/journal", icon: Newspaper },
       { label: "Finance", href: "/admin/finance", icon: Wallet },
       { label: "Feedback", href: "/admin/feedback", icon: MessageSquare },
+      { label: "Email campaigns", href: "/admin/marketing", icon: Mail },
     ],
   },
   {
