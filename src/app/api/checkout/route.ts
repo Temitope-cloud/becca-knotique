@@ -19,6 +19,7 @@ import { deliveryQuoteFor } from "@/lib/delivery";
 import { paystackInitialize } from "@/lib/paystack";
 import { getStoreCredit } from "@/lib/store-credit";
 import { markOrderPaid } from "@/lib/orders";
+import { measurementsFor, requiresMeasurements } from "@/lib/product-measurements";
 
 export const runtime = "nodejs";
 
@@ -134,6 +135,13 @@ export async function POST(request: Request) {
         },
         { status: 409 },
       );
+    }
+    if (requiresMeasurements(product)) {
+      const supplied = new Set((line.measurements ?? []).map((measurement) => measurement.label));
+      const missing = measurementsFor(product).filter((field) => !supplied.has(field.label));
+      if (missing.length) {
+        return NextResponse.json({ error: `Please add measurements for ${product.name}: ${missing.map((field) => field.label).join(", ")}.` }, { status: 400 });
+      }
     }
     orderItems.push({
       productId: product.id,

@@ -16,6 +16,7 @@ import { formatNaira, priceForSize } from "@/lib/money";
 import { isSoldOut, unitsLeft } from "@/lib/stock";
 import Tooltip from "@/components/ui/Tooltip";
 import MeasureGuideButton from "@/components/MeasureGuide";
+import { measurementsFor, requiresMeasurements } from "@/lib/product-measurements";
 
 export interface MeasurementField {
   label: string;
@@ -39,6 +40,7 @@ export interface PurchaseProduct {
   stockCount?: number;
   madeToOrder?: boolean;
   leadTime?: string;
+  category?: string;
 }
 
 // NEXT_PUBLIC_* values are inlined at build time. When absent, the Cloudinary
@@ -179,8 +181,9 @@ export default function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
-  const measurementFields = product.measurementFields ?? [];
-  const [customFit, setCustomFit] = useState(false);
+  const measurementsRequired = requiresMeasurements(product);
+  const measurementFields = measurementsRequired ? measurementsFor(product) : (product.measurementFields ?? []);
+  const [customFit, setCustomFit] = useState(measurementsRequired);
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [customColor, setCustomColor] = useState("");
   const [referenceImage, setReferenceImage] = useState("");
@@ -225,6 +228,7 @@ export default function ProductPurchasePanel({
       : [];
 
   const trimmedCustomColor = customColor.trim();
+  const measurementsComplete = !measurementsRequired || measurementFields.every((f) => measurements[f.label]?.trim());
 
   function buildItem() {
     return {
@@ -242,12 +246,14 @@ export default function ProductPurchasePanel({
   }
 
   function handleAdd() {
+    if (!measurementsComplete) return;
     addItem(buildItem(), quantity);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
 
   function handleBuyNow() {
+    if (!measurementsComplete) return;
     addItem(buildItem(), quantity);
     router.push("/checkout");
   }
@@ -395,14 +401,15 @@ export default function ProductPurchasePanel({
               type="checkbox"
               checked={customFit}
               onChange={(e) => setCustomFit(e.target.checked)}
+              disabled={measurementsRequired}
               className="mt-0.5 h-4 w-4 rounded border-stone-300"
             />
             <span className="text-sm">
               <span className="font-medium text-stone-800">
-                Made to my measurements
+                {measurementsRequired ? "Measurements required" : "Made to my measurements"}
               </span>
               <span className="block text-xs text-stone-500">
-                Give us your exact numbers for a custom fit (optional).
+                {measurementsRequired ? "Fill every field before you can add this made-to-order clothing piece to cart." : "Give us your exact numbers for a custom fit (optional)."}
               </span>
             </span>
           </label>
@@ -414,6 +421,7 @@ export default function ProductPurchasePanel({
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <label className="text-xs font-medium text-stone-700">
                       {f.label}
+                      {measurementsRequired ? <span className="text-rose-600"> *</span> : null}
                       {f.unit ? (
                         <span className="text-stone-400"> ({f.unit})</span>
                       ) : null}
@@ -562,11 +570,11 @@ export default function ProductPurchasePanel({
         <button
           type="button"
           onClick={handleAdd}
-          disabled={soldOut}
+          disabled={soldOut || !measurementsComplete}
           style={{ borderColor: outlineColor, color: outlineColor }}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 bg-white px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {added ? (
+          {!measurementsComplete ? "Add measurements" : added ? (
             <>
               <Check className="h-4 w-4" /> Added
             </>
@@ -579,7 +587,7 @@ export default function ProductPurchasePanel({
         <button
           type="button"
           onClick={handleBuyNow}
-          disabled={soldOut}
+          disabled={soldOut || !measurementsComplete}
           style={{
             backgroundColor: ctaBg,
             color: ctaText,
@@ -587,8 +595,8 @@ export default function ProductPurchasePanel({
           }}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 px-6 py-4 text-sm font-semibold tracking-[0.14em] uppercase transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {soldOut ? "Sold out" : "Buy now"}
-          {!soldOut ? <ArrowRight className="h-4 w-4" /> : null}
+          {soldOut ? "Sold out" : !measurementsComplete ? "Add measurements" : "Buy now"}
+          {!soldOut && measurementsComplete ? <ArrowRight className="h-4 w-4" /> : null}
         </button>
       </div>
     </div>

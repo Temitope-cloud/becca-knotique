@@ -231,6 +231,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
                 id: product.id,
                 slug: product.slug,
                 name: product.name,
+                category: product.category,
                 price: product.price,
                 oldPrice: product.oldPrice,
                 sizePrices: product.sizePrices,

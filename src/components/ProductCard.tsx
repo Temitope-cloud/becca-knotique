@@ -9,6 +9,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { formatNaira } from "@/lib/money";
 import { isSoldOut } from "@/lib/stock";
+import { requiresMeasurements } from "@/lib/product-measurements";
 
 function prettyCategory(c: string) {
   return c
@@ -27,12 +28,14 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
   // Made-to-order pieces are crocheted per order, so they never sell out.
   const soldOut = isSoldOut(product);
   const wished = has(product.slug);
+  const measurementsRequired = requiresMeasurements(product);
   const discount =
     product.oldPrice && product.oldPrice > product.price
       ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
       : null;
 
   function quickAdd() {
+    if (measurementsRequired) return;
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -147,7 +150,12 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
         </div>
 
         <div className="mt-3.5 flex flex-col gap-2 @min-[250px]:flex-row">
-          <button
+          {measurementsRequired ? <Link
+            href={`/products/${product.slug}`}
+            className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-stone-900 px-2 py-2.5 text-xs font-semibold text-white transition hover:bg-stone-800"
+          >
+            Add measurements
+          </Link> : <button
             type="button"
             onClick={quickAdd}
             disabled={soldOut}
@@ -162,7 +170,7 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
                 <ShoppingBag className="h-3.5 w-3.5 shrink-0" /> Add to cart
               </>
             )}
-          </button>
+          </button>}
           <Link
             href={`/products/${product.slug}`}
             className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-lg border border-stone-300 px-3 py-2.5 text-xs font-semibold text-stone-700 transition hover:bg-stone-100"
