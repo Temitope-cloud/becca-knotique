@@ -274,6 +274,22 @@ export default function CheckoutPage() {
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                  State
+                </label>
+                <select
+                  required
+                  name="state"
+                  autoComplete="address-level1"
+                  value={form.state}
+                  onChange={updateState}
+                  className={inputClass}
+                >
+                  <option value="">Select state</option>
+                  {deliveryLocations.map((item) => <option key={item.state} value={item.state}>{item.state}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-stone-700">
                   City
                 </label>
                 <select
@@ -287,22 +303,6 @@ export default function CheckoutPage() {
                 >
                   <option value="">{form.state ? "Select city or area" : "Select state first"}</option>
                   {citiesForSelectedState.map((city) => <option key={city} value={city}>{city}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-stone-700">
-                  State
-                </label>
-                <select
-                  required
-                  name="state"
-                  autoComplete="address-level1"
-                  value={form.state}
-                  onChange={updateState}
-                  className={inputClass}
-                >
-                  <option value="">Select state</option>
-                  {deliveryLocations.map((item) => <option key={item.state} value={item.state}>{item.state}</option>)}
                 </select>
               </div>
               <div className="sm:col-span-2">
