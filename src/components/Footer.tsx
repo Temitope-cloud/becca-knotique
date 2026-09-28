@@ -185,6 +185,13 @@ const Footer = ({
           </p>
 
           <div className="order-1 flex items-center gap-5 sm:order-2">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("bk-cookie-settings"))}
+              className="text-xs text-white/60 transition hover:text-white"
+            >
+              Cookie settings
+            </button>
             <a
               href="https://temistudio.vercel.app/"
               target="_blank"

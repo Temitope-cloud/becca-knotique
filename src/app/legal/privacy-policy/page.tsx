@@ -65,7 +65,7 @@ const PrivacyPolicy = async () => {
     },
     {
       title: "5. Cookies and Analytics",
-      body: "Our website may use cookies and analytics tools to understand user behavior, remember preferences, and improve performance. You can manage cookie settings through your browser at any time.",
+      body: "We use essential cookies for core store functions, such as keeping the cart and account sessions working. We ask for your choice before loading optional Google Analytics cookies. You can change your decision at any time through Cookie settings in the footer, or manage cookies through your browser.",
     },
     {
       title: "6. Your Rights",
