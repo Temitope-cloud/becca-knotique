@@ -78,8 +78,8 @@ export function labelFor(pref: ShoppingPreference): string {
 
 /** Subtle, on-brand hero eyebrow. `null` keeps the default hero. */
 export function heroEyebrowFor(pref: ShoppingPreference | null): string | null {
-  if (pref === "her") return "The edit, for her";
-  if (pref === "him") return "The edit, for him";
-  if (pref === "gift") return "Find a gift they'll keep";
+  if (pref === "her") return "The edit, for her.";
+  if (pref === "him") return "The edit, for him.";
+  if (pref === "gift") return "Find a gift they'll keep.";
   return null;
 }

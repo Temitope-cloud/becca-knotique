@@ -74,7 +74,7 @@ export default function WelcomeOfferPopup() {
           <button type="button" onClick={() => close()} className="mt-4 text-[11px] font-medium text-stone-500 underline underline-offset-4">Do not show this again</button>
         </div>
         <div className="relative hidden min-h-full bg-stone-100 md:block">
-          <Image src="https://res.cloudinary.com/u3kraw33/image/upload/v1787262028/beccas-knotique/images/about2.jpg" alt="Becca's Knotique handmade crochet look" fill sizes="50vw" className="object-cover" priority />
+          <Image src="https://res.cloudinary.com/u3kraw33/image/upload/f_auto,q_auto,w_750,c_limit/v1790056694/beccas-knotique/products/approved-2026-09-22/unisex-granny-square-crochet-cardigan/c7178f12-1794-490c-9916-5bcd6e2bea3d.png" alt="Unisex Granny Square Crochet Cardigan" fill sizes="50vw" className="object-cover" priority />
         </div>
       </section>
     </div>
