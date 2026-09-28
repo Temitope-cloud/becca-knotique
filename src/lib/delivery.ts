@@ -4,6 +4,7 @@ import { DeliveryZone, type IDeliveryZone } from "@/lib/models/DeliveryZone";
 import type { StoreSettings } from "@/lib/settings";
 
 const normalise = (value: string) => value.trim().toLocaleLowerCase("en-NG");
+const IBADAN_FREE_DELIVERY_THRESHOLD = 30000;
 
 export type DeliveryQuote = {
   fee: number;
@@ -26,7 +27,7 @@ export async function deliveryQuoteFor(
   const zone = zones.find((item) => item.cities.map(normalise).includes(place)) ??
     zones.find((item) => item.states.map(normalise).includes(region));
   if (zone) return {
-    fee: settings.freeShippingThreshold > 0 && subtotal >= settings.freeShippingThreshold ? 0 : zone.fee,
+    fee: (zone.fulfillmentMethod === "door_delivery" && subtotal >= IBADAN_FREE_DELIVERY_THRESHOLD) || (settings.freeShippingThreshold > 0 && subtotal >= settings.freeShippingThreshold) ? 0 : zone.fee,
     eta: zone.eta,
     zoneName: zone.name,
     fulfillmentMethod: zone.fulfillmentMethod ?? "park_pickup",

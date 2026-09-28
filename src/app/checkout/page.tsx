@@ -259,7 +259,7 @@ export default function CheckoutPage() {
               Delivery location
             </h2>
             <p className="mt-1 text-sm text-stone-500">
-              Delivery starts from {deliveryOrigin}. Ibadan orders are delivered to your door. Orders outside Ibadan are collected from a motor park.
+              Delivery starts from {deliveryOrigin}. Ibadan orders from ₦30,000 get free door delivery. Orders outside Ibadan are collected from a motor park.
             </p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
