@@ -16,7 +16,10 @@ export default function AnnouncementBanner() {
 
   return (
     <div className="bg-emerald-700 px-4 py-2 text-center text-xs font-medium tracking-wide text-white sm:text-sm">
-      {text}
+      <div
+        className="mx-auto max-w-6xl [&_a]:underline [&_a]:underline-offset-2 [&_p]:m-0 [&_p]:inline [&_strong]:font-bold"
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
     </div>
   );
 }

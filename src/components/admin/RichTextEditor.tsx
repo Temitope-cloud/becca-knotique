@@ -218,9 +218,11 @@ function Toolbar({ editor }: { editor: Editor }) {
 export default function RichTextEditor({
   value,
   onChange,
+  compact = false,
 }: {
   value: string;
   onChange: (html: string) => void;
+  compact?: boolean;
 }) {
   const editor = useEditor({
     immediatelyRender: false, // avoid Next SSR hydration mismatch
@@ -235,7 +237,7 @@ export default function RichTextEditor({
     content: value || "",
     editorProps: {
       attributes: {
-        class: `${PROSE_CLASS} min-h-[320px] px-4 py-3 outline-none`,
+        class: `${PROSE_CLASS} ${compact ? "min-h-[100px]" : "min-h-[320px]"} px-4 py-3 outline-none`,
       },
     },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),

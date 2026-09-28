@@ -13,7 +13,7 @@ const schema = z.object({
   storeName: z.string().max(120).optional(),
   supportEmail: z.string().email().or(z.literal("")).optional(),
   supportPhone: z.string().max(30).optional(),
-  announcement: z.string().max(200).optional(),
+  announcement: z.string().max(4000).optional(),
   shippingFee: z.number().min(0).optional(),
   freeShippingThreshold: z.number().min(0).optional(),
   // Contact & social
@@ -47,6 +47,9 @@ export async function PATCH(request: Request) {
   }
 
   const data = { ...parsed.data };
+  if (typeof data.announcement === "string") {
+    data.announcement = cleanContent(data.announcement);
+  }
   // Sanitize any policy HTML before storing.
   if (data.policies) {
     data.policies = {

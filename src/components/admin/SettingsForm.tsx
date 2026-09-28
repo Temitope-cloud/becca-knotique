@@ -123,13 +123,15 @@ export default function SettingsForm({ settings }: { settings: StoreSettings }) 
               </div>
               <div>
                 <label className={label}>Announcement banner (optional)</label>
-                <input
+                <RichTextEditor
                   value={form.announcement}
-                  onChange={set("announcement")}
-                  placeholder="e.g. Free shipping on orders over ₦100,000"
-                  className={input}
+                  onChange={(announcement) => {
+                    setForm((current) => ({ ...current, announcement }));
+                    setSaved(false);
+                  }}
+                  compact
                 />
-                <p className={hint}>Shows across the top of the store when set.</p>
+                <p className={hint}>Shows across the top of the store when set. Keep it short for mobile.</p>
               </div>
             </div>
           </div>
