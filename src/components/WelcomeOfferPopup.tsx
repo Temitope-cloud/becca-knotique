@@ -54,21 +54,18 @@ export default function WelcomeOfferPopup() {
           <X className="size-5" />
         </button>
         <div className="p-6 pt-14 sm:p-8 sm:pt-14">
-          <p className="text-[10px] font-semibold tracking-[0.18em] text-emerald-700 uppercase">A welcome from Becca&apos;s Knotique</p>
-          <h2 id="welcome-offer-title" className="mt-3 text-3xl font-semibold tracking-tight text-stone-950">More to love in every order.</h2>
-          <p className="mt-3 text-sm leading-relaxed text-stone-600">Join our list for new drops and handmade stories. Your cart can unlock these welcome offers.</p>
-          <div className="mt-5 space-y-2 text-xs">
-            <p className="border-l-2 border-stone-950 pl-3"><strong>WELCOME50</strong> · 7% off from ₦50,000</p>
-            <p className="border-l-2 border-emerald-700 pl-3"><strong>WELCOME100</strong> · 12% off from ₦100,000</p>
-          </div>
-          <form onSubmit={subscribe} className="mt-5">
+          <h2 id="welcome-offer-title" className="text-2xl font-semibold leading-tight tracking-tight text-stone-950 uppercase">Welcome savings.</h2>
+          <p className="mt-4 text-sm leading-relaxed text-stone-600">Subscribe for 7% off orders from ₦50,000 with <strong>WELCOME50</strong>, or 12% off from ₦100,000 with <strong>WELCOME100</strong>.</p>
+          <form onSubmit={subscribe} className="mt-6">
             <label className="sr-only" htmlFor="welcome-email">Email address</label>
-            <input id="welcome-email" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" className="w-full border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-950" />
+            <div className="flex">
+              <input id="welcome-email" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" className="min-w-0 flex-1 border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-950" />
+              <button disabled={saving} className="bg-stone-950 px-4 py-2.5 text-xs font-semibold tracking-[0.08em] text-white uppercase transition hover:bg-stone-800 disabled:opacity-60">{saving ? "Joining" : "Subscribe"}</button>
+            </div>
             <label className="mt-2.5 flex items-start gap-2 text-[11px] leading-relaxed text-stone-600">
               <input required type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-0.5 accent-emerald-700" />
               I agree to receive occasional offers and updates by email.
             </label>
-            <button disabled={saving} className="mt-3 w-full bg-stone-950 px-5 py-2.5 text-xs font-semibold tracking-[0.1em] text-white uppercase transition hover:bg-stone-800 disabled:opacity-60">{saving ? "Joining..." : "Join the list"}</button>
           </form>
           {message ? <p className="mt-3 text-sm text-emerald-700">{message}</p> : null}
           <button type="button" onClick={() => close()} className="mt-4 text-[11px] font-medium text-stone-500 underline underline-offset-4">Do not show this again</button>
