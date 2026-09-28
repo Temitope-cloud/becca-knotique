@@ -53,7 +53,7 @@ export default function ShoppingIntro() {
 
   return (
     <div
-      className="fixed inset-0 z-[400] flex items-center justify-center overflow-y-auto bg-[#faf8f5] px-6 py-16"
+      className="fixed inset-0 z-[400] flex items-center justify-center overflow-y-auto bg-[#fafafa] px-6 py-16"
       role="dialog"
       aria-modal="true"
       aria-labelledby="intro-heading"

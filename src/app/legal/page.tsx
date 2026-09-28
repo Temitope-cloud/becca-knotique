@@ -43,10 +43,10 @@ const legalLinks = [
 
 const LegalPage = () => {
   return (
-    <main className="bg-linear-to-b from-[#fff8f5] via-white to-[#fffaf7] px-4 py-14 sm:px-8 lg:px-12">
+    <main className="bg-linear-to-b from-[#fafafa] via-white to-[#fafafa] px-4 py-14 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-5xl">
-        <section className="rounded-3xl border border-[#f0d8d2] bg-white/90 p-8 shadow-sm sm:p-10">
-          <p className="text-sm font-semibold tracking-[0.2em] text-[#a34f3e] uppercase">
+        <section className="rounded-3xl border border-[#e7e5e4] bg-white/90 p-8 shadow-sm sm:p-10">
+          <p className="text-sm font-semibold tracking-[0.2em] text-[#111827] uppercase">
             Legal
           </p>
           <h1 className="font-apparel mt-3 text-4xl leading-tight font-medium text-gray-900 sm:text-5xl">
@@ -63,7 +63,7 @@ const LegalPage = () => {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-2xl border border-[#f4e3df] bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className="rounded-2xl border border-[#e7e5e4] bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <h2 className="text-xl font-semibold text-gray-900">{item.title}</h2>
               <p className="mt-2 text-base leading-relaxed text-gray-600">

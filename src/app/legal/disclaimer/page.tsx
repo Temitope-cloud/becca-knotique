@@ -77,10 +77,10 @@ const DisclaimerPage = async () => {
   ];
 
   return (
-    <main className="bg-linear-to-b from-[#fff8f5] via-white to-[#fffaf7] px-4 py-14 sm:px-8 lg:px-12">
+    <main className="bg-linear-to-b from-[#fafafa] via-white to-[#fafafa] px-4 py-14 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-6xl">
-        <section className="rounded-3xl border border-[#f0d8d2] bg-white/90 p-8 shadow-sm sm:p-10">
-          <p className="text-sm font-semibold tracking-[0.2em] text-[#a34f3e] uppercase">
+        <section className="rounded-3xl border border-[#e7e5e4] bg-white/90 p-8 shadow-sm sm:p-10">
+          <p className="text-sm font-semibold tracking-[0.2em] text-[#111827] uppercase">
             Legal
           </p>
           <h1 className="font-apparel mt-3 text-4xl leading-tight font-medium text-gray-900 sm:text-5xl">
@@ -97,7 +97,7 @@ const DisclaimerPage = async () => {
           {highlights.map((item) => (
             <article
               key={item.title}
-              className="rounded-2xl border border-[#f4e3df] bg-white p-5 shadow-sm"
+              className="rounded-2xl border border-[#e7e5e4] bg-white p-5 shadow-sm"
             >
               <h2 className="text-lg font-semibold text-gray-900">{item.title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-gray-600 sm:text-base">
@@ -111,7 +111,7 @@ const DisclaimerPage = async () => {
           {policySections.map((section) => (
             <article
               key={section.title}
-              className="rounded-2xl border border-[#f4e3df] bg-white p-6 shadow-sm sm:p-7"
+              className="rounded-2xl border border-[#e7e5e4] bg-white p-6 shadow-sm sm:p-7"
             >
               <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
                 {section.title}
@@ -123,7 +123,7 @@ const DisclaimerPage = async () => {
           ))}
         </section>
 
-        <section className="mt-8 rounded-2xl border border-[#ecd0c9] bg-[#fff4ef] p-6 sm:p-8">
+        <section className="mt-8 rounded-2xl border border-[#e7e5e4] bg-[#fafafa] p-6 sm:p-8">
           <h2 className="text-2xl font-semibold text-gray-900">Need clarity?</h2>
           <p className="mt-2 max-w-2xl text-base leading-relaxed text-gray-700">
             If anything in this disclaimer is unclear, contact us and we&apos;ll
@@ -132,13 +132,13 @@ const DisclaimerPage = async () => {
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="mailto:beccasknotique@gmail.com"
-              className="rounded-full bg-[#a34f3e] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#8d4334]"
+              className="rounded-full bg-[#111827] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#292524]"
             >
               Email Support
             </Link>
             <Link
               href="/contact"
-              className="rounded-full border border-[#a34f3e] px-5 py-2.5 text-sm font-semibold text-[#a34f3e] transition hover:bg-[#a34f3e] hover:text-white"
+              className="rounded-full border border-[#111827] px-5 py-2.5 text-sm font-semibold text-[#111827] transition hover:bg-[#111827] hover:text-white"
             >
               Contact Page
             </Link>

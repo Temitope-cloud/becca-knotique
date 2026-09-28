@@ -58,7 +58,7 @@ const AboutUs = async () => {
     <>
       <div className="mb-10 px-4">
         <div className="mx-auto mt-10 max-w-5xl px-4 sm:px-8">
-          <p className="mb-2 text-sm font-semibold tracking-[0.22em] text-[#a34f3e] uppercase">
+          <p className="mb-2 text-sm font-semibold tracking-[0.22em] text-[#111827] uppercase">
             Our Story
           </p>
           <h1 className="font-apparel text-4xl leading-tight font-medium text-gray-900 sm:text-5xl lg:text-6xl">
@@ -94,7 +94,7 @@ const AboutUs = async () => {
                   {a.des}
                 </p>
                 {a.sub && (
-                  <p className="mt-3 border-l-4 border-[#a34f3e] pl-4 text-base leading-relaxed text-gray-600 lg:text-lg">
+                  <p className="mt-3 border-l-4 border-[#111827] pl-4 text-base leading-relaxed text-gray-600 lg:text-lg">
                     {a.sub}
                   </p>
                 )}

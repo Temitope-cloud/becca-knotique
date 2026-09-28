@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const CONSENT_COOKIE = "bk_cookie_consent";
@@ -14,6 +15,7 @@ function savedConsent() {
 }
 
 export default function CookieConsent() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function CookieConsent() {
     setOpen(false);
   }
 
-  if (!open) return null;
+  if (!open || pathname.startsWith("/admin")) return null;
 
   return (
     <section

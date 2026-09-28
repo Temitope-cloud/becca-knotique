@@ -31,7 +31,7 @@ const STEPS = [
     title: "Confirm Order",
     description: "We start crafting your piece with care",
     icon: Sparkles,
-    accent: "from-emerald-100 to-orange-50 text-emerald-900 ring-emerald-200/70",
+    accent: "from-emerald-100 to-stone-50 text-emerald-900 ring-emerald-200/70",
   },
   {
     id: 4,
@@ -50,7 +50,7 @@ const CrochetProcess = () => {
   return (
     <section
       id="process"
-      className="relative scroll-mt-24 overflow-hidden border-t border-stone-200/80 bg-linear-to-b from-[#faf8f5] via-stone-50 to-[#f5f0ea]"
+      className="relative scroll-mt-24 overflow-hidden border-t border-stone-200/80 bg-linear-to-b from-[#fafafa] via-stone-50 to-[#f5f5f5]"
     >
       <div
         className="pointer-events-none absolute -top-24 right-0 h-64 w-64 rounded-full bg-emerald-200/20 blur-3xl"
@@ -145,7 +145,7 @@ const CrochetProcess = () => {
                     className={`relative md:pl-14 ${!isLast ? "pb-10" : ""}`}
                   >
                     <div className="absolute top-1 left-0 hidden md:flex md:h-9 md:w-9 md:items-center md:justify-center">
-                      <span className="z-10 flex h-9 w-full items-center justify-center rounded-full border-2 border-white bg-[#faf8f5] text-sm font-bold text-stone-700 shadow-sm ring-1 ring-stone-200">
+                      <span className="z-10 flex h-9 w-full items-center justify-center rounded-full border-2 border-white bg-[#fafafa] text-sm font-bold text-stone-700 shadow-sm ring-1 ring-stone-200">
                         <p className="w-full text-center"> {step.id} </p>
                       </span>
                     </div>
