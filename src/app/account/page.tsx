@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Package, ShieldCheck, Heart, Wallet } from "lucide-react";
+import { ArrowRight, Clock3, Heart, Package, ShieldCheck, ShoppingBag, Wallet } from "lucide-react";
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrder } from "@/lib/models/Order";
@@ -9,6 +9,7 @@ import { formatNaira } from "@/lib/money";
 import { getStoreCredit, listStoreCreditEntries } from "@/lib/store-credit";
 import { totalRefundable } from "@/lib/refunds";
 import { RefundRequest, type IRefundRequest } from "@/lib/models/RefundRequest";
+import { User } from "@/lib/models/User";
 import SignOutButton from "@/components/auth/SignOutButton";
 import RefundRequestForm from "@/components/account/RefundRequestForm";
 import DeleteAccountButton from "@/components/account/DeleteAccountButton";
@@ -42,7 +43,7 @@ export default async function AccountPage() {
   }
 
   const orders = await getOrders(session.user.id, session.user.email ?? "");
-  const [storeCredit, creditEntries, refundReqs] = await Promise.all([
+  const [storeCredit, creditEntries, refundReqs, profile] = await Promise.all([
     getStoreCredit(session.user.id),
     listStoreCreditEntries(session.user.id, 6),
     RefundRequest.find({
@@ -53,6 +54,11 @@ export default async function AccountPage() {
     })
       .sort({ createdAt: -1 })
       .lean<IRefundRequest[]>(),
+    User.findById(session.user.id).select("wishlist phone createdAt").lean<{
+      wishlist?: string[];
+      phone?: string;
+      createdAt?: Date;
+    }>(),
   ]);
 
   // Latest request per order reference (for status + eligibility).
@@ -69,29 +75,44 @@ export default async function AccountPage() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <section className="overflow-hidden rounded-3xl bg-stone-950 text-white">
+        <div className="flex flex-wrap items-center justify-between gap-6 px-6 py-7 sm:px-8 sm:py-9">
+          <div className="flex min-w-0 items-center gap-4">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-xl font-semibold text-stone-950">
+              {(session.user.name || session.user.email || "B").trim().charAt(0).toUpperCase()}
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm text-white/60">Welcome back</p>
+              <h1 className="truncate text-2xl font-semibold tracking-tight sm:text-3xl">{session.user.name || "Becca’s Knotique customer"}</h1>
+              <p className="mt-1 truncate text-sm text-white/65">{session.user.email}</p>
+            </div>
+          </div>
+          <div className="text-left sm:text-right">
+            <p className="text-xs font-medium tracking-[0.16em] text-emerald-300 uppercase">Member since</p>
+            <p className="mt-1 text-sm text-white/80">{profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString("en-NG", { month: "long", year: "numeric" }) : "Becca’s Knotique"}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-4 grid gap-3 sm:grid-cols-3">
+        <Link href="/account/wishlist" className="group rounded-2xl border border-stone-200 bg-white p-4 transition hover:border-stone-300 hover:shadow-sm"><div className="flex items-center justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600"><Heart className="h-5 w-5" /></span><ArrowRight className="h-4 w-4 text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-stone-700" /></div><p className="mt-4 font-semibold text-stone-900">Wishlist</p><p className="mt-1 text-sm text-stone-500">{profile?.wishlist?.length ?? 0} saved piece{(profile?.wishlist?.length ?? 0) === 1 ? "" : "s"}</p></Link>
+        <Link href="/account/security" className="group rounded-2xl border border-stone-200 bg-white p-4 transition hover:border-stone-300 hover:shadow-sm"><div className="flex items-center justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700"><ShieldCheck className="h-5 w-5" /></span><ArrowRight className="h-4 w-4 text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-stone-700" /></div><p className="mt-4 font-semibold text-stone-900">Security</p><p className="mt-1 text-sm text-stone-500">Protect your account</p></Link>
+        <Link href="/products" className="group rounded-2xl border border-stone-200 bg-white p-4 transition hover:border-stone-300 hover:shadow-sm"><div className="flex items-center justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-stone-100 text-stone-900"><ShoppingBag className="h-5 w-5" /></span><ArrowRight className="h-4 w-4 text-stone-300 transition group-hover:translate-x-0.5 group-hover:text-stone-700" /></div><p className="mt-4 font-semibold text-stone-900">Shop collection</p><p className="mt-1 text-sm text-stone-500">Find your next handmade piece</p></Link>
+      </section>
+
+      <section className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-stone-200 bg-white p-4"><p className="text-sm text-stone-500">Orders placed</p><p className="mt-2 text-3xl font-semibold tracking-tight text-stone-900">{orders.length}</p></div>
+        <div className="rounded-2xl border border-stone-200 bg-white p-4"><p className="text-sm text-stone-500">In progress</p><p className="mt-2 flex items-center gap-2 text-3xl font-semibold tracking-tight text-stone-900"><Clock3 className="h-5 w-5 text-amber-600" />{orders.filter((order) => order.status === "pending" || (order.status === "paid" && order.fulfillmentStatus !== "delivered")).length}</p></div>
+        <div className="rounded-2xl border border-stone-200 bg-white p-4"><p className="text-sm text-stone-500">Store credit</p><p className="mt-2 text-3xl font-semibold tracking-tight text-stone-900">{formatNaira(storeCredit)}</p></div>
+      </section>
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-stone-900">
-            My account
-          </h1>
-          <p className="mt-1 text-stone-600">
-            {session.user.name} · {session.user.email}
-          </p>
+          <h2 className="text-xl font-semibold text-stone-900">Your account</h2>
+          <p className="mt-1 text-sm text-stone-500">Orders, credit, and account protection in one place.</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <Link
-            href="/account/wishlist"
-            className="inline-flex items-center gap-2 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-100"
-          >
-            <Heart className="h-4 w-4" /> Wishlist
-          </Link>
-          <Link
-            href="/account/security"
-            className="inline-flex items-center gap-2 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-100"
-          >
-            <ShieldCheck className="h-4 w-4" /> Security
-          </Link>
           {session.user.role === "admin" ? (
             <Link
               href="/admin"
