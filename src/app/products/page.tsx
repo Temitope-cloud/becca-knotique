@@ -55,9 +55,9 @@ export const metadata: Metadata = {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; for?: string }>;
+  searchParams: Promise<{ q?: string; for?: string; category?: string }>;
 }) {
-  const { q, for: forAudience } = await searchParams;
+  const { q, for: forAudience, category } = await searchParams;
   // Explicit ?for= wins; otherwise default the filter to the saved preference.
   const cookiePref = (await cookies()).get(PREFERENCE_COOKIE)?.value;
   const preference = isPreference(cookiePref) ? cookiePref : "all";
@@ -98,6 +98,7 @@ export default async function ProductsPage({
         products={products}
         initialQuery={q ?? ""}
         initialGender={initialGender}
+        initialCategory={category ?? "all"}
       />
     </>
   );

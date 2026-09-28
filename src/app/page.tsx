@@ -1,14 +1,13 @@
 import CrochetProcess from "@/components/CrochetProcess";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/HeroSection";
-import NewCollection from "@/components/NewCollection";
+import ShopByCategories from "@/components/ShopByCategories";
 import OnePiece from "@/components/OnePiece";
 import OurStory from "@/components/OurStory";
 import PreFooterCta from "@/components/PreFooterCta";
-import WelcomePackages from "@/components/WelcomePackages";
 import { AnimatedTestimonial } from "@/components/Testimonial";
 import type { Metadata } from "next";
-import { getFeaturedProduct, getFeaturedProducts, getProductsBySlugs } from "@/lib/catalog";
+import { getAllProducts, getFeaturedProduct, getFeaturedProducts } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
 import {
@@ -45,15 +44,16 @@ export default async function Home() {
   const preference = isPreference(cookiePref) ? cookiePref : "all";
   const orderedFeatured = sortByPreference(featuredList, preference);
   const hero = orderedFeatured[0] ?? (await getFeaturedProduct());
-  const gridProducts = orderedFeatured
-    .filter((p) => p.id !== hero?.id)
-    .slice(0, 12);
   const settings = await getSettings();
-  const welcomePackages = await getProductsBySlugs([
-    "handmade-gift-set",
-    "blue-heart-earrings",
-    "hairband",
-  ]);
+  const catalogue = await getAllProducts();
+  const imageFor = (predicate: (product: (typeof catalogue)[number]) => boolean) =>
+    catalogue.find(predicate)?.image;
+  const categoryTiles = [
+    { name: "New in", href: "/products", image: orderedFeatured[0]?.image ?? hero?.image },
+    { name: "Men", href: "/products?for=men", image: imageFor((product) => product.madefor === "men") },
+    { name: "Women", href: "/products?for=women", image: imageFor((product) => product.madefor === "women" && product.category !== "accessories") },
+    { name: "Accessories", href: "/products?category=accessories", image: imageFor((product) => product.category === "accessories") },
+  ];
 
   return (
     <>
@@ -61,10 +61,7 @@ export default async function Home() {
         foundedYear={settings.foundedYear}
         eyebrow={heroEyebrowFor(preference)}
       />
-      {gridProducts.length > 0 ? (
-        <NewCollection products={gridProducts} />
-      ) : null}
-      <WelcomePackages products={welcomePackages} />
+      <ShopByCategories tiles={categoryTiles} />
       <OurStory />
       <CrochetProcess />
       {/* <AnimatedTestimonial /> */}

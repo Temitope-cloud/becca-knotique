@@ -102,10 +102,12 @@ export default function ProductsPageClient({
   products,
   initialQuery = "",
   initialGender = "all",
+  initialCategory = "all",
 }: {
   products: CatalogProduct[];
   initialQuery?: string;
   initialGender?: string;
+  initialCategory?: string;
 }) {
   const valid = useMemo(
     () => products.filter((p) => p.slug && p.name && p.active !== false),
@@ -135,7 +137,9 @@ export default function ProductsPageClient({
     }
     if (preference) setGender(genderFilterFor(preference));
   }, [preference]);
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState(
+    categories.includes(initialCategory) ? initialCategory : "all",
+  );
   const [price, setPrice] = useState("all");
   const [sort, setSort] = useState("featured");
   const [query, setQuery] = useState(initialQuery);
