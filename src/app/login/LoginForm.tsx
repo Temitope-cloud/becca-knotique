@@ -15,6 +15,8 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [twoFactorCode, setTwoFactorCode] = useState("");
+  const [awaitingCode, setAwaitingCode] = useState(false);
   const [error, setError] = useState<string | null>(
     searchParams.get("error") === "NoAccount"
       ? "We couldn't find an account for that Google email. Please sign up first."
@@ -27,9 +29,30 @@ export default function LoginForm() {
     setError(null);
     setLoading(true);
 
+    if (!awaitingCode) {
+      const response = await fetch("/api/auth/two-factor/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setLoading(false);
+        setError(data.error || "Invalid email or password.");
+        return;
+      }
+      if (data.requiresTwoFactor) {
+        setAwaitingCode(true);
+        setLoading(false);
+        setError(null);
+        return;
+      }
+    }
+
     const res = await signIn("credentials", {
       email,
       password,
+      twoFactorCode: awaitingCode ? twoFactorCode : undefined,
       redirect: false,
     });
 
@@ -64,6 +87,26 @@ export default function LoginForm() {
             className="w-full rounded-xl border border-stone-300 px-4 py-3 text-stone-900 outline-none transition focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10"
           />
         </div>
+
+        {awaitingCode ? (
+          <div>
+            <label htmlFor="two-factor-code" className="mb-1.5 block text-sm font-medium text-stone-700">
+              Security code
+            </label>
+            <input
+              id="two-factor-code"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="[0-9]{6}"
+              maxLength={6}
+              required
+              value={twoFactorCode}
+              onChange={(e) => setTwoFactorCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              className="w-full rounded-xl border border-stone-300 px-4 py-3 tracking-[0.35em] text-stone-900 outline-none transition focus:border-stone-900 focus:ring-2 focus:ring-stone-900/10"
+            />
+            <p className="mt-1 text-xs text-stone-500">We sent a six-digit code to your email. It expires in 10 minutes.</p>
+          </div>
+        ) : null}
 
         <div>
           <div className="mb-1.5 flex items-center justify-between">
@@ -118,7 +161,7 @@ export default function LoginForm() {
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:opacity-60"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-          Sign in
+          {awaitingCode ? "Verify and sign in" : "Sign in"}
         </button>
       </form>
 

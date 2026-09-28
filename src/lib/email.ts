@@ -222,6 +222,20 @@ export async function sendPasswordResetEmail(
   }
 }
 
+/** Sends the short-lived code used for optional two-step verification. */
+export async function sendTwoFactorCode(to: string, code: string): Promise<boolean> {
+  return sendMail({
+    to,
+    sender: "security",
+    subject: "Your Becca's Knotique security code",
+    title: "Your security code",
+    body:
+      p("Enter the code below to finish signing in or update your two-step verification settings. It expires in 10 minutes.") +
+      `<p style="margin:24px 0;padding:16px 20px;border:1px solid #e7e5e4;background:#fafafa;color:#111827;font-size:28px;font-weight:700;letter-spacing:0.2em;text-align:center;">${escapeHtml(code)}</p>` +
+      muted("If you did not request this code, you can safely ignore this email."),
+  });
+}
+
 /** Sends the customer receipt + the owner notification for a paid order. */
 export async function sendOrderEmails(order: IOrder): Promise<void> {
   const resend = getResend();

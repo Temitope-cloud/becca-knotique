@@ -26,6 +26,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        twoFactorCode: { label: "Security code", type: "text" },
       },
       authorize: async (credentials) => {
         const email = credentials?.email
@@ -44,11 +45,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!limited.ok) return null;
 
         await connectToDatabase();
-        const user = await User.findOne({ email }).select("+password");
+        const user = await User.findOne({ email }).select("+password +twoFactorCodeHash +twoFactorCodeExpires");
         if (!user?.password || user.isActive === false) return null;
 
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) return null;
+
+        if (user.twoFactorEnabled) {
+          const code = credentials?.twoFactorCode ? String(credentials.twoFactorCode) : "";
+          const codeValid = Boolean(
+            code &&
+            user.twoFactorCodeHash &&
+            user.twoFactorCodeExpires &&
+            user.twoFactorCodeExpires.getTime() >= Date.now() &&
+            await bcrypt.compare(code, user.twoFactorCodeHash),
+          );
+          if (!codeValid) return null;
+          await User.updateOne(
+            { _id: user._id, twoFactorCodeHash: user.twoFactorCodeHash },
+            { $unset: { twoFactorCodeHash: "", twoFactorCodeExpires: "" } },
+          );
+        }
 
         // Coming back cancels a pending deletion and restores the account.
         if (user.deletionScheduledAt) {

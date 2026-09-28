@@ -18,6 +18,10 @@ export interface IUser {
   storeCredit: number;
   /** Admins can pause a customer account without removing their order history. */
   isActive: boolean;
+  /** Optional email code verification for password sign-ins. */
+  twoFactorEnabled: boolean;
+  twoFactorCodeHash?: string;
+  twoFactorCodeExpires?: Date;
   /** Explicit consent for promotional email. Transactional order email is separate. */
   marketingOptIn: boolean;
   /** sha256 of the active password-reset token (raw token is emailed, never stored) */
@@ -54,6 +58,9 @@ const UserSchema = new Schema<IUser>(
     wishlist: { type: [String], default: [] },
     storeCredit: { type: Number, default: 0, min: 0 },
     isActive: { type: Boolean, default: true, index: true },
+    twoFactorEnabled: { type: Boolean, default: false },
+    twoFactorCodeHash: { type: String, select: false },
+    twoFactorCodeExpires: { type: Date, select: false },
     marketingOptIn: { type: Boolean, default: false, index: true },
     resetTokenHash: { type: String, select: false },
     resetTokenExpires: { type: Date, select: false },

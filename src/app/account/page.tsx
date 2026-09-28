@@ -86,6 +86,12 @@ export default async function AccountPage() {
           >
             <Heart className="h-4 w-4" /> Wishlist
           </Link>
+          <Link
+            href="/account/security"
+            className="inline-flex items-center gap-2 rounded-xl border border-stone-300 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-100"
+          >
+            <ShieldCheck className="h-4 w-4" /> Security
+          </Link>
           {session.user.role === "admin" ? (
             <Link
               href="/admin"
