@@ -23,6 +23,7 @@ export default function DeliveryPage() {
   const [fee, setFee] = useState("");
   const [eta, setEta] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -83,6 +84,21 @@ export default function DeliveryPage() {
     void load();
   }
 
+  async function remove(zone: Zone) {
+    setSaving(true);
+    setMessage("");
+    const response = await fetch(`/api/admin/delivery-zones?id=${encodeURIComponent(zone._id)}`, { method: "DELETE" });
+    setSaving(false);
+    if (!response.ok) {
+      setMessage("Could not delete this delivery zone.");
+      return;
+    }
+    if (editingId === zone._id) clearForm();
+    setDeleteId(null);
+    setMessage("Delivery zone deleted.");
+    void load();
+  }
+
   return (
     <div className="mx-auto max-w-4xl px-5 py-8 sm:px-8">
       <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
@@ -126,9 +142,25 @@ export default function DeliveryPage() {
                 {zone.eta ? ` · ${zone.eta}` : ""}
               </p>
             </div>
-            <button type="button" onClick={() => edit(zone)} className="mt-3 rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-50 sm:mt-0">
-              Edit
-            </button>
+            <div className="mt-3 flex items-center gap-2 sm:mt-0">
+              <button type="button" onClick={() => edit(zone)} className="rounded-lg border border-stone-300 px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-50">
+                Edit
+              </button>
+              {deleteId === zone._id ? (
+                <>
+                  <button type="button" disabled={saving} onClick={() => void remove(zone)} className="rounded-lg bg-rose-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-rose-700 disabled:opacity-60">
+                    Confirm delete
+                  </button>
+                  <button type="button" disabled={saving} onClick={() => setDeleteId(null)} className="text-sm font-medium text-stone-600 underline underline-offset-2">
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button type="button" onClick={() => setDeleteId(zone._id)} className="rounded-lg border border-rose-200 px-3 py-1.5 text-sm font-semibold text-rose-600 hover:bg-rose-50">
+                  Delete
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
