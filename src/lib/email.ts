@@ -93,10 +93,15 @@ function itemsTable(order: IOrder): string {
 
 function shell(title: string, body: string): string {
   return `
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bk-email-logo-wrap { background: transparent !important; }
+    }
+  </style>
   <div style="background:#f5f5f5;padding:32px 12px;font-family:Arial,Helvetica,sans-serif;">
     <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e7e5e4;">
-      <div style="background:#0a0a0a;padding:26px 28px;text-align:center;">
-        <a href="${SITE_URL}" style="display:inline-block;text-decoration:none;"><img src="${LOGO_URL}" alt="Becca's Knotique" width="180" style="display:block;width:180px;height:auto;margin:0 auto;border:0;" /></a>
+      <div class="bk-email-logo-wrap" bgcolor="#0a0a0a" style="background:#0a0a0a;background-image:linear-gradient(#0a0a0a,#0a0a0a);padding:14px 28px;text-align:center;">
+        <a href="${SITE_URL}" style="display:inline-block;text-decoration:none;"><img src="${LOGO_URL}" alt="Becca's Knotique" width="72" style="display:block;width:72px;height:auto;margin:0 auto;border:0;background:transparent;" /></a>
       </div>
       <div style="padding:32px 28px;">
         <h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;color:#111827;">${title}</h1>
