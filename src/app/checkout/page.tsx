@@ -40,6 +40,7 @@ export default function CheckoutPage() {
   const [quote, setQuote] = useState<{ fee: number; eta: string; fulfillmentMethod?: "door_delivery" | "park_pickup"; available: boolean } | null>(null);
   const [storeCredit, setStoreCredit] = useState(0);
   const [applyCredit, setApplyCredit] = useState(true);
+  const [liveTiming, setLiveTiming] = useState<Record<string, { madeToOrder: boolean; leadTime?: string }>>({});
 
   useEffect(() => {
     fetch("/api/store-settings")
@@ -89,6 +90,25 @@ export default function CheckoutPage() {
     if (hydrated && items.length === 0) router.replace("/cart");
   }, [hydrated, items.length, router]);
 
+  // Product lead times can change after a shopper has added an item. Refresh
+  // them here so checkout never promises an outdated ready-to-ship estimate.
+  useEffect(() => {
+    const ids = [...new Set(items.map((item) => item.productId).filter(Boolean))];
+    if (!ids.length) {
+      setLiveTiming({});
+      return;
+    }
+    const params = new URLSearchParams();
+    ids.forEach((id) => params.append("id", id));
+    fetch(`/api/products/timing?${params}`)
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => {
+        if (!data?.items) return;
+        setLiveTiming(Object.fromEntries(data.items.map((item: { id: string; madeToOrder: boolean; leadTime?: string }) => [item.id, { madeToOrder: item.madeToOrder, leadTime: item.leadTime }])));
+      })
+      .catch(() => {});
+  }, [items]);
+
   // Load the signed-in customer's store credit balance.
   useEffect(() => {
     if (!session?.user) {
@@ -124,7 +144,11 @@ export default function CheckoutPage() {
   const total = Math.max(0, subtotal - discount) + shipping;
   const creditApplied = applyCredit ? Math.min(storeCredit, total) : 0;
   const amountToPay = Math.max(0, total - creditApplied);
-  const timing = preparationTiming(items);
+  const timing = preparationTiming(items.map((item) => ({
+    ...item,
+    madeToOrder: liveTiming[item.productId]?.madeToOrder ?? item.madeToOrder,
+    leadTime: liveTiming[item.productId]?.leadTime ?? item.leadTime,
+  })));
   const isParkPickup = quote?.fulfillmentMethod === "park_pickup";
 
   async function handleSubmit(e: React.FormEvent) {
