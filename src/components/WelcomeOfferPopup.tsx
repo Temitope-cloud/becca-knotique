@@ -2,10 +2,16 @@
 
 import Image from "next/image";
 import { X } from "lucide-react";
+import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const DISMISSED_KEY = "bk-welcome-offer-dismissed";
+const SHOPPING_ROUTES = ["/", "/products", "/trending", "/journal"];
+
+function isShoppingRoute(pathname: string) {
+  return SHOPPING_ROUTES.some((route) => route === "/" ? pathname === route : pathname === route || pathname.startsWith(`${route}/`));
+}
 
 export default function WelcomeOfferPopup() {
   const pathname = usePathname();
@@ -16,9 +22,38 @@ export default function WelcomeOfferPopup() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (pathname.startsWith("/admin") || pathname.startsWith("/checkout") || localStorage.getItem(DISMISSED_KEY)) return;
-    const timer = window.setTimeout(() => setOpen(true), 900);
-    return () => window.clearTimeout(timer);
+    if (!isShoppingRoute(pathname) || localStorage.getItem(DISMISSED_KEY)) return;
+
+    let shown = false;
+    const reveal = () => {
+      if (shown || localStorage.getItem(DISMISSED_KEY)) return;
+      shown = true;
+      setOpen(true);
+    };
+    const hasExplored = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      return window.scrollY >= 560 || (scrollableHeight > 0 && window.scrollY / scrollableHeight >= 0.5);
+    };
+    const onScroll = () => {
+      if (hasExplored()) reveal();
+    };
+    const onInteraction = () => {
+      window.setTimeout(() => {
+        if (pathname.startsWith("/products")) reveal();
+      }, 8000);
+    };
+    const isProductPage = pathname.startsWith("/products/");
+    const patientInvite = window.setTimeout(reveal, isProductPage ? 14000 : 35000);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pointerdown", onInteraction, { once: true, passive: true });
+    window.addEventListener("keydown", onInteraction, { once: true });
+    return () => {
+      window.clearTimeout(patientInvite);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointerdown", onInteraction);
+      window.removeEventListener("keydown", onInteraction);
+    };
   }, [pathname]);
 
   function close(remember = true) {
@@ -48,15 +83,16 @@ export default function WelcomeOfferPopup() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/55 p-4" role="dialog" aria-modal="true" aria-labelledby="welcome-offer-title">
-      <section className="relative grid w-full max-w-2xl overflow-hidden bg-white shadow-2xl md:grid-cols-[1.1fr_0.9fr]">
+    <div className="fixed inset-0 z-[200] flex items-end justify-center bg-black/35 p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="welcome-offer-title">
+      <motion.section initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }} className="relative grid w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl md:grid-cols-[1.1fr_0.9fr]">
         <button type="button" onClick={() => close()} className="absolute top-3 left-3 z-10 rounded-full p-1 text-stone-950 transition hover:bg-stone-100" aria-label="Close welcome offer">
           <X className="size-5" />
         </button>
         <div className="p-6 pt-14 sm:p-8 sm:pt-14">
-          <h2 id="welcome-offer-title" className="text-2xl font-semibold leading-tight tracking-tight text-stone-950 uppercase">Welcome savings.</h2>
-          <p className="mt-4 text-sm leading-relaxed text-stone-600">Subscribe for 7% off orders from ₦50,000 with <strong>WELCOME50</strong>, or 12% off from ₦100,000 with <strong>WELCOME100</strong>.</p>
-          <form onSubmit={subscribe} className="mt-6">
+          <p className="text-[11px] font-semibold tracking-[0.18em] text-emerald-700 uppercase">A welcome from Becca&apos;s Knotique</p>
+          <h2 id="welcome-offer-title" className="mt-2 text-2xl font-semibold leading-tight tracking-tight text-stone-950">Hello.</h2>
+          <p className="mt-3 text-sm leading-relaxed text-stone-600">Enjoy 7% off orders from ₦50,000 with <strong>WELCOME50</strong>, or 12% off from ₦100,000 with <strong>WELCOME100</strong>.</p>
+          <form onSubmit={subscribe} className="mt-5">
             <label className="sr-only" htmlFor="welcome-email">Email address</label>
             <div className="flex">
               <input id="welcome-email" required type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email" className="min-w-0 flex-1 border border-stone-300 px-3 py-2.5 text-sm outline-none focus:border-stone-950" />
@@ -73,7 +109,7 @@ export default function WelcomeOfferPopup() {
         <div className="relative hidden min-h-full bg-stone-100 md:block">
           <Image src="https://res.cloudinary.com/u3kraw33/image/upload/f_auto,q_auto,w_750,c_limit/v1790056694/beccas-knotique/products/approved-2026-09-22/unisex-granny-square-crochet-cardigan/c7178f12-1794-490c-9916-5bcd6e2bea3d.png" alt="Unisex Granny Square Crochet Cardigan" fill sizes="50vw" className="object-cover" priority />
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
