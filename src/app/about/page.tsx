@@ -32,14 +32,22 @@ const AboutUs = async () => {
       des: "Becca’s Knotique was born from a love for creating pieces that feel as special as the people who wear them. What started as a simple passion for crochet has grown into a brand dedicated to handmade fashion that stands out.",
     },
     {
+      title: "Vision",
+      des: "To be a distinctive crochet brand known for creativity, quality, and meaningful handmade pieces.",
+    },
+    {
+      title: "Mission",
+      des: "To create beautiful, expressive crochet pieces through creativity, craftsmanship, and purpose.",
+    },
+    {
       title: "The Story",
-      des: `Founded in ${foundedYear}, Becca’s Knotique began with a vision — to turn yarn into wearable art. Every stitch, pattern, and design is carefully crafted, not just to look good, but to feel personal.`,
+      des: `Founded in ${foundedYear}, Becca’s Knotique began with a vision to turn yarn into wearable art. Every stitch, pattern, and design is carefully crafted, not just to look good, but to feel personal.`,
       sub: "From scrunchies and accessories to full statement outfits, each piece tells a story of patience, creativity, and attention to detail.",
     },
     {
       title: "What Makes Us Different",
       des: "We don’t believe in mass production. Every item is handmade with care, which means no two pieces are exactly the same.",
-      sub: "Whether it’s a custom order or a ready-to-wear design, our goal is simple — to create something that feels uniquely yours.",
+      sub: "Whether it’s a custom order or a ready-to-wear design, our goal is simple: to create something that feels uniquely yours.",
     },
     {
       title: "The Experience",

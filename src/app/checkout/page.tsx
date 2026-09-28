@@ -34,6 +34,8 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [shippingCfg, setShippingCfg] = useState({ fee: 0, threshold: 0 });
+  const [deliveryLocations, setDeliveryLocations] = useState<Array<{ state: string; cities: string[] }>>([]);
+  const [deliveryOrigin, setDeliveryOrigin] = useState("Challenge, Ibadan");
   const [quote, setQuote] = useState<{ fee: number; eta: string; available: boolean } | null>(null);
   const [storeCredit, setStoreCredit] = useState(0);
   const [applyCredit, setApplyCredit] = useState(true);
@@ -47,6 +49,17 @@ export default function CheckoutPage() {
           threshold: Number(d.freeShippingThreshold) || 0,
         }),
       )
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/delivery-locations")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (!data) return;
+        setDeliveryLocations(data.states ?? []);
+        setDeliveryOrigin(data.origin ?? "Challenge, Ibadan");
+      })
       .catch(() => {});
   }, []);
 
@@ -88,8 +101,16 @@ export default function CheckoutPage() {
   }, [session]);
 
   function update(field: keyof typeof form) {
-    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm((f) => ({ ...f, [field]: e.target.value }));
+  }
+
+  const citiesForSelectedState = deliveryLocations.find(
+    (item) => item.state === form.state,
+  )?.cities ?? [];
+
+  function updateState(e: React.ChangeEvent<HTMLSelectElement>) {
+    setForm((current) => ({ ...current, state: e.target.value, city: "" }));
   }
 
   const discount = coupon?.discount ?? 0;
@@ -234,6 +255,9 @@ export default function CheckoutPage() {
             <h2 className="text-lg font-semibold text-stone-900">
               Delivery address
             </h2>
+            <p className="mt-1 text-sm text-stone-500">
+              Delivery starts from {deliveryOrigin}. Choose your state and city to see the fee.
+            </p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
@@ -252,27 +276,34 @@ export default function CheckoutPage() {
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
                   City
                 </label>
-                <input
+                <select
                   required
                   name="city"
                   autoComplete="address-level2"
                   value={form.city}
                   onChange={update("city")}
                   className={inputClass}
-                />
+                  disabled={!form.state || citiesForSelectedState.length === 0}
+                >
+                  <option value="">{form.state ? "Select city or area" : "Select state first"}</option>
+                  {citiesForSelectedState.map((city) => <option key={city} value={city}>{city}</option>)}
+                </select>
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
                   State
                 </label>
-                <input
+                <select
                   required
                   name="state"
                   autoComplete="address-level1"
                   value={form.state}
-                  onChange={update("state")}
+                  onChange={updateState}
                   className={inputClass}
-                />
+                >
+                  <option value="">Select state</option>
+                  {deliveryLocations.map((item) => <option key={item.state} value={item.state}>{item.state}</option>)}
+                </select>
               </div>
               <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
