@@ -48,7 +48,7 @@ const highlights = [
     Icon: RefreshCcw,
     title: "We'll make it right",
     detail:
-      "If the fault is ours, you'll get a refund, replacement, or store credit — your choice.",
+      "If the fault is ours, you'll get a refund, replacement, or store credit - your choice.",
   },
 ];
 
@@ -56,13 +56,13 @@ const fullRefund = [
   "Your item arrives damaged or faulty.",
   "You received the wrong item, colour, or size versus what you ordered.",
   "Your order never arrives or is lost in transit.",
-  "We can't make your piece (for example we run out of the yarn) — you get a full refund.",
+  "We can't make your piece (for example we run out of the yarn) - you get a full refund.",
   "The item is significantly not as described.",
 ];
 
 const storeCredit = [
-  "Fit isn't right on a made-to-measure piece you gave measurements for — we'll offer an alteration or a discounted remake.",
-  "You changed your mind on a ready-made, unworn item within 7 days — returned in original condition for store credit, or a refund minus delivery.",
+  "Fit isn't right on a made-to-measure piece you gave measurements for - we'll offer an alteration or a discounted remake.",
+  "You changed your mind on a ready-made, unworn item within 7 days - returned in original condition for store credit, or a refund minus delivery.",
 ];
 
 const noRefund = [
@@ -151,7 +151,7 @@ const RefundPolicy = async () => {
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-stone-600 sm:text-lg">
             Every piece is made by hand, often to your exact measurements. This
-            policy explains — in plain language — when we refund, when we offer
+            policy explains - in plain language - when we refund, when we offer
             store credit or a remake, and when a sale is final, so you always
             know where you stand.
           </p>
@@ -228,7 +228,7 @@ const RefundPolicy = async () => {
             <p className="mt-3 text-sm leading-relaxed text-stone-600">
               You can cancel for a full refund within 24 hours of ordering, as
               long as we haven&apos;t started making your piece. For approved
-              returns, you cover return shipping unless the fault is ours —
+              returns, you cover return shipping unless the fault is ours -
               please use a trackable service.
             </p>
           </article>

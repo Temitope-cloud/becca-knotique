@@ -25,7 +25,7 @@ import ProductRevisitNudge from "@/components/ProductRevisitNudge";
 import ProductViewTracker from "@/components/ProductViewTracker";
 import ProductPurchasePanel from "@/components/cart/ProductPurchasePanel";
 import ShareButton from "@/components/ShareButton";
-// v1 ordered via WhatsApp — kept in src/lib/utils.ts (getWhatsAppLink) as a fallback.
+// v1 ordered via WhatsApp - kept in src/lib/utils.ts (getWhatsAppLink) as a fallback.
 
 type ProductDetailsProps = {
   params: Promise<{ slug: string }>;
@@ -65,7 +65,7 @@ export async function generateMetadata({
     imgs.length > 0
       ? imgs.map((src, i) => ({
           url: src,
-          alt: `${product.name}${i > 0 ? ` — photo ${i + 1}` : ""}`,
+          alt: `${product.name}${i > 0 ? ` - photo ${i + 1}` : ""}`,
           width: 1200,
           height: 1200,
         }))
@@ -264,7 +264,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
 
             <ProductRevisitNudge slug={product.slug} productName={product.name} />
 
-            {/* v1 fallback — order on WhatsApp (disabled while Paystack checkout is live):
+            {/* v1 fallback - order on WhatsApp (disabled while Paystack checkout is live):
             <a
               href={getWhatsAppLink(product)}
               target="_blank"

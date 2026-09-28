@@ -41,7 +41,7 @@ export async function listReleases(): Promise<ReleaseRow[]> {
         items: r.items,
       })),
     ).catch(() => {
-      /* ignore races / partial seeds — the read below still returns rows */
+      /* ignore races / partial seeds - the read below still returns rows */
     });
   }
   // `date` is an ISO string, so lexicographic sort is chronological.

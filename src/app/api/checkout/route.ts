@@ -219,7 +219,7 @@ export async function POST(request: Request) {
       shipping,
     });
 
-    // Store credit covers the whole order — no card payment needed.
+    // Store credit covers the whole order - no card payment needed.
     if (amountToPay <= 0) {
       await markOrderPaid(reference);
       return NextResponse.json({ paid: true, reference });

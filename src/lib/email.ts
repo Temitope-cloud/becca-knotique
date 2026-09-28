@@ -175,7 +175,7 @@ export async function sendPasswordResetEmail(
   link: string,
 ): Promise<boolean> {
   const resend = getResend();
-  if (!resend) return false; // not configured — caller logs the link in dev
+  if (!resend) return false; // not configured - caller logs the link in dev
 
   try {
     await resend.emails.send({
@@ -211,7 +211,7 @@ export async function sendPasswordResetEmail(
 /** Sends the customer receipt + the owner notification for a paid order. */
 export async function sendOrderEmails(order: IOrder): Promise<void> {
   const resend = getResend();
-  if (!resend) return; // not configured yet — skip silently
+  if (!resend) return; // not configured yet - skip silently
 
   const admin = adminAddress();
   const shipping = `${order.shipping.address}, ${order.shipping.city}, ${order.shipping.state}`;
@@ -242,7 +242,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
       resend.emails.send({
         from: fromFor("notifications"),
         to: admin,
-        subject: `New paid order — ${formatNaira(order.amount)} (${order.orderNumber ?? order.reference})`,
+        subject: `New paid order - ${formatNaira(order.amount)} (${order.orderNumber ?? order.reference})`,
         html: shell(
           "New order received 🎉",
           `<p style="color:#57534e;font-size:14px;line-height:1.6;">
@@ -470,7 +470,7 @@ export async function sendAdminNewRefundRequest(opts: {
   return sendMail({
     to: admin,
     sender: "notifications",
-    subject: `Refund request — ${opts.ref}`,
+    subject: `Refund request - ${opts.ref}`,
     title: "New refund request to review",
     body:
       p(`<strong>${opts.customerEmail}</strong> requested a refund for order <strong>${opts.ref}</strong>.`) +

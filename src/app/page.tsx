@@ -20,7 +20,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Becca’s Knotique — Made by Hand, Made for You",
+  title: "Becca’s Knotique - Made by Hand, Made for You",
   description:
     "Shop handmade crochet outfits and accessories from Becca's Knotique. Discover unique pieces crafted with care and creativity.",
   alternates: {

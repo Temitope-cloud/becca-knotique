@@ -117,7 +117,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 
       <style>{`
         /* Centering uses Tailwind's translate utilities (the CSS 'translate'
-           property), so animate opacity + the standalone 'scale' property here —
+           property), so animate opacity + the standalone 'scale' property here -
            animating 'transform' would fight the centering and slide the box. */
         @keyframes bk-confirm-overlay-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes bk-confirm-content-in {

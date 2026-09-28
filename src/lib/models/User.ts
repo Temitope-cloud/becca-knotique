@@ -7,7 +7,7 @@ export interface IUser {
   _id: string;
   name: string;
   email: string;
-  /** bcrypt hash — absent for OAuth-only (Google) accounts */
+  /** bcrypt hash - absent for OAuth-only (Google) accounts */
   password?: string;
   image?: string;
   provider: AuthProvider;

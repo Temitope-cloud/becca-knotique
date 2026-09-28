@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 const OG_IMAGE = "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png";
 
 const listingDescription =
-  "Shop handmade crochet dresses, sets, accessories, and bags from Becca's Knotique — premium small-batch pieces with nationwide shipping in Nigeria.";
+  "Shop handmade crochet dresses, sets, accessories, and bags from Becca's Knotique - premium small-batch pieces with nationwide shipping in Nigeria.";
 
 export const metadata: Metadata = {
   title: "Shop crochet products",
@@ -75,7 +75,7 @@ export default async function ProductsPage({
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Becca's Knotique — crochet products",
+    name: "Becca's Knotique - crochet products",
     description: listingDescription,
     url: `${SITE_URL}/products`,
     numberOfItems: itemListElements.length,

@@ -213,7 +213,7 @@ export default function ProductsPageClient({
             </h1>
             <p className="mt-2 max-w-xl text-sm text-stone-600">
               Handmade crochet, made to be worn. Filter by style, size range, or
-              budget — add to cart and check out in minutes.
+              budget - add to cart and check out in minutes.
             </p>
           </div>
           <Link

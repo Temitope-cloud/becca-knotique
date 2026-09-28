@@ -6,12 +6,12 @@ import ParallaxReveal from "@/components/ui/parallaxReveal";
 export const metadata: Metadata = {
   title: "Our Story",
   description:
-    "Why I started Becca's Knotique — from a secondary-school table mat and abandoned yarn to earrings, small orders, and a registered handmade crochet brand.",
+    "Why I started Becca's Knotique - from a secondary-school table mat and abandoned yarn to earrings, small orders, and a registered handmade crochet brand.",
   alternates: { canonical: "/our-story" },
   openGraph: {
     title: "Why I Started Becca's Knotique",
     description:
-      "The honest story behind Becca's Knotique — built one stitch at a time.",
+      "The honest story behind Becca's Knotique - built one stitch at a time.",
     url: "/our-story",
     images: [
       "https://res.cloudinary.com/u3kraw33/image/upload/v1787262035/beccas-knotique/images/our-story.jpg",
@@ -55,8 +55,8 @@ export default function OurStoryPage() {
       {/* narrative */}
       <article className="mx-auto mt-16 w-full max-w-2xl space-y-6 px-5 text-lg leading-relaxed text-stone-700">
         <p>
-          I&apos;ve actually always loved crochet. Back in secondary school —
-          we called it knitting then — I made a little table mat with normal
+          I&apos;ve actually always loved crochet. Back in secondary school -
+          we called it knitting then - I made a little table mat with normal
           cotton, and crocheted the edges myself.
         </p>
         <p>
@@ -77,7 +77,7 @@ export default function OurStoryPage() {
         <p>
           So I went on YouTube. My very first crochet project was a pair of
           shorts. Then I made a bra top for myself. And somehow, I kept coming
-          back to crochet — I even made another bra top for my director when I
+          back to crochet - I even made another bra top for my director when I
           started working as a teacher. But then… I stopped again.
         </p>
         <p>

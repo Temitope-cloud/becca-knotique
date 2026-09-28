@@ -12,7 +12,7 @@ import { materialCostForSize } from "@/lib/money";
 /** Types that represent money coming IN (stored as a positive amount). */
 const INFLOW_TYPES: FinanceType[] = ["revenue", "other_income"];
 
-/** Non-cash types — real profit/reserve concepts, not actual cash movements. */
+/** Non-cash types - real profit/reserve concepts, not actual cash movements. */
 const NON_CASH_TYPES: FinanceType[] = ["cogs", "tax_provision"];
 
 export function isInflow(type: FinanceType): boolean {
@@ -40,7 +40,7 @@ export const TYPE_LABELS: Record<FinanceType, string> = {
 };
 
 /**
- * Create the finance ledger entries for a paid order — revenue, the real
+ * Create the finance ledger entries for a paid order - revenue, the real
  * Paystack fee, and COGS from product costs. Idempotent: the unique
  * (order, type) index means re-running is safe.
  */
@@ -105,7 +105,7 @@ export async function createOrderFinanceEntries(order: IOrder): Promise<void> {
   if (fee > 0) {
     entries.push({
       date: order.paidAt ?? new Date(),
-      description: `Paystack fee — ${ref}`,
+      description: `Paystack fee - ${ref}`,
       type: "paystack_fee",
       amount: -fee,
       reference: ref,
@@ -118,7 +118,7 @@ export async function createOrderFinanceEntries(order: IOrder): Promise<void> {
   if (cogs > 0) {
     entries.push({
       date: order.paidAt ?? new Date(),
-      description: `Cost of goods — ${ref}`,
+      description: `Cost of goods - ${ref}`,
       type: "cogs",
       amount: -Math.round(cogs),
       reference: ref,

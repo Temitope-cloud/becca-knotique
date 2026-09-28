@@ -89,7 +89,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               },
             );
           }
-          return true; // known account — just sign in
+          return true; // known account - just sign in
         }
 
         // Unknown account. Only create one if the person explicitly chose

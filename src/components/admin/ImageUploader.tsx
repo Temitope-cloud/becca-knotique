@@ -6,7 +6,7 @@ import { ImagePlus, X, Plus } from "lucide-react";
 
 // NEXT_PUBLIC_* values are inlined at build time. When they're missing (e.g. not
 // set on the host), we fall back to pasting an image URL instead of rendering the
-// Cloudinary widget — which throws if the API key is absent.
+// Cloudinary widget - which throws if the API key is absent.
 const cloudinaryReady = Boolean(
   process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME &&
     process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,

@@ -8,7 +8,7 @@ import { sendAccountDeletionScheduledEmail } from "@/lib/email";
 export const runtime = "nodejs";
 
 /**
- * Self-serve account deletion — SOFT delete with a grace period. Marks the
+ * Self-serve account deletion - SOFT delete with a grace period. Marks the
  * account for deletion and signs the user out; a daily job purges accounts
  * older than DELETION_GRACE_DAYS. Logging back in before then cancels it and
  * restores the account (handled in the auth callbacks).

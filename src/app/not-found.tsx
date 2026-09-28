@@ -37,7 +37,7 @@ export default function NotFound() {
           This page slipped a stitch
         </h1>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-stone-600 sm:text-base">
-          The page you&apos;re looking for isn&apos;t here — it may have moved, or
+          The page you&apos;re looking for isn&apos;t here - it may have moved, or
           the link was unravelled. Let&apos;s get you back to something beautiful.
         </p>
 

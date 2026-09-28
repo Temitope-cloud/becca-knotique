@@ -23,7 +23,7 @@ export default async function ReleaseLogPage() {
         </h1>
         <p className="mt-1 text-sm text-stone-500">
           A running list of what we have shipped on Becca&apos;s Knotique, newest
-          first. Add, edit, or remove entries here — only you can see this page.
+          first. Add, edit, or remove entries here - only you can see this page.
         </p>
       </div>
 

@@ -183,13 +183,13 @@ export default async function AdminProductsPage({
                       </div>
                     </td>
                     <td className="px-4 py-3 text-stone-500 capitalize">
-                      {p.category || "—"}
+                      {p.category || "-"}
                     </td>
                     <td className="px-4 py-3 font-medium whitespace-nowrap text-stone-900">
                       {formatNaira(p.price)}
                     </td>
                     <td className="px-4 py-3 text-stone-600">
-                      {p.stockCount ?? "—"}
+                      {p.stockCount ?? "-"}
                     </td>
                     <td className="px-4 py-3">
                       {isTrash ? (

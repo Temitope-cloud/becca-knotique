@@ -1,5 +1,5 @@
 /**
- * Custom next/image loader — serves images straight from Cloudinary with
+ * Custom next/image loader - serves images straight from Cloudinary with
  * Cloudinary's own optimization (f_auto, q_auto, width), instead of proxying
  * through Vercel's /_next/image optimizer. Non-Cloudinary sources pass through
  * untouched.

@@ -75,7 +75,7 @@ const CrochetProcess = () => {
             />
           </div>
           <p className="mt-3 text-center text-xs tracking-wide text-stone-500 lg:text-left">
-            Every stitch is made by hand — quality you can feel.
+            Every stitch is made by hand - quality you can feel.
           </p>
         </div>
         {/* <div className="h-full w-full flex-1">
@@ -102,7 +102,7 @@ const CrochetProcess = () => {
           </h2>
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-stone-600">
             Simple steps from choosing a design to unboxing something made
-            especially for you — warm, wearable, and one of a kind.
+            especially for you - warm, wearable, and one of a kind.
           </p>
 
           <div className="mt-8 grid gap-2 md:grid-cols-2 md:gap-10">

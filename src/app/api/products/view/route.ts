@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     await connectToDatabase();
     await Product.updateOne({ slug }, { $inc: { viewCount: 1 } });
   } catch {
-    // non-critical — never block the page on analytics
+    // non-critical - never block the page on analytics
   }
   return NextResponse.json({ ok: true });
 }

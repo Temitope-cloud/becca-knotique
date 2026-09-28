@@ -17,7 +17,7 @@ export const SITE_LOGO =
 export const SITE_OG_IMAGE =
   "https://res.cloudinary.com/u3kraw33/image/upload/v1787262026/beccas-knotique/images/about1.png";
 
-/** Public social profiles — feed schema.org `sameAs` for the knowledge graph. */
+/** Public social profiles - feed schema.org `sameAs` for the knowledge graph. */
 export const SOCIAL_PROFILES = [
   "https://www.instagram.com/beccasknotique/",
   "https://www.tiktok.com/@beccas_knotique/",
@@ -32,7 +32,7 @@ export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-/** Organization schema — brand identity, logo, and social profiles. */
+/** Organization schema - brand identity, logo, and social profiles. */
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
@@ -62,7 +62,7 @@ export function organizationSchema() {
   };
 }
 
-/** WebSite schema — enables the sitelinks search box in Google results. */
+/** WebSite schema - enables the sitelinks search box in Google results. */
 export function websiteSchema() {
   return {
     "@context": "https://schema.org",

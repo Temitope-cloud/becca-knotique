@@ -202,7 +202,7 @@ export async function getProductsByCategory(
 
 /**
  * Distinct categories already in use (across published, draft and hidden
- * products) — used to suggest existing categories in the admin product form
+ * products) - used to suggest existing categories in the admin product form
  * while still allowing a brand-new one to be typed.
  */
 export async function getCategories(): Promise<string[]> {

@@ -115,7 +115,7 @@ const Footer = ({
             />
             <p className="mt-5 text-sm leading-relaxed text-white/60">
               Handmade crochet fashion and custom statement pieces, crafted with
-              care in Nigeria — made by hand, made for you.
+              care in Nigeria - made by hand, made for you.
             </p>
 
             <Link

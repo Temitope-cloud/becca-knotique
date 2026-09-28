@@ -99,7 +99,7 @@ export default function ProductCard({ product }: { product: CatalogProduct }) {
         ) : null}
       </Link>
 
-      {/* wishlist heart — feedback comes from the toast, so no tooltip here
+      {/* wishlist heart - feedback comes from the toast, so no tooltip here
           (a hover tooltip sticks open and clips on touch devices). */}
       <span className="absolute top-3 right-3">
         <button

@@ -52,7 +52,7 @@ export interface IProduct {
   infos: IProductInfo[];
   featured: boolean;
   active: boolean;
-  /** COGS inputs (NGN) — direct material and packaging cost per unit. */
+  /** COGS inputs (NGN) - direct material and packaging cost per unit. */
   materialCost?: number;
   packagingCost?: number;
   /** Optional per-size material cost override (bigger sizes use more yarn). */

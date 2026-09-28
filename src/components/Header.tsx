@@ -30,7 +30,7 @@ const Header = () => {
 
   const closeMenu = () => setMenuClicked(false);
 
-  // Always close the mobile menu on navigation — including browser back/forward,
+  // Always close the mobile menu on navigation - including browser back/forward,
   // which don't fire the in-menu link handlers. Otherwise the body scroll lock
   // below could stay on and leave the next page unable to scroll.
   useEffect(() => {
@@ -239,7 +239,7 @@ const Header = () => {
                 <ArrowRight className="size-4" />
               </Link>
               <p className="text-center text-xs text-white/45">
-                Handmade crochet — made to order.
+                Handmade crochet - made to order.
               </p>
             </div>
           </div>

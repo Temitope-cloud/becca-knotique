@@ -220,7 +220,7 @@ export const products: Product[] = [
       "A refined handmade crochet three-piece set pairing a textured cropped blazer, soft ivory bandeau, and pleated mini skirt in warm camel neutrals.",
 
     longDescription:
-      "Designed as a coordinated editorial look, this set combines structured lapels and long sleeves with a crisp ivory crochet bandeau and a high-waisted pleated mini skirt. Each piece is crafted with dense artisan stitches that read beautifully on camera and in daylight—ideal for events, shoots, and confident everyday statement styling.",
+      "Designed as a coordinated editorial look, this set combines structured lapels and long sleeves with a crisp ivory crochet bandeau and a high-waisted pleated mini skirt. Each piece is crafted with dense artisan stitches that read beautifully on camera and in daylight-ideal for events, shoots, and confident everyday statement styling.",
 
     images: [
       "https://res.cloudinary.com/u3kraw33/image/upload/v1787262036/beccas-knotique/images/products/camel-crochet-three-piece-set/camel-crochet-three-piece-set-1.jpg",
@@ -262,7 +262,7 @@ export const products: Product[] = [
       "A handmade crochet mini dress with horizontal earth-tone stripes, airy granny-stitch texture, and dramatic bell sleeves for elevated boho styling.",
 
     longDescription:
-      "Designed around artisan texture and movement, this dress combines classic cluster stitches with bold flare sleeves and a clean boat neckline. The warm stripe rhythm reads beautifully outdoors and indoors alike—perfect for events, creative shoots, and statement casual dressing with breathable handmade comfort.",
+      "Designed around artisan texture and movement, this dress combines classic cluster stitches with bold flare sleeves and a clean boat neckline. The warm stripe rhythm reads beautifully outdoors and indoors alike-perfect for events, creative shoots, and statement casual dressing with breathable handmade comfort.",
 
     images: [
       "https://res.cloudinary.com/u3kraw33/image/upload/v1787262071/beccas-knotique/images/products/sunset-stripe-bell-sleeve-crochet-mini-dress/sunset-stripe-bell-sleeve-crochet-mini-dress-4.png",
@@ -305,7 +305,7 @@ export const products: Product[] = [
       "A handmade halter crochet mini dress with an airy granny-stitch body, pink-to-fuchsia gradient rhythm, and swingy yarn fringe at the hem.",
 
     longDescription:
-      "Designed for warm-light moments and confident movement, this dress pairs delicate openwork crochet with a sculpted halter neckline and bold fringe finish. The tonal pink layout highlights artisan stitching while staying breathable—ideal for vacations, outdoor gatherings, and editorial-ready weekend styling.",
+      "Designed for warm-light moments and confident movement, this dress pairs delicate openwork crochet with a sculpted halter neckline and bold fringe finish. The tonal pink layout highlights artisan stitching while staying breathable-ideal for vacations, outdoor gatherings, and editorial-ready weekend styling.",
 
     images: [
       "https://res.cloudinary.com/u3kraw33/image/upload/v1787262043/beccas-knotique/images/products/fuchsia-fringe-halter-crochet-mini-dress/fuchsia-fringe-halter-crochet-mini-dress-1.png",

@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
   const sent = await sendPasswordResetEmail(email, user.name, link);
   if (!sent) {
-    // Email isn't configured yet (no RESEND_API_KEY) — surface the link in logs
+    // Email isn't configured yet (no RESEND_API_KEY) - surface the link in logs
     // so resets still work in development.
     console.log("[password-reset] email not sent (Resend not configured). Link:", link);
   }

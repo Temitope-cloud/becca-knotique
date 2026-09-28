@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Journal",
   description:
-    "Stories, styling ideas and care guides from Becca's Knotique — handmade crochet fashion from Nigeria.",
+    "Stories, styling ideas and care guides from Becca's Knotique - handmade crochet fashion from Nigeria.",
   alternates: { canonical: "/journal" },
   openGraph: {
     title: "The Becca's Knotique Journal",

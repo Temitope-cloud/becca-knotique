@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 
 /**
  * Backfill finance ledger entries for orders that were paid before the finance
- * module existed. Idempotent — createOrderFinanceEntries won't duplicate entries
+ * module existed. Idempotent - createOrderFinanceEntries won't duplicate entries
  * (unique {order,type} index), so this is safe to run repeatedly.
  */
 export async function POST() {

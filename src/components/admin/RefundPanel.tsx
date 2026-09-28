@@ -142,7 +142,7 @@ export default function RefundPanel({
               </div>
               <p className="text-stone-500">
                 {r.reason}
-                {r.note ? ` — ${r.note}` : ""}
+                {r.note ? ` - ${r.note}` : ""}
               </p>
             </li>
           ))}
@@ -183,7 +183,7 @@ export default function RefundPanel({
                 className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none focus:border-stone-900"
               >
                 <option value="store_credit" disabled={!hasCustomer}>
-                  Store credit{hasCustomer ? "" : " (guest — unavailable)"}
+                  Store credit{hasCustomer ? "" : " (guest - unavailable)"}
                 </option>
                 <option value="paystack" disabled={paystackRefundable <= 0}>
                   Paystack card refund
@@ -195,7 +195,7 @@ export default function RefundPanel({
               </select>
               <p className="mt-1 text-[11px] text-stone-400">
                 Store credit and card refunds are actioned automatically. “Manual
-                / cash” only records it here — pay the customer yourself.
+                / cash” only records it here - pay the customer yourself.
               </p>
             </div>
             <div>

@@ -48,7 +48,7 @@ export default function SignupForm() {
       setLoading(false);
 
       if (signInRes?.error) {
-        // Account created but sign-in failed — send them to login.
+        // Account created but sign-in failed - send them to login.
         router.push("/login");
         return;
       }

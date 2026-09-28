@@ -18,7 +18,7 @@ export const releases: Release[] = [
     tag: "improvement",
     items: [
       "Saving to your wishlist now shows a clear pop-up confirmation ('Saved to wishlist'), and we removed a stray label that could appear cut-off on phones.",
-      "You can now add your own product categories from the admin — just type a new one and it appears in the shop filters automatically.",
+      "You can now add your own product categories from the admin - just type a new one and it appears in the shop filters automatically.",
       "This release log is now stored in the database and edited right here in the admin, instead of being fixed in code.",
       "Made the sitemap resilient so a temporary database hiccup can no longer fail a deployment.",
     ],
@@ -29,7 +29,7 @@ export const releases: Release[] = [
     tag: "feature",
     items: [
       "New admin refund tool on each paid order: refund to the customer's card (via Paystack), as store credit, or record a manual/cash refund. Partial refunds are supported, and every refund is recorded in Finance automatically.",
-      "Store credit: customers can be refunded as credit that shows on their account and is spent automatically at checkout — it can even cover a whole order with no card payment. Store credit avoids Paystack's per-refund fee and keeps money in the business.",
+      "Store credit: customers can be refunded as credit that shows on their account and is spent automatically at checkout - it can even cover a whole order with no card payment. Store credit avoids Paystack's per-refund fee and keeps money in the business.",
       "Customers now see their store credit balance, credit history, and each order's refund status on their account page.",
       "Redesigned the Refund Policy page to the brand look with clear, categorised conditions: full refund when the fault is ours, store credit or a remake for fit and change-of-mind, and what's final.",
     ],
@@ -39,7 +39,7 @@ export const releases: Release[] = [
     title: "Search engine (SEO) groundwork",
     tag: "improvement",
     items: [
-      "Added rich 'structured data' across the site so Google understands the brand, products (with price and availability), articles, and breadcrumbs — the groundwork for rich results and a brand panel.",
+      "Added rich 'structured data' across the site so Google understands the brand, products (with price and availability), articles, and breadcrumbs - the groundwork for rich results and a brand panel.",
       "Search engines are now steered away from private pages (cart, checkout, account, admin) and pointed at the sitemap, which now includes the shop, journal, and trending pages.",
       "Added a spot to plug in the Google Search Console verification code, an app manifest, and a working product search link, and fixed the site to use one consistent web address everywhere.",
     ],

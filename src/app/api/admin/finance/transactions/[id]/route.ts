@@ -15,7 +15,7 @@ export async function DELETE(
   const { id } = await params;
   await connectToDatabase();
 
-  // Only manual entries can be deleted — order-sourced ones stay for integrity.
+  // Only manual entries can be deleted - order-sourced ones stay for integrity.
   const txn = await FinanceTransaction.findById(id).select("source").lean<{
     source: string;
   }>();

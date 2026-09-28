@@ -1,5 +1,5 @@
 /**
- * Shopping personalization — single source of truth for how a shopper's
+ * Shopping personalization - single source of truth for how a shopper's
  * preference maps to the product `madefor` audience. Pure and dependency-free,
  * safe to import on both server and client.
  */

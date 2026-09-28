@@ -52,7 +52,7 @@ export default async function TaxesPage() {
       <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />
         These are <strong>estimates / provisions</strong> to help you save ahead
-        — not legally confirmed tax owed. Always confirm actual obligations with
+        - not legally confirmed tax owed. Always confirm actual obligations with
         a qualified accountant.
       </div>
 

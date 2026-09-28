@@ -166,7 +166,7 @@ export default async function FinanceOverviewPage({
       label: "Cost of goods (COGS)",
       value: money(o.cogs),
       sign: "out",
-      hint: "What it cost to make the items sold — yarn, materials, packaging.",
+      hint: "What it cost to make the items sold - yarn, materials, packaging.",
     },
     {
       label: "Gross profit",
@@ -177,7 +177,7 @@ export default async function FinanceOverviewPage({
       label: "Operating expenses",
       value: money(o.operatingExpenses),
       sign: "out",
-      hint: "Costs of running the business — data, transport, ads, tools, etc.",
+      hint: "Costs of running the business - data, transport, ads, tools, etc.",
     },
     {
       label: "Owner salary",
@@ -342,7 +342,7 @@ export default async function FinanceOverviewPage({
 
       <p className="mt-6 flex items-start gap-2 rounded-xl bg-stone-100 px-4 py-3 text-xs text-stone-500">
         <Info className="mt-0.5 h-4 w-4 shrink-0" />
-        Tax provision is an estimate to set aside — not a legally confirmed
+        Tax provision is an estimate to set aside - not a legally confirmed
         amount. Confirm actual obligations with an accountant. Sales, Paystack
         fees, and COGS are recorded automatically when an order is paid.
       </p>

@@ -6,7 +6,7 @@ import { SITE_URL as baseUrl } from "@/lib/seo";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Product URLs need the DB. If it's unreachable at build time (e.g. env vars
   // not yet set), fall back to the static routes rather than failing the whole
-  // deploy — a sitemap without every product beats no deploy at all.
+  // deploy - a sitemap without every product beats no deploy at all.
   let productEntries: MetadataRoute.Sitemap = [];
   try {
     const products = await getAllProducts();

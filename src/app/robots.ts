@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Private, transactional, and system routes — no SEO value, and we
+        // Private, transactional, and system routes - no SEO value, and we
         // don't want them in the index.
         disallow: [
           "/admin",

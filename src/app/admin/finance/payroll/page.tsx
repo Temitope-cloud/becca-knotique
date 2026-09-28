@@ -49,7 +49,7 @@ export default async function PayrollPage() {
       <p className="mt-1 mb-6 text-sm text-stone-500">
         Pay yourself a defined <strong>salary</strong>, and record any money you
         take out beyond that as a <strong>drawing</strong>. They&apos;re kept
-        separate — neither is a business expense.
+        separate - neither is a business expense.
       </p>
 
       <FinanceTabs />

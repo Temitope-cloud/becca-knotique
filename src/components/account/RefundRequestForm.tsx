@@ -100,7 +100,7 @@ export default function RefundRequestForm({ orderRef }: { orderRef: string }) {
       </div>
       <div>
         <label className="mb-1 block text-xs font-medium text-stone-600">
-          Photos (optional — helps if it arrived damaged)
+          Photos (optional - helps if it arrived damaged)
         </label>
         <ImageUploader value={photos} onChange={setPhotos} />
       </div>

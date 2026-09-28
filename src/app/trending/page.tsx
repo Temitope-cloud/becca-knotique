@@ -31,7 +31,7 @@ export default async function TrendingPage() {
           Trending now
         </h1>
         <p className="mt-2 max-w-xl text-sm text-stone-600">
-          Real-time picks — our best sellers and the pieces shoppers are viewing
+          Real-time picks - our best sellers and the pieces shoppers are viewing
           most.
         </p>
       </section>

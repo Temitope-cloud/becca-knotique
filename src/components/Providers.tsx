@@ -22,7 +22,7 @@ interface providersProps {
 const Providers = ({ children, settings, preference = null }: providersProps) => {
   const pathname = usePathname();
   const Homepage = pathname === "/";
-  // Admin has its own chrome — hide the storefront header/footer there.
+  // Admin has its own chrome - hide the storefront header/footer there.
   const hideChrome = pathname.startsWith("/admin");
   const showChrome = !Homepage && !hideChrome;
   // Transactional / utility pages: keep them focused (no "shop now" CTA).

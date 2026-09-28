@@ -12,7 +12,7 @@ import {
 import type { CatalogProduct } from "@/lib/catalog";
 import { formatNaira } from "@/lib/money";
 import StarRating from "./StarRating";
-// v1 CTA used WhatsApp (getWhatsAppLink in @/lib/utils) — now routes to the store.
+// v1 CTA used WhatsApp (getWhatsAppLink in @/lib/utils) - now routes to the store.
 
 const DEFAULT_HIGHLIGHTS = [
   { Icon: Scissors, label: "Handmade to order in Nigeria" },
@@ -74,7 +74,7 @@ const OnePiece = ({ product }: { product: CatalogProduct | null }) => {
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-stone-100 md:aspect-auto md:h-[500px] lg:h-[560px]">
               <img
                 src={activeImage}
-                alt={`${product.name} — product photo`}
+                alt={`${product.name} - product photo`}
                 className="h-full w-full object-cover"
               />
               {discount ? (

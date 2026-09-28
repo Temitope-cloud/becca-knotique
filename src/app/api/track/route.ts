@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 /**
  * Order lookup for the tracking page. An order is only revealed when BOTH the
- * order number AND its matching email are supplied — so orders can't be
+ * order number AND its matching email are supplied - so orders can't be
  * enumerated by number alone, and a wrong email never returns someone's order.
  * (Signed-in customers see all their orders on the account page instead.)
  */
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     ],
   }).lean<IOrder>();
 
-  // The email must match the order's email — the shared secret that proves
+  // The email must match the order's email - the shared secret that proves
   // ownership. A missing order and a wrong email look identical to the caller.
   if (!order || email !== (order.email || "").toLowerCase()) {
     return NextResponse.json({

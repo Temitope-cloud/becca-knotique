@@ -1,4 +1,4 @@
-/** Shared styling for rich text — used by the editor and the public post render. */
+/** Shared styling for rich text - used by the editor and the public post render. */
 export const PROSE_CLASS =
   "max-w-none text-[15px] leading-relaxed text-stone-700 " +
   "[&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_h2]:text-stone-900 " +

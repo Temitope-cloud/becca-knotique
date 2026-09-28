@@ -19,7 +19,7 @@ async function applyStoreCredit(order: IOrder): Promise<void> {
   if (applied <= 0 || order.storeCreditSpent || !order.user) return;
   const ok = await spendStoreCredit(String(order.user), applied, {
     orderRef: order.orderNumber ?? order.reference,
-    description: `Paid with store credit — ${order.orderNumber ?? order.reference}`,
+    description: `Paid with store credit - ${order.orderNumber ?? order.reference}`,
   });
   await Order.updateOne(
     { reference: order.reference },
@@ -88,14 +88,14 @@ export async function markOrderPaid(
 ): Promise<boolean> {
   await connectToDatabase();
   // { new: false } returns the PRE-update doc, or null if nothing matched
-  // (i.e. it was already paid) — that tells us whether we are the one flipping it.
+  // (i.e. it was already paid) - that tells us whether we are the one flipping it.
   const previous = await Order.findOneAndUpdate(
     { reference, status: { $ne: "paid" } },
     { status: "paid", paidAt: new Date(), ...(paystackData ? { paystack: paystackData } : {}) },
     { new: false },
   );
 
-  if (!previous) return false; // already paid (or missing) — no duplicate email
+  if (!previous) return false; // already paid (or missing) - no duplicate email
 
   const fresh = await Order.findOne({ reference }).lean<IOrder>();
   if (fresh) {

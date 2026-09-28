@@ -119,13 +119,13 @@ export async function recordRefund(input: RefundInput): Promise<RefundResult> {
   // are allowed (the unique order+type index only applies to source "order").
   await FinanceTransaction.create({
     date: new Date(),
-    description: `Refund — ${order.orderNumber ?? order.reference} (${input.method.replace("_", " ")})`,
+    description: `Refund - ${order.orderNumber ?? order.reference} (${input.method.replace("_", " ")})`,
     type: "refund",
     amount: -amount,
     reference: order.orderNumber ?? order.reference,
     source: "manual",
     order: order._id,
-    notes: input.reason + (input.note ? ` — ${input.note}` : ""),
+    notes: input.reason + (input.note ? ` - ${input.note}` : ""),
     createdBy: input.adminEmail ?? "admin",
   });
 

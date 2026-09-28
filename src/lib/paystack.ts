@@ -15,7 +15,7 @@ function secretKey(): string {
 
 export interface PaystackInitParams {
   email: string;
-  /** amount in NGN (naira) — converted to kobo internally */
+  /** amount in NGN (naira) - converted to kobo internally */
   amountNaira: number;
   reference: string;
   callbackUrl: string;

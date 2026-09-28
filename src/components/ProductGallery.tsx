@@ -28,7 +28,7 @@ export default function ProductGallery({ images, name }: ProductGalleryProps) {
 
       <Image
         src={activeImage}
-        alt={`${name} — product photo`}
+        alt={`${name} - product photo`}
         fill
         sizes="(max-width: 1024px) 100vw, 50vw"
         className="object-cover"

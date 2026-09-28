@@ -117,7 +117,7 @@ export const MEASURE_GUIDES: Record<string, Guide> = {
     steps: [
       "Wrap a soft tape around the widest part of your head.",
       "Keep it just above the ears and eyebrows, around the back.",
-      "Snug, not tight — that number is the circumference.",
+      "Snug, not tight - that number is the circumference.",
     ],
     Diagram: () => (
       <svg viewBox="0 0 200 180" className="h-44 w-full text-stone-700">
@@ -172,7 +172,7 @@ export const MEASURE_GUIDES: Record<string, Guide> = {
     steps: [
       "Wrap the tape around the fullest part of the chest.",
       "Keep it level and parallel to the floor.",
-      "Breathe normally — don't pull the tape tight.",
+      "Breathe normally - don't pull the tape tight.",
     ],
     Diagram: () => <Torso lineY={95} label="Fullest part" />,
   },
@@ -190,7 +190,7 @@ export const MEASURE_GUIDES: Record<string, Guide> = {
     steps: [
       "Find the narrowest part of your waist (near the navel).",
       "Wrap the tape around, keeping it level.",
-      "Don't suck in — measure relaxed.",
+      "Don't suck in - measure relaxed.",
     ],
     Diagram: () => <Torso lineY={120} label="Narrowest part" />,
   },
@@ -368,7 +368,7 @@ const GENERIC: Guide = {
   steps: [
     "Use a soft measuring tape.",
     "Keep the tape flat and level.",
-    "Snug, not tight — measure over light clothing.",
+    "Snug, not tight - measure over light clothing.",
   ],
   Diagram: () => (
     <svg viewBox="0 0 200 120" className="h-32 w-full text-stone-700">

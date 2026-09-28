@@ -142,7 +142,7 @@ export default function ChartPageClient({
                 No views yet
               </p>
               <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-stone-600">
-                Browse the shop and open a few pieces — this list will fill in
+                Browse the shop and open a few pieces - this list will fill in
                 automatically.
               </p>
               <Link
@@ -190,7 +190,7 @@ export default function ChartPageClient({
                             />
                           ) : (
                             <div className="flex h-full items-center justify-center text-stone-300">
-                              —
+                              -
                             </div>
                           )}
                         </div>

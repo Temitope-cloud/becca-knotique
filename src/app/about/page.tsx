@@ -51,7 +51,7 @@ const AboutUs = async () => {
     },
     {
       title: "The Experience",
-      des: "At Becca’s Knotique, you’re not just buying a product — you’re part of the process. From choosing colors to final delivery, we make sure every piece reflects your style and personality.",
+      des: "At Becca’s Knotique, you’re not just buying a product - you’re part of the process. From choosing colors to final delivery, we make sure every piece reflects your style and personality.",
     },
   ];
   return (

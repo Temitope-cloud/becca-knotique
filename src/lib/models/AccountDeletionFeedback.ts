@@ -2,8 +2,8 @@ import { Schema, model, models, type Model } from "mongoose";
 
 /**
  * Anonymous feedback captured when someone deletes their account. Deliberately
- * stores NO personal data (no email, name, or user id) — just the reason, an
- * optional comment, and whether the account had orders — so it's useful
+ * stores NO personal data (no email, name, or user id) - just the reason, an
+ * optional comment, and whether the account had orders - so it's useful
  * feedback without retaining a deleted user's information.
  */
 export interface IAccountDeletionFeedback {

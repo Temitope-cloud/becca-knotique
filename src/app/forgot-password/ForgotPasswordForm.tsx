@@ -19,7 +19,7 @@ export default function ForgotPasswordForm() {
         body: JSON.stringify({ email }),
       });
     } catch {
-      // Ignore — we always show the same confirmation either way.
+      // Ignore - we always show the same confirmation either way.
     } finally {
       setLoading(false);
       setSent(true);

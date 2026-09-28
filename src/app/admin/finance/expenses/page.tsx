@@ -80,7 +80,7 @@ export default async function ExpensesPage() {
         </span>
       </div>
       <p className="mt-1 mb-6 text-sm text-stone-500">
-        Business running costs — production materials, packaging, delivery,
+        Business running costs - production materials, packaging, delivery,
         marketing, tools and subscriptions.
       </p>
 

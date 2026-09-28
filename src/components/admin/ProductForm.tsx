@@ -248,7 +248,7 @@ export default function ProductForm({
               ))}
             </datalist>
             <p className="mt-1 text-xs text-stone-400">
-              Pick a suggestion or type a new category — it appears in the shop
+              Pick a suggestion or type a new category - it appears in the shop
               filters automatically.
             </p>
           </div>
@@ -444,7 +444,7 @@ export default function ProductForm({
               </span>
               <span className="text-stone-400">
                 {" "}
-                — customers can type a colour and attach a reference photo
+                - customers can type a colour and attach a reference photo
               </span>
             </span>
           </label>
@@ -468,7 +468,7 @@ export default function ProductForm({
               />
               <span className="text-sm">
                 <span className="font-medium text-stone-800">{row.label}</span>
-                <span className="text-stone-400"> — {row.desc}</span>
+                <span className="text-stone-400"> - {row.desc}</span>
               </span>
             </label>
           ))}

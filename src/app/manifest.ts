@@ -3,7 +3,7 @@ import { SITE_NAME, SITE_DESCRIPTION, SITE_LOGO } from "@/lib/seo";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${SITE_NAME} — Handmade Crochet Fashion`,
+    name: `${SITE_NAME} - Handmade Crochet Fashion`,
     short_name: SITE_NAME,
     description: SITE_DESCRIPTION,
     start_url: "/",

@@ -161,7 +161,7 @@ export default function CheckoutPage() {
         setLoading(false);
         return;
       }
-      // Store credit covered the whole order — skip Paystack.
+      // Store credit covered the whole order - skip Paystack.
       if (data.paid) {
         window.location.href = `/order/callback?reference=${encodeURIComponent(data.reference)}`;
         return;
@@ -416,7 +416,7 @@ export default function CheckoutPage() {
                 <span className="font-semibold text-stone-900">
                   Use store credit
                 </span>{" "}
-                — you have {formatNaira(storeCredit)} available.
+                - you have {formatNaira(storeCredit)} available.
               </span>
             </label>
           ) : null}

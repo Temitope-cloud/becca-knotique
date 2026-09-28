@@ -22,7 +22,7 @@ export function isSoldOut(p: StockLike): boolean {
 }
 
 /**
- * Units a shopper can buy right now. `null` means "not limited" — either the
+ * Units a shopper can buy right now. `null` means "not limited" - either the
  * item is made to order, or its stock isn't tracked.
  */
 export function unitsLeft(p: StockLike): number | null {

@@ -299,7 +299,7 @@ export default function ProductPurchasePanel({
                   Made to order.
                 </span>{" "}
                 {product.leadTime
-                  ? `We crochet it just for you — about ${product.leadTime} to make.`
+                  ? `We crochet it just for you - about ${product.leadTime} to make.`
                   : "We crochet it just for you after you order."}
               </>
             ) : (
