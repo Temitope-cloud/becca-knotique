@@ -7,6 +7,8 @@ import { Coupon } from "@/lib/models/Coupon";
 export const runtime = "nodejs";
 
 const schema = z.object({
+  code: z.string().min(3).max(30).optional(),
+  type: z.enum(["percentage", "fixed"]).optional(),
   active: z.boolean().optional(),
   value: z.number().min(0).optional(),
   minOrder: z.number().min(0).optional(),
@@ -36,6 +38,12 @@ export async function PATCH(
   }
 
   await connectToDatabase();
+  if (typeof update.code === "string") {
+    const normalized = update.code.toUpperCase().trim();
+    const duplicate = await Coupon.exists({ code: normalized, _id: { $ne: id } });
+    if (duplicate) return NextResponse.json({ error: "A coupon with that code already exists." }, { status: 409 });
+    update.code = normalized;
+  }
   const result = await Coupon.updateOne({ _id: id }, { $set: update });
   if (result.matchedCount === 0) {
     return NextResponse.json({ error: "Coupon not found" }, { status: 404 });

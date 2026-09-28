@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Trash2, Plus } from "lucide-react";
+import { Loader2, Trash2, Plus, Pencil } from "lucide-react";
 import { formatNaira } from "@/lib/money";
 import { useConfirm } from "@/components/ui/confirm";
 
@@ -31,17 +31,38 @@ export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
   });
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const input =
     "w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm outline-none focus:border-stone-900";
 
-  async function create(e: React.FormEvent) {
+  function resetForm() {
+    setForm({ code: "", type: "percentage", value: "", minOrder: "", usageLimit: "", expiresAt: "" });
+    setEditingId(null);
+    setError(null);
+  }
+
+  function edit(coupon: CouponRow) {
+    setEditingId(coupon.id);
+    setForm({
+      code: coupon.code,
+      type: coupon.type,
+      value: String(coupon.value),
+      minOrder: coupon.minOrder ? String(coupon.minOrder) : "",
+      usageLimit: coupon.usageLimit ? String(coupon.usageLimit) : "",
+      expiresAt: coupon.expiresAt?.slice(0, 10) ?? "",
+    });
+    setError(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function save(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setSaving(true);
     try {
-      const res = await fetch("/api/admin/coupons", {
-        method: "POST",
+      const res = await fetch(editingId ? `/api/admin/coupons/${editingId}` : "/api/admin/coupons", {
+        method: editingId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code: form.code,
@@ -50,16 +71,16 @@ export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
           minOrder: form.minOrder ? Number(form.minOrder) : 0,
           usageLimit: form.usageLimit ? Number(form.usageLimit) : 0,
           expiresAt: form.expiresAt || undefined,
-          active: true,
+          ...(editingId ? {} : { active: true }),
         }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data?.error || "Could not create coupon.");
+        setError(data?.error || "Could not save this coupon.");
         setSaving(false);
         return;
       }
-      setForm({ code: "", type: "percentage", value: "", minOrder: "", usageLimit: "", expiresAt: "" });
+      resetForm();
       router.refresh();
     } finally {
       setSaving(false);
@@ -91,10 +112,13 @@ export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
     <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
       {/* create form */}
       <form
-        onSubmit={create}
+        onSubmit={save}
         className="h-fit space-y-3 rounded-2xl border border-stone-200 bg-white p-5"
       >
-        <h2 className="font-semibold text-stone-900">New coupon</h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-semibold text-stone-900">{editingId ? "Edit coupon" : "New coupon"}</h2>
+          {editingId ? <button type="button" onClick={resetForm} className="text-xs font-semibold text-stone-600 underline underline-offset-2">Cancel</button> : null}
+        </div>
         <input
           required
           placeholder="CODE (e.g. WELCOME10)"
@@ -153,7 +177,7 @@ export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-800 disabled:opacity-60"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-          Create coupon
+          {editingId ? "Save changes" : "Create coupon"}
         </button>
       </form>
 
@@ -212,6 +236,14 @@ export default function CouponManager({ coupons }: { coupons: CouponRow[] }) {
                     </button>
                   </td>
                   <td className="px-4 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => edit(c)}
+                      aria-label={`Edit ${c.code}`}
+                      className="rounded-md p-1.5 text-stone-400 transition hover:bg-stone-100 hover:text-stone-900"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
                     <button
                       type="button"
                       onClick={() => remove(c.id)}
