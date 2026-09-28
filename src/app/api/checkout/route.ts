@@ -20,6 +20,7 @@ import { paystackInitialize } from "@/lib/paystack";
 import { getStoreCredit } from "@/lib/store-credit";
 import { markOrderPaid } from "@/lib/orders";
 import { measurementsFor, requiresMeasurements } from "@/lib/product-measurements";
+import { preparationTiming } from "@/lib/delivery-estimate";
 
 export const runtime = "nodejs";
 
@@ -110,6 +111,7 @@ export async function POST(request: Request) {
 
   // Recompute every line from the trusted catalog (never trust client prices).
   const orderItems: IOrderItem[] = [];
+  const timingItems: Array<{ name: string; madeToOrder?: boolean; leadTime?: string }> = [];
   for (const line of items) {
     const product =
       (line.slug ? await getProductBySlug(line.slug) : null) ??
@@ -156,6 +158,7 @@ export async function POST(request: Request) {
       customColor: line.customColor || undefined,
       referenceImage: line.referenceImage || undefined,
     });
+    timingItems.push({ name: product.name, madeToOrder: product.madeToOrder, leadTime: product.leadTime });
   }
 
   const subtotal = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -187,6 +190,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "We could not quote delivery for this location yet. Please contact us before placing your order." }, { status: 400 });
   }
   const shippingFee = quote.fee;
+  const timing = preparationTiming(timingItems);
   const amount = Math.max(0, subtotal - discount) + shippingFee;
 
   // Store credit (signed-in customers only). Applied up to the order total.
@@ -216,7 +220,12 @@ export async function POST(request: Request) {
       currency: "NGN",
       status: "pending",
       customer,
-      shipping,
+      shipping: {
+        ...shipping,
+        fulfillmentMethod: quote.fulfillmentMethod ?? "park_pickup",
+        preparationTime: timing.label,
+        transitTime: quote.eta,
+      },
     });
 
     // Store credit covers the whole order - no card payment needed.

@@ -24,6 +24,8 @@ export interface CartItem {
   customColor?: string;
   /** URL of an uploaded reference image. */
   referenceImage?: string;
+  madeToOrder?: boolean;
+  leadTime?: string;
 }
 
 export interface AppliedCoupon {

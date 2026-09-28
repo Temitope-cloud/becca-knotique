@@ -9,6 +9,7 @@ type Zone = {
   cities: string[];
   fee: number;
   eta: string;
+  fulfillmentMethod: "door_delivery" | "park_pickup";
   active: boolean;
 };
 
@@ -22,6 +23,7 @@ export default function DeliveryPage() {
   const [cities, setCities] = useState("");
   const [fee, setFee] = useState("");
   const [eta, setEta] = useState("");
+  const [fulfillmentMethod, setFulfillmentMethod] = useState<Zone["fulfillmentMethod"]>("park_pickup");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
@@ -42,6 +44,7 @@ export default function DeliveryPage() {
     setCities("");
     setFee("");
     setEta("");
+    setFulfillmentMethod("park_pickup");
     setEditingId(null);
   }
 
@@ -52,6 +55,7 @@ export default function DeliveryPage() {
     setCities(zone.cities.join(", "));
     setFee(String(zone.fee));
     setEta(zone.eta);
+    setFulfillmentMethod(zone.fulfillmentMethod ?? "park_pickup");
     setMessage(`Editing ${zone.name}.`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -70,6 +74,7 @@ export default function DeliveryPage() {
         cities: cities.split(",").map((item) => item.trim()).filter(Boolean),
         fee: Number(fee),
         eta,
+        fulfillmentMethod,
         active: true,
       }),
     });
@@ -124,6 +129,10 @@ export default function DeliveryPage() {
         <input className={input} value={states} onChange={(event) => setStates(event.target.value)} placeholder="States, comma separated" />
         <input className={input} value={cities} onChange={(event) => setCities(event.target.value)} placeholder="Cities or areas, comma separated" />
         <input className={input} value={eta} onChange={(event) => setEta(event.target.value)} placeholder="Estimated delivery, e.g. 1 to 2 business days" />
+        <select className={input} value={fulfillmentMethod} onChange={(event) => setFulfillmentMethod(event.target.value as Zone["fulfillmentMethod"])}>
+          <option value="door_delivery">Door delivery</option>
+          <option value="park_pickup">Park pickup</option>
+        </select>
         <button disabled={saving} className="rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60">
           {saving ? "Saving..." : editingId ? "Save changes" : "Save zone"}
         </button>
@@ -139,7 +148,7 @@ export default function DeliveryPage() {
               </p>
               <p className="mt-1 text-sm text-stone-500">
                 {[...zone.cities, ...zone.states].join(", ") || "No locations added"}
-                {zone.eta ? ` · ${zone.eta}` : ""}
+                {zone.eta ? ` · ${zone.eta}` : ""} · {zone.fulfillmentMethod === "door_delivery" ? "Door delivery" : "Park pickup"}
               </p>
             </div>
             <div className="mt-3 flex items-center gap-2 sm:mt-0">

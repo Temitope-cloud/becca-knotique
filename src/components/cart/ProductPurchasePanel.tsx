@@ -242,6 +242,8 @@ export default function ProductPurchasePanel({
       measurements: filledMeasurements.length ? filledMeasurements : undefined,
       customColor: trimmedCustomColor || undefined,
       referenceImage: referenceImage || undefined,
+      madeToOrder: product.madeToOrder,
+      leadTime: product.leadTime,
     };
   }
 

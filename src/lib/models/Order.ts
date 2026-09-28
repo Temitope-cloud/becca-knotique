@@ -62,6 +62,9 @@ export interface IOrder {
     city: string;
     state: string;
     note?: string;
+    fulfillmentMethod?: "door_delivery" | "park_pickup";
+    preparationTime?: string;
+    transitTime?: string;
   };
   paidAt?: Date | null;
   paystack?: Record<string, unknown>;
@@ -136,6 +139,9 @@ const OrderSchema = new Schema<IOrder>(
       city: { type: String, required: true },
       state: { type: String, required: true },
       note: { type: String },
+      fulfillmentMethod: { type: String, enum: ["door_delivery", "park_pickup"] },
+      preparationTime: { type: String },
+      transitTime: { type: String },
     },
     paidAt: { type: Date, default: null },
     paystack: { type: Schema.Types.Mixed },

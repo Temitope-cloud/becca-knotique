@@ -7,6 +7,7 @@ export interface IDeliveryZone {
   cities: string[];
   fee: number;
   eta: string;
+  fulfillmentMethod: "door_delivery" | "park_pickup";
   active: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -19,6 +20,7 @@ const DeliveryZoneSchema = new Schema<IDeliveryZone>(
     cities: { type: [String], default: [] },
     fee: { type: Number, required: true, min: 0 },
     eta: { type: String, default: "", maxlength: 80 },
+    fulfillmentMethod: { type: String, enum: ["door_delivery", "park_pickup"], default: "park_pickup" },
     active: { type: Boolean, default: true, index: true },
   },
   { timestamps: true },

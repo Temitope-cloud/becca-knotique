@@ -165,6 +165,18 @@ export default async function AdminOrderDetail({
                   {order.shipping?.state}
                 </dd>
               </div>
+              {order.shipping?.fulfillmentMethod ? (
+                <div>
+                  <dt className="text-stone-400">Fulfilment</dt>
+                  <dd className="text-stone-800">{order.shipping.fulfillmentMethod === "door_delivery" ? "Door delivery" : "Park pickup"}</dd>
+                </div>
+              ) : null}
+              {order.shipping?.preparationTime || order.shipping?.transitTime ? (
+                <div>
+                  <dt className="text-stone-400">Timing</dt>
+                  <dd className="text-stone-800">{[order.shipping.preparationTime, order.shipping.transitTime && `Transit: ${order.shipping.transitTime} after dispatch`].filter(Boolean).join(" · ")}</dd>
+                </div>
+              ) : null}
               {order.shipping?.note ? (
                 <div className="sm:col-span-2">
                   <dt className="text-stone-400">Note</dt>

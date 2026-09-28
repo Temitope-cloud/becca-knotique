@@ -5,9 +5,10 @@ import NewCollection from "@/components/NewCollection";
 import OnePiece from "@/components/OnePiece";
 import OurStory from "@/components/OurStory";
 import PreFooterCta from "@/components/PreFooterCta";
+import WelcomePackages from "@/components/WelcomePackages";
 import { AnimatedTestimonial } from "@/components/Testimonial";
 import type { Metadata } from "next";
-import { getFeaturedProduct, getFeaturedProducts } from "@/lib/catalog";
+import { getFeaturedProduct, getFeaturedProducts, getProductsBySlugs } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { cookies } from "next/headers";
 import {
@@ -48,6 +49,11 @@ export default async function Home() {
     .filter((p) => p.id !== hero?.id)
     .slice(0, 12);
   const settings = await getSettings();
+  const welcomePackages = await getProductsBySlugs([
+    "handmade-gift-set",
+    "blue-heart-earrings",
+    "hairband",
+  ]);
 
   return (
     <>
@@ -58,6 +64,7 @@ export default async function Home() {
       {gridProducts.length > 0 ? (
         <NewCollection products={gridProducts} />
       ) : null}
+      <WelcomePackages products={welcomePackages} />
       <OurStory />
       <CrochetProcess />
       {/* <AnimatedTestimonial /> */}

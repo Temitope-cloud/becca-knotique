@@ -47,8 +47,9 @@ const zones = [
 
 await mongoose.connect(process.env.MONGODB_URI, { bufferCommands: false });
 const collection = mongoose.connection.db.collection("deliveryzones");
+const doorDeliveryZones = new Set(["Challenge & Ring Road, Ibadan", "Central Ibadan", "Outer Ibadan"]);
 for (const zone of zones) {
-  await collection.updateOne({ name: zone.name }, { $set: { ...zone, active: true, updatedAt: new Date() }, $setOnInsert: { createdAt: new Date() } }, { upsert: true });
+  await collection.updateOne({ name: zone.name }, { $set: { ...zone, fulfillmentMethod: doorDeliveryZones.has(zone.name) ? "door_delivery" : "park_pickup", active: true, updatedAt: new Date() }, $setOnInsert: { createdAt: new Date() } }, { upsert: true });
 }
 console.log(`Seeded ${zones.length} delivery zones.`);
 await mongoose.disconnect();

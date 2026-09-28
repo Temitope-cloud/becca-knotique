@@ -215,6 +215,8 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
 
   const admin = adminAddress();
   const shipping = `${order.shipping.address}, ${order.shipping.city}, ${order.shipping.state}`;
+  const fulfilment = order.shipping.fulfillmentMethod === "park_pickup" ? "Park pickup" : "Door delivery";
+  const timing = [order.shipping.preparationTime, order.shipping.transitTime && `Transit: ${order.shipping.transitTime} after dispatch`].filter(Boolean).join(" · ");
 
   const tasks: Promise<unknown>[] = [];
 
@@ -228,7 +230,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
         "Thank you for your order!",
         `<p style="color:#57534e;font-size:14px;line-height:1.6;">
            Hi ${order.customer.name}, we&apos;ve received your payment and your order is confirmed.
-           We&apos;ll be in touch about delivery to <strong>${shipping}</strong>.
+           Your fulfilment method is <strong>${fulfilment}</strong>. We&apos;ll be in touch about your order at <strong>${shipping}</strong>${timing ? `. ${timing}.` : "."}
          </p>
          <div style="margin:20px 0;">${itemsTable(order)}</div>
          <p style="color:#a8a29e;font-size:12px;">Order number: ${order.orderNumber ?? order.reference}</p>`,
@@ -253,6 +255,8 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
              <tr><td style="padding:2px 0;">Email</td><td style="text-align:right;">${order.email}</td></tr>
              <tr><td style="padding:2px 0;">Phone</td><td style="text-align:right;">${order.customer.phone}</td></tr>
              <tr><td style="padding:2px 0;">Deliver to</td><td style="text-align:right;">${shipping}</td></tr>
+             <tr><td style="padding:2px 0;">Fulfilment</td><td style="text-align:right;">${fulfilment}</td></tr>
+             ${timing ? `<tr><td style="padding:2px 0;">Timing</td><td style="text-align:right;">${timing}</td></tr>` : ""}
              ${order.shipping.note ? `<tr><td style="padding:2px 0;">Note</td><td style="text-align:right;">${order.shipping.note}</td></tr>` : ""}
            </table>`,
         ),

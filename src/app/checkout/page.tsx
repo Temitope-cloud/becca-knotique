@@ -16,6 +16,7 @@ import {
 import { useCart } from "@/context/CartContext";
 import { formatNaira } from "@/lib/money";
 import CheckoutSteps from "@/components/CheckoutSteps";
+import { preparationTiming } from "@/lib/delivery-estimate";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function CheckoutPage() {
   const [shippingCfg, setShippingCfg] = useState({ fee: 0, threshold: 0 });
   const [deliveryLocations, setDeliveryLocations] = useState<Array<{ state: string; cities: string[] }>>([]);
   const [deliveryOrigin, setDeliveryOrigin] = useState("Challenge, Ibadan");
-  const [quote, setQuote] = useState<{ fee: number; eta: string; available: boolean } | null>(null);
+  const [quote, setQuote] = useState<{ fee: number; eta: string; fulfillmentMethod?: "door_delivery" | "park_pickup"; available: boolean } | null>(null);
   const [storeCredit, setStoreCredit] = useState(0);
   const [applyCredit, setApplyCredit] = useState(true);
 
@@ -123,6 +124,8 @@ export default function CheckoutPage() {
   const total = Math.max(0, subtotal - discount) + shipping;
   const creditApplied = applyCredit ? Math.min(storeCredit, total) : 0;
   const amountToPay = Math.max(0, total - creditApplied);
+  const timing = preparationTiming(items);
+  const isParkPickup = quote?.fulfillmentMethod === "park_pickup";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -219,7 +222,7 @@ export default function CheckoutPage() {
                   className={inputClass}
                 />
               </div>
-              {quote ? <p className={`sm:col-span-2 text-sm ${quote.available ? "text-emerald-700" : "text-rose-700"}`}>{quote.available ? `Delivery: ${formatNaira(quote.fee)}${quote.eta ? ` · ${quote.eta}` : ""}` : quote.eta}</p> : <p className="sm:col-span-2 text-sm text-stone-400">Enter your city and state to see delivery.</p>}
+              {quote ? <p className={`sm:col-span-2 text-sm ${quote.available ? "text-emerald-700" : "text-rose-700"}`}>{quote.available ? `${quote.fulfillmentMethod === "park_pickup" ? "Park pickup" : "Door delivery"}: ${formatNaira(quote.fee)}${quote.eta ? ` · ${quote.eta}` : ""}` : quote.eta}</p> : <p className="sm:col-span-2 text-sm text-stone-400">Enter your city and state to see delivery.</p>}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
                   Email
@@ -253,15 +256,15 @@ export default function CheckoutPage() {
 
           <section className="rounded-2xl border border-stone-200 bg-white p-6">
             <h2 className="text-lg font-semibold text-stone-900">
-              Delivery address
+              Delivery location
             </h2>
             <p className="mt-1 text-sm text-stone-500">
-              Delivery starts from {deliveryOrigin}. Choose your state and city to see the fee.
+              Delivery starts from {deliveryOrigin}. Ibadan orders are delivered to your door. Orders outside Ibadan are collected from a motor park.
             </p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
-                  Address
+                  {isParkPickup ? "Preferred destination motor park or transport company" : "Door delivery address"}
                 </label>
                 <input
                   required
@@ -316,6 +319,22 @@ export default function CheckoutPage() {
                   className={inputClass}
                 />
               </div>
+            </div>
+            <div className="mt-5 rounded-xl bg-stone-50 p-4 text-sm text-stone-700">
+              {quote?.available ? (
+                <>
+                  <p className="font-semibold text-stone-900">
+                    {isParkPickup ? "Park pickup" : "Door delivery"}
+                  </p>
+                  <p className="mt-1">
+                    {isParkPickup
+                      ? "Your parcel will be sent to the motor park or transport company you selected. We will contact you with collection details after dispatch."
+                      : "We will deliver to the address you provided."}
+                  </p>
+                </>
+              ) : (
+                <p>Select your state and city to see your fulfilment method.</p>
+              )}
             </div>
           </section>
         </div>
@@ -373,6 +392,11 @@ export default function CheckoutPage() {
             <div className="flex justify-between text-stone-600">
               <span>Subtotal</span>
               <span>{formatNaira(subtotal)}</span>
+            </div>
+            <div className="rounded-xl bg-stone-50 px-3 py-3 text-stone-600">
+              <p className="font-medium text-stone-900">Order timing</p>
+              <p className="mt-1">{timing.label}</p>
+              {quote?.available ? <p className="mt-1">Transit: {quote.eta} after dispatch</p> : <p className="mt-1">Select your location to see transit time.</p>}
             </div>
             {discount > 0 ? (
               <div className="flex justify-between text-[#047857]">
