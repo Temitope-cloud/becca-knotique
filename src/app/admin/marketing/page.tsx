@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2, Mail, Send, Users } from "lucide-react";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 type Audience = "all_opted_in" | "newsletter" | "customers";
 type Campaign = { _id: string; subject: string; previewText?: string; content: string; audience?: Audience; status: "draft" | "sent"; recipientCount: number; createdAt: string };
@@ -79,7 +80,11 @@ export default function MarketingPage() {
           <div><label className="mb-1.5 block text-sm font-medium text-stone-700">Send to</label><select value={audience} onChange={(event) => setAudience(event.target.value as Audience)} className={input}>{(Object.keys(audienceLabels) as Audience[]).map((key) => <option key={key} value={key}>{audienceLabels[key]}</option>)}</select><p className="mt-1.5 text-xs text-stone-500">This campaign will go to {selectedCount} eligible recipient{selectedCount === 1 ? "" : "s"}.</p></div>
           <input required value={subject} onChange={(event) => setSubject(event.target.value)} maxLength={160} placeholder="Email subject" className={input} />
           <input value={previewText} onChange={(event) => setPreviewText(event.target.value)} maxLength={240} placeholder="Preview text, optional" className={input} />
-          <textarea required rows={8} value={content} onChange={(event) => setContent(event.target.value)} maxLength={20000} placeholder="Write your update here..." className={input} />
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-stone-700">Email message</label>
+            <RichTextEditor value={content} onChange={setContent} />
+            <p className="mt-1.5 text-xs text-stone-500">Use the toolbar for headings, links, lists, images, and emphasis.</p>
+          </div>
         </div>
         {message ? <p className="mt-4 rounded-lg bg-stone-100 px-3 py-2 text-sm text-stone-700">{message}</p> : null}
         <button disabled={saving} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60">{saving ? <Loader2 className="size-4 animate-spin" /> : null} Save draft</button>

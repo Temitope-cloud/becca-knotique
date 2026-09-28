@@ -6,6 +6,7 @@ import { User } from "@/lib/models/User";
 import { NewsletterSubscriber } from "@/lib/models/NewsletterSubscriber";
 import { MarketingCampaign } from "@/lib/models/MarketingCampaign";
 import { sendMarketingEmail } from "@/lib/email";
+import { cleanContent } from "@/lib/blog";
 
 export const runtime = "nodejs";
 
@@ -54,7 +55,11 @@ export async function POST(request: Request) {
   const parsed = campaignSchema.safeParse(await request.json().catch(() => ({})));
   if (!parsed.success) return NextResponse.json({ error: "Please add an audience, subject, and message." }, { status: 400 });
   await connectToDatabase();
-  const campaign = await MarketingCampaign.create({ ...parsed.data, status: "draft" });
+  const content = cleanContent(parsed.data.content);
+  if (!content.replace(/<[^>]*>/g, "").trim()) {
+    return NextResponse.json({ error: "Please add an email message." }, { status: 400 });
+  }
+  const campaign = await MarketingCampaign.create({ ...parsed.data, content, status: "draft" });
   return NextResponse.json({ campaign }, { status: 201 });
 }
 
@@ -70,7 +75,7 @@ export async function PATCH(request: Request) {
   const recipients = audience === "newsletter" ? groups.newsletter : audience === "customers" ? groups.customers : groups.all;
   if (!recipients.length) return NextResponse.json({ error: "There are no opted-in recipients in this audience." }, { status: 400 });
   if (!process.env.RESEND_API_KEY) return NextResponse.json({ error: "Email sending is not configured yet." }, { status: 503 });
-  const sent = await Promise.all(recipients.map((recipient) => sendMarketingEmail({ to: recipient.email, subject: campaign.subject, previewText: campaign.previewText, content: campaign.content })));
+  const sent = await Promise.all(recipients.map((recipient) => sendMarketingEmail({ to: recipient.email, subject: campaign.subject, previewText: campaign.previewText, content: cleanContent(campaign.content) })));
   const sentCount = sent.filter(Boolean).length;
   if (!sentCount) return NextResponse.json({ error: "The email provider did not accept the campaign." }, { status: 502 });
   campaign.status = "sent";

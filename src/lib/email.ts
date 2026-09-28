@@ -170,7 +170,7 @@ export async function sendMarketingEmail(opts: {
     subject: opts.subject,
     title: opts.subject,
     sender: "hello",
-    body: `${preview}<div style="color:#57534e;font-size:14px;line-height:1.7;white-space:pre-line;">${escapeHtml(opts.content)}</div><p style="color:#a8a29e;font-size:12px;line-height:1.6;margin:20px 0 0;">You are receiving this because you opted in to Becca's Knotique updates. You can change your preferences from your account.</p>`,
+    body: `${preview}<div style="color:#57534e;font-size:14px;line-height:1.7;">${opts.content}</div><p style="color:#a8a29e;font-size:12px;line-height:1.6;margin:20px 0 0;">You are receiving this because you opted in to Becca's Knotique updates. You can change your preferences from your account.</p>`,
   });
 }
 
