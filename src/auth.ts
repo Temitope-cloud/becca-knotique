@@ -45,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         await connectToDatabase();
         const user = await User.findOne({ email }).select("+password");
-        if (!user?.password) return null;
+        if (!user?.password || user.isActive === false) return null;
 
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) return null;
@@ -79,6 +79,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         await connectToDatabase();
         const existing = await User.findOne({ email });
         if (existing) {
+          if (existing.isActive === false) return false;
           // Coming back cancels a pending deletion and restores the account.
           if (existing.deletionScheduledAt) {
             await User.updateOne(

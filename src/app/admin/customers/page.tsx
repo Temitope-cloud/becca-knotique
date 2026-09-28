@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/db";
 import { User, type IUser } from "@/lib/models/User";
 import { Order } from "@/lib/models/Order";
 import { formatNaira } from "@/lib/money";
+import CustomerActions from "@/components/admin/CustomerActions";
 
 interface SpendRow {
   _id: string;
@@ -50,12 +51,13 @@ export default async function AdminCustomersPage() {
               <th className="px-4 py-3 font-medium">Sign-in</th>
               <th className="px-4 py-3 font-medium">Orders</th>
               <th className="px-4 py-3 font-medium">Total spent</th>
+              <th className="px-4 py-3 font-medium">Account</th>
             </tr>
           </thead>
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-stone-500">
+                <td colSpan={6} className="px-4 py-12 text-center text-stone-500">
                   No customers yet.
                 </td>
               </tr>
@@ -86,6 +88,14 @@ export default async function AdminCustomersPage() {
                     </td>
                     <td className="px-4 py-3 font-medium whitespace-nowrap text-stone-900">
                       {formatNaira(agg?.spend ?? 0)}
+                    </td>
+                    <td className="px-4 py-3 align-top">
+                      <CustomerActions
+                        customerId={u._id.toString()}
+                        name={u.name}
+                        initialCredit={u.storeCredit ?? 0}
+                        initialActive={u.isActive !== false}
+                      />
                     </td>
                   </tr>
                 );

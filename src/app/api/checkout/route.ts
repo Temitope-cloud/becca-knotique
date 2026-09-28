@@ -4,6 +4,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/db";
 import { Order, type IOrderItem } from "@/lib/models/Order";
+import { User } from "@/lib/models/User";
 import { Coupon, computeCouponDiscount } from "@/lib/models/Coupon";
 import {
   getProductById,
@@ -106,6 +107,14 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "An email is required to check out." },
       { status: 400 },
+    );
+  }
+  await connectToDatabase();
+  const account = await User.findOne({ email }).select("isActive").lean<{ isActive?: boolean }>();
+  if (account?.isActive === false) {
+    return NextResponse.json(
+      { error: "This account has been deactivated. Please contact support for help." },
+      { status: 403 },
     );
   }
 
