@@ -37,6 +37,7 @@ export interface ProductInput {
   packagingCost?: number;
   inStock: boolean;
   featured: boolean;
+  homepageFeatured?: boolean;
   active: boolean;
   status?: "published" | "draft";
 }
@@ -85,6 +86,7 @@ export default function ProductForm({
     allowCustomColor: product?.allowCustomColor ?? false,
     inStock: product?.inStock ?? true,
     featured: product?.featured ?? false,
+    homepageFeatured: product?.homepageFeatured ?? false,
     active: product?.active ?? true,
   });
   const [images, setImages] = useState<string[]>(product?.images ?? []);
@@ -151,6 +153,7 @@ export default function ProductForm({
         : undefined,
       inStock: form.inStock,
       featured: form.featured,
+      homepageFeatured: form.homepageFeatured,
       active: form.active,
     };
 
@@ -458,6 +461,7 @@ export default function ProductForm({
             { k: "inStock" as const, label: "In stock", desc: "Customers can buy it" },
             { k: "active" as const, label: "Active", desc: "Shown in the store" },
             { k: "featured" as const, label: "Featured", desc: "Highlighted on the homepage" },
+            { k: "homepageFeatured" as const, label: "Homepage featured piece", desc: "The single editorial product in the Featured piece section" },
           ].map((row) => (
             <label key={row.k} className="flex items-center gap-3">
               <input

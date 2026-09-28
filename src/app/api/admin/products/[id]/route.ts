@@ -42,6 +42,9 @@ export async function PATCH(
 
   await connectToDatabase();
   const data = parsed.data;
+  if (data.homepageFeatured) {
+    await Product.updateMany({ _id: { $ne: id } }, { $set: { homepageFeatured: false } });
+  }
 
   const update: Record<string, unknown> = {
     ...data,

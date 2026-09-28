@@ -40,6 +40,7 @@ export const productSchema = z.object({
   packagingCost: z.number().min(0).optional(),
   inStock: z.boolean().default(true),
   featured: z.boolean().default(false),
+  homepageFeatured: z.boolean().default(false),
   active: z.boolean().default(true),
   status: z.enum(["published", "draft"]).default("published"),
 });

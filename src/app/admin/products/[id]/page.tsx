@@ -55,6 +55,7 @@ export default async function EditProductPage({
           materialCost: product.materialCost,
           packagingCost: product.packagingCost,
           featured: product.featured,
+          homepageFeatured: product.homepageFeatured,
           active: product.active,
           status: product.status,
         }}

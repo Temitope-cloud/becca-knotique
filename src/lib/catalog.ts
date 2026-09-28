@@ -36,6 +36,7 @@ export interface CatalogProduct {
   tags: string[];
   infos: { label: string }[];
   featured: boolean;
+  homepageFeatured: boolean;
   active: boolean;
   status: "published" | "draft";
   trashed: boolean;
@@ -82,6 +83,7 @@ function fromDoc(doc: IProduct): CatalogProduct {
     tags: doc.tags ?? [],
     infos: (doc.infos ?? []).map((i) => ({ label: i.label })),
     featured: !!doc.featured,
+    homepageFeatured: !!doc.homepageFeatured,
     active: doc.active !== false,
     status: doc.status === "draft" ? "draft" : "published",
     trashed: !!doc.trashed,
@@ -121,6 +123,7 @@ function fromStatic(p: (typeof staticProducts)[number]): CatalogProduct {
     tags: p.tags ?? [],
     infos: (p.infos ?? []).map((i) => ({ label: i.label })),
     featured: false,
+    homepageFeatured: false,
     active: true,
     status: "published",
     trashed: false,
@@ -234,6 +237,15 @@ export async function getFeaturedProducts(
 }
 
 export async function getFeaturedProduct(): Promise<CatalogProduct | null> {
+  if (!(await dbIsEmpty())) {
+    const primary = await Product.findOne({
+      homepageFeatured: true,
+      active: { $ne: false },
+      status: { $ne: "draft" },
+      trashed: { $ne: true },
+    }).lean<IProduct>();
+    if (primary) return fromDoc(primary);
+  }
   const featured = await getFeaturedProducts(1);
   if (featured[0]) return featured[0];
   // Fallback so the hero still shows something before anything is featured.

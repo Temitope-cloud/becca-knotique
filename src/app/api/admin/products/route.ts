@@ -36,6 +36,9 @@ export async function POST(request: Request) {
   await connectToDatabase();
   const data = parsed.data;
   const slug = await uniqueSlug(data.slug || data.name);
+  if (data.homepageFeatured) {
+    await Product.updateMany({}, { $set: { homepageFeatured: false } });
+  }
 
   const created = await Product.create({
     ...data,

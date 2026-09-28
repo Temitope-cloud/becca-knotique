@@ -44,6 +44,7 @@ export default async function Home() {
   const preference = isPreference(cookiePref) ? cookiePref : "all";
   const orderedFeatured = sortByPreference(featuredList, preference);
   const hero = orderedFeatured[0] ?? (await getFeaturedProduct());
+  const homepageFeature = await getFeaturedProduct();
   const settings = await getSettings();
   const catalogue = await getAllProducts();
   const imageFor = (predicate: (product: (typeof catalogue)[number]) => boolean) =>
@@ -65,7 +66,7 @@ export default async function Home() {
       <OurStory />
       <CrochetProcess />
       {/* <AnimatedTestimonial /> */}
-      {hero ? <OnePiece product={hero} /> : null}
+      {homepageFeature ? <OnePiece product={homepageFeature} /> : null}
       <PreFooterCta />
       <Footer />
     </>

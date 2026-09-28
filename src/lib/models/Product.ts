@@ -51,6 +51,8 @@ export interface IProduct {
   tags: string[];
   infos: IProductInfo[];
   featured: boolean;
+  /** The single product used in the homepage Featured piece editorial. */
+  homepageFeatured: boolean;
   active: boolean;
   /** COGS inputs (NGN) - direct material and packaging cost per unit. */
   materialCost?: number;
@@ -115,6 +117,7 @@ const ProductSchema = new Schema<IProduct>(
       default: [],
     },
     featured: { type: Boolean, default: false, index: true },
+    homepageFeatured: { type: Boolean, default: false, index: true },
     active: { type: Boolean, default: true, index: true },
     materialCost: { type: Number, min: 0, default: 0 },
     packagingCost: { type: Number, min: 0, default: 0 },
