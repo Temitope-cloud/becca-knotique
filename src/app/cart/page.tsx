@@ -47,6 +47,20 @@ export default function CartPage() {
     setCouponLoading(false);
   }
 
+  async function applyWelcome(code: "WELCOME50" | "WELCOME100") {
+    setCouponLoading(true);
+    setCouponError(null);
+    const res = await applyCoupon(code);
+    if (!res.ok) setCouponError(res.reason || "Could not apply this offer.");
+    setCouponLoading(false);
+  }
+
+  const welcomeOffer = subtotal >= 100000
+    ? { code: "WELCOME100" as const, label: "12% off your ₦100,000+ order" }
+    : subtotal >= 50000
+      ? { code: "WELCOME50" as const, label: "7% off your ₦50,000+ order" }
+      : null;
+
   if (hydrated && items.length === 0) {
     return (
       <main className="mx-auto flex min-h-[70vh] w-full max-w-3xl flex-col items-center justify-center px-4 py-16 text-center">
@@ -223,6 +237,16 @@ export default function CartPage() {
             )}
             {couponError ? (
               <p className="mt-2 text-xs text-rose-600">{couponError}</p>
+            ) : null}
+            {!coupon && welcomeOffer ? (
+              <div className="mt-4 border-t border-stone-100 pt-4">
+                <p className="text-sm font-medium text-stone-900">Your cart qualifies for {welcomeOffer.label}.</p>
+                <button type="button" disabled={couponLoading} onClick={() => void applyWelcome(welcomeOffer.code)} className="mt-2 text-sm font-semibold text-emerald-700 underline underline-offset-4 disabled:opacity-60">
+                  Apply {welcomeOffer.code}
+                </button>
+              </div>
+            ) : !coupon ? (
+              <p className="mt-4 border-t border-stone-100 pt-4 text-xs leading-relaxed text-stone-500">Spend ₦50,000 for 7% off with WELCOME50, or ₦100,000 for 12% off with WELCOME100.</p>
             ) : null}
           </div>
 

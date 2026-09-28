@@ -7,6 +7,7 @@ import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
+import WelcomeOfferPopup from "@/components/WelcomeOfferPopup";
 import { organizationSchema, websiteSchema } from "@/lib/seo";
 import { getSettings } from "@/lib/settings";
 import { PREFERENCE_COOKIE, isPreference } from "@/lib/audience";
@@ -109,6 +110,7 @@ export default async function RootLayout({
       <body className="flex min-h-full flex-col">
         <GoogleAnalytics />
         <CookieConsent />
+        <WelcomeOfferPopup />
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />
         <Providers settings={settings} preference={initialPreference}>

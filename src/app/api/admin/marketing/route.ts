@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getAdminSession } from "@/lib/admin-auth";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/User";
+import { NewsletterSubscriber } from "@/lib/models/NewsletterSubscriber";
 import { MarketingCampaign } from "@/lib/models/MarketingCampaign";
 import { sendMarketingEmail } from "@/lib/email";
 
@@ -17,10 +18,12 @@ const campaignSchema = z.object({
 export async function GET() {
   if (!(await getAdminSession())) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await connectToDatabase();
-  const [campaigns, recipients] = await Promise.all([
+  const [campaigns, customerEmails, subscriberEmails] = await Promise.all([
     MarketingCampaign.find().sort({ createdAt: -1 }).limit(30).lean(),
-    User.countDocuments({ role: { $ne: "admin" }, marketingOptIn: true, deletionScheduledAt: null }),
+    User.find({ role: { $ne: "admin" }, marketingOptIn: true, deletionScheduledAt: null }).select("email").lean(),
+    NewsletterSubscriber.find({ active: true }).select("email").lean(),
   ]);
+  const recipients = new Set([...customerEmails, ...subscriberEmails].map((recipient) => recipient.email.toLowerCase())).size;
   return NextResponse.json({ campaigns, recipients });
 }
 
@@ -41,7 +44,11 @@ export async function PATCH(request: Request) {
   await connectToDatabase();
   const campaign = await MarketingCampaign.findById(id.data);
   if (!campaign || campaign.status !== "draft") return NextResponse.json({ error: "This campaign cannot be sent." }, { status: 400 });
-  const recipients = await User.find({ role: { $ne: "admin" }, marketingOptIn: true, deletionScheduledAt: null }).select("email").lean();
+  const [customers, subscribers] = await Promise.all([
+    User.find({ role: { $ne: "admin" }, marketingOptIn: true, deletionScheduledAt: null }).select("email").lean(),
+    NewsletterSubscriber.find({ active: true }).select("email").lean(),
+  ]);
+  const recipients = Array.from(new Set([...customers, ...subscribers].map((recipient) => recipient.email.toLowerCase()))).map((email) => ({ email }));
   if (!recipients.length) return NextResponse.json({ error: "No customers have opted in yet." }, { status: 400 });
   if (!process.env.RESEND_API_KEY) return NextResponse.json({ error: "Email sending is not configured yet." }, { status: 503 });
   const sent = await Promise.all(recipients.map((user) => sendMarketingEmail({ to: user.email, subject: campaign.subject, previewText: campaign.previewText, content: campaign.content })));
