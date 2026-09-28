@@ -222,7 +222,7 @@ export default function CheckoutPage() {
                   className={inputClass}
                 />
               </div>
-              {quote ? <p className={`sm:col-span-2 text-sm ${quote.available ? "text-emerald-700" : "text-rose-700"}`}>{quote.available ? `${quote.fulfillmentMethod === "park_pickup" ? "Park pickup" : "Door delivery"}: ${formatNaira(quote.fee)}${quote.eta ? ` · ${quote.eta}` : ""}` : quote.eta}</p> : <p className="sm:col-span-2 text-sm text-stone-400">Enter your city and state to see delivery.</p>}
+              {quote ? <p className={`sm:col-span-2 text-sm ${quote.available ? "text-emerald-700" : "text-rose-700"}`}>{quote.available ? `${quote.fulfillmentMethod === "park_pickup" ? "Park pickup" : "Door delivery"}: ${quote.fee > 0 ? formatNaira(quote.fee) : "Free"}${quote.eta ? ` · ${quote.eta}` : ""}` : quote.eta}</p> : <p className="sm:col-span-2 text-sm text-stone-400">Enter your city and state to see delivery.</p>}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-stone-700">
                   Email
