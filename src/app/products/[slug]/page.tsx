@@ -21,7 +21,7 @@ import {
 import JsonLd from "@/components/JsonLd";
 import GalleryChartLink from "@/components/GalleryChartLink";
 import ProductGallery from "@/components/ProductGallery";
-import ProductRevisitNudge from "@/components/ProductRevisitNudge";
+// ProductRevisitNudge is kept for a future campaign, but is disabled for launch.
 import ProductViewTracker from "@/components/ProductViewTracker";
 import ProductPurchasePanel from "@/components/cart/ProductPurchasePanel";
 import ShareButton from "@/components/ShareButton";
@@ -262,7 +262,9 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
               </div>
             </div>
 
+            {/* Product revisit reminder disabled for launch.
             <ProductRevisitNudge slug={product.slug} productName={product.name} />
+            */}
 
             {/* v1 fallback - order on WhatsApp (disabled while Paystack checkout is live):
             <a
