@@ -244,7 +244,7 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
   const admin = adminAddress();
   const shipping = `${order.shipping.address}, ${order.shipping.city}, ${order.shipping.state}`;
   const fulfilment = order.shipping.fulfillmentMethod === "park_pickup" ? "Park pickup" : "Door delivery";
-  const preparation = order.shipping.preparationTime || "Preparation time will be confirmed shortly.";
+  const preparation = order.shipping.preparationTime || "Your order preparation time will be confirmed shortly.";
   const transit = order.shipping.transitTime
     ? `${order.shipping.transitTime} after dispatch`
     : "Transit time will be confirmed after dispatch.";
@@ -274,8 +274,8 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
          <div style="margin:0 0 22px;padding:16px 18px;border-left:3px solid #059669;background:#f0fdf4;color:#374151;font-size:13px;line-height:1.7;">
            <strong style="color:#111827;font-size:14px;">Your delivery plan</strong><br />
            ${fulfilment} to ${deliveryAddress}<br />
-           <strong>Preparation:</strong> ${escapeHtml(preparation)}<br />
-           <strong>Transit:</strong> ${escapeHtml(transit)}
+           <strong>Ready to dispatch:</strong> ${escapeHtml(preparation)}<br />
+           <strong>${fulfilment === "Park pickup" ? "Park pickup transit" : "Delivery"}:</strong> ${escapeHtml(transit)}
          </div>
          ${deliveryNote ? `<p style="color:#57534e;font-size:13px;line-height:1.6;margin:0 0 18px;"><strong>Delivery note:</strong> ${deliveryNote}</p>` : ""}
          <div style="margin:20px 0;">${itemsTable(order)}</div>
@@ -302,8 +302,8 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
              <tr><td style="padding:2px 0;">Phone</td><td style="text-align:right;">${escapeHtml(order.customer.phone)}</td></tr>
              <tr><td style="padding:2px 0;">Deliver to</td><td style="text-align:right;">${deliveryAddress}</td></tr>
              <tr><td style="padding:2px 0;">Fulfilment</td><td style="text-align:right;">${fulfilment}</td></tr>
-             <tr><td style="padding:2px 0;">Preparation</td><td style="text-align:right;">${escapeHtml(preparation)}</td></tr>
-             <tr><td style="padding:2px 0;">Transit</td><td style="text-align:right;">${escapeHtml(transit)}</td></tr>
+             <tr><td style="padding:2px 0;">Ready to dispatch</td><td style="text-align:right;">${escapeHtml(preparation)}</td></tr>
+             <tr><td style="padding:2px 0;">${fulfilment === "Park pickup" ? "Park pickup transit" : "Delivery"}</td><td style="text-align:right;">${escapeHtml(transit)}</td></tr>
              ${deliveryNote ? `<tr><td style="padding:2px 0;">Note</td><td style="text-align:right;">${deliveryNote}</td></tr>` : ""}
            </table>`,
         ),

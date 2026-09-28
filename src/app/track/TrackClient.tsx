@@ -14,6 +14,9 @@ interface TrackResult extends TimelineOrder {
   amount: number;
   customerName: string;
   destination: string;
+  fulfillmentMethod?: "door_delivery" | "park_pickup";
+  preparationTime?: string | null;
+  transitTime?: string | null;
   items: { name: string; quantity: number; size: string | null; image: string | null }[];
 }
 
@@ -163,6 +166,13 @@ export default function TrackClient() {
               <p className="mt-1 text-xs text-stone-500">
                 Delivering to {order.destination}
               </p>
+            ) : null}
+            {order.preparationTime || order.transitTime ? (
+              <div className="mt-4 rounded-xl border border-stone-200 bg-white p-3 text-xs leading-relaxed text-stone-600">
+                <p className="font-semibold text-stone-900">Order timing</p>
+                {order.preparationTime ? <p className="mt-1">{order.preparationTime}</p> : null}
+                {order.transitTime ? <p className="mt-1">{order.fulfillmentMethod === "park_pickup" ? "Park pickup transit" : "Delivery"}: {order.transitTime} after dispatch.</p> : null}
+              </div>
             ) : null}
             <ul className="mt-4 space-y-2 border-t border-stone-200 pt-4">
               {order.items.map((item, i) => (

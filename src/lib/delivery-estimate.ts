@@ -22,7 +22,7 @@ export function preparationTiming(items: DeliveryTimingItem[]) {
   return {
     leadTime,
     label: madeToOrder
-      ? `Made to order: up to ${leadTime} before dispatch`
-      : `Preparation: up to ${leadTime} before dispatch`,
+      ? `Your order will be ready in about ${leadTime}.`
+      : `Your order will be ready in ${leadTime}.`,
   };
 }

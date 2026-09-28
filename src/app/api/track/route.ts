@@ -60,6 +60,9 @@ export async function POST(request: Request) {
     destination: [order.shipping?.city, order.shipping?.state]
       .filter(Boolean)
       .join(", "),
+    fulfillmentMethod: order.shipping?.fulfillmentMethod ?? "door_delivery",
+    preparationTime: order.shipping?.preparationTime ?? null,
+    transitTime: order.shipping?.transitTime ?? null,
     items: order.items.map((i) => ({
       name: i.name,
       quantity: i.quantity,

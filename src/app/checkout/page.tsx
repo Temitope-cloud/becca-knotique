@@ -420,7 +420,7 @@ export default function CheckoutPage() {
             <div className="rounded-xl bg-stone-50 px-3 py-3 text-stone-600">
               <p className="font-medium text-stone-900">Order timing</p>
               <p className="mt-1">{timing.label}</p>
-              {quote?.available ? <p className="mt-1">Transit: {quote.eta} after dispatch</p> : <p className="mt-1">Select your location to see transit time.</p>}
+              {quote?.available ? <p className="mt-1">{isParkPickup ? "Park pickup transit" : "Delivery"}: {quote.eta} after dispatch.</p> : <p className="mt-1">Select your location to see delivery time after dispatch.</p>}
             </div>
             {discount > 0 ? (
               <div className="flex justify-between text-[#047857]">
