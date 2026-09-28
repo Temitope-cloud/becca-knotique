@@ -4,6 +4,18 @@ import type { IOrder } from "@/lib/models/Order";
 import { formatNaira } from "@/lib/money";
 import { SITE_URL } from "@/lib/seo";
 
+const LOGO_URL = "https://res.cloudinary.com/u3kraw33/image/upload/v1787262022/beccas-knotique/footer-logo.png";
+const INSTAGRAM_URL = "https://www.instagram.com/beccasknotique/";
+const TIKTOK_URL = "https://www.tiktok.com/@beccas_knotique/";
+const WHATSAPP_URL = "https://wa.me/2348029086678";
+
+const escapeHtml = (value: string | number | undefined | null) => String(value ?? "")
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/\"/g, "&quot;")
+  .replace(/'/g, "&#039;");
+
 /**
  * Transactional email via Resend.
  * Everything here no-ops gracefully until RESEND_API_KEY (+ EMAIL_FROM) are set,
@@ -59,7 +71,7 @@ function itemsTable(order: IOrder): string {
       (i) => `
       <tr>
         <td style="padding:8px 0;border-bottom:1px solid #eee;color:#44403c;">
-          ${i.name}${i.size ? ` · ${i.size}` : ""}${i.color ? ` · ${i.color}` : ""}
+          ${escapeHtml(i.name)}${i.size ? ` · ${escapeHtml(i.size)}` : ""}${i.color ? ` · ${escapeHtml(i.color)}` : ""}
           <span style="color:#a8a29e;"> × ${i.quantity}</span>
         </td>
         <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;color:#1c1917;white-space:nowrap;">
@@ -72,29 +84,33 @@ function itemsTable(order: IOrder): string {
   return `
     <table style="width:100%;border-collapse:collapse;font-size:14px;">
       ${rows}
-      <tr>
-        <td style="padding:12px 0 0;font-weight:600;color:#1c1917;">Total</td>
-        <td style="padding:12px 0 0;text-align:right;font-weight:700;color:#1c1917;">
-          ${formatNaira(order.amount)}
-        </td>
-      </tr>
+      <tr><td style="padding:12px 0 0;color:#57534e;">Subtotal</td><td style="padding:12px 0 0;text-align:right;color:#57534e;">${formatNaira(order.subtotal)}</td></tr>
+      ${order.discount > 0 ? `<tr><td style="padding:6px 0 0;color:#047857;">Discount${order.couponCode ? ` (${escapeHtml(order.couponCode)})` : ""}</td><td style="padding:6px 0 0;text-align:right;color:#047857;">-${formatNaira(order.discount)}</td></tr>` : ""}
+      <tr><td style="padding:6px 0 0;color:#57534e;">Delivery</td><td style="padding:6px 0 0;text-align:right;color:#57534e;">${order.shippingFee > 0 ? formatNaira(order.shippingFee) : "Free"}</td></tr>
+      <tr><td style="padding:14px 0 0;font-weight:700;color:#1c1917;border-top:1px solid #e7e5e4;">Total paid</td><td style="padding:14px 0 0;text-align:right;font-weight:700;color:#1c1917;border-top:1px solid #e7e5e4;">${formatNaira(order.amount)}</td></tr>
     </table>`;
 }
 
 function shell(title: string, body: string): string {
   return `
-  <div style="background:#f5f5f4;padding:32px 0;font-family:ui-sans-serif,system-ui,Arial,sans-serif;">
-    <div style="max-width:560px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e7e5e4;">
-      <div style="background:#0a0a0a;padding:24px 28px;">
-        <p style="margin:0;color:#fff;font-size:18px;font-weight:700;letter-spacing:0.02em;">Becca&apos;s Knotique</p>
+  <div style="background:#f5f5f5;padding:32px 12px;font-family:Arial,Helvetica,sans-serif;">
+    <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e7e5e4;">
+      <div style="background:#0a0a0a;padding:26px 28px;text-align:center;">
+        <a href="${SITE_URL}" style="display:inline-block;text-decoration:none;"><img src="${LOGO_URL}" alt="Becca's Knotique" width="180" style="display:block;width:180px;height:auto;margin:0 auto;border:0;" /></a>
       </div>
-      <div style="padding:28px;">
-        <h1 style="margin:0 0 8px;font-size:20px;color:#1c1917;">${title}</h1>
+      <div style="padding:32px 28px;">
+        <h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;color:#111827;">${title}</h1>
         ${body}
       </div>
-      <div style="padding:18px 28px;border-top:1px solid #f0ede9;color:#a8a29e;font-size:12px;">
-        Handmade crochet, made for you. ·
-        <a href="${SITE_URL}" style="color:#059669;text-decoration:none;">beccasknotique.com</a>
+      <div style="padding:24px 28px;background:#fafafa;border-top:1px solid #e7e5e4;text-align:center;">
+        <p style="margin:0;color:#57534e;font-size:13px;line-height:1.6;">Handmade crochet, made for you.</p>
+        <p style="margin:14px 0 0;font-size:12px;line-height:1.6;">
+          <a href="${SITE_URL}" style="color:#111827;text-decoration:none;font-weight:700;">Website</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+          <a href="${INSTAGRAM_URL}" style="color:#111827;text-decoration:none;font-weight:700;">Instagram</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+          <a href="${TIKTOK_URL}" style="color:#111827;text-decoration:none;font-weight:700;">TikTok</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+          <a href="${WHATSAPP_URL}" style="color:#111827;text-decoration:none;font-weight:700;">WhatsApp</a>
+        </p>
+        <p style="margin:16px 0 0;color:#a8a29e;font-size:11px;line-height:1.5;">© ${new Date().getFullYear()} Becca&apos;s Knotique. All rights reserved.</p>
       </div>
     </div>
   </div>`;
@@ -146,8 +162,6 @@ export async function sendMarketingEmail(opts: {
   previewText?: string;
   content: string;
 }): Promise<boolean> {
-  const escapeHtml = (value: string) =>
-    value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#039;");
   const preview = opts.previewText
     ? `<p style="color:#a8a29e;font-size:12px;margin:0 0 16px;">${escapeHtml(opts.previewText)}</p>`
     : "";
@@ -216,7 +230,14 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
   const admin = adminAddress();
   const shipping = `${order.shipping.address}, ${order.shipping.city}, ${order.shipping.state}`;
   const fulfilment = order.shipping.fulfillmentMethod === "park_pickup" ? "Park pickup" : "Door delivery";
-  const timing = [order.shipping.preparationTime, order.shipping.transitTime && `Transit: ${order.shipping.transitTime} after dispatch`].filter(Boolean).join(" · ");
+  const preparation = order.shipping.preparationTime || "Preparation time will be confirmed shortly.";
+  const transit = order.shipping.transitTime
+    ? `${order.shipping.transitTime} after dispatch`
+    : "Transit time will be confirmed after dispatch.";
+  const reference = order.orderNumber ?? order.reference;
+  const customerName = escapeHtml(order.customer.name || "there");
+  const deliveryAddress = escapeHtml(shipping);
+  const deliveryNote = order.shipping.note ? escapeHtml(order.shipping.note) : "";
 
   const tasks: Promise<unknown>[] = [];
 
@@ -225,15 +246,26 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
     resend.emails.send({
       from: fromFor("orders"),
       to: order.email,
-      subject: `Your Becca's Knotique order is confirmed (${order.orderNumber ?? order.reference})`,
+      subject: `Your Becca's Knotique order is confirmed (${reference})`,
       html: shell(
-        "Thank you for your order!",
-        `<p style="color:#57534e;font-size:14px;line-height:1.6;">
-           Hi ${order.customer.name}, we&apos;ve received your payment and your order is confirmed.
-           Your fulfilment method is <strong>${fulfilment}</strong>. We&apos;ll be in touch about your order at <strong>${shipping}</strong>${timing ? `. ${timing}.` : "."}
+        "Your order is confirmed.",
+        `<p style="color:#57534e;font-size:15px;line-height:1.65;margin:0 0 18px;">
+           Hi ${customerName}, we&apos;ve received your payment. Your handmade piece is now in our care.
          </p>
+         <div style="margin:0 0 18px;padding:16px 18px;border:1px solid #e7e5e4;background:#fafafa;font-size:13px;line-height:1.7;color:#57534e;">
+           <div><strong style="color:#111827;">Order:</strong> ${escapeHtml(reference)}</div>
+           <div><strong style="color:#111827;">Payment:</strong> Paid</div>
+           <div><strong style="color:#111827;">Fulfilment:</strong> ${fulfilment}</div>
+         </div>
+         <div style="margin:0 0 22px;padding:16px 18px;border-left:3px solid #059669;background:#f0fdf4;color:#374151;font-size:13px;line-height:1.7;">
+           <strong style="color:#111827;font-size:14px;">Your delivery plan</strong><br />
+           ${fulfilment} to ${deliveryAddress}<br />
+           <strong>Preparation:</strong> ${escapeHtml(preparation)}<br />
+           <strong>Transit:</strong> ${escapeHtml(transit)}
+         </div>
+         ${deliveryNote ? `<p style="color:#57534e;font-size:13px;line-height:1.6;margin:0 0 18px;"><strong>Delivery note:</strong> ${deliveryNote}</p>` : ""}
          <div style="margin:20px 0;">${itemsTable(order)}</div>
-         <p style="color:#a8a29e;font-size:12px;">Order number: ${order.orderNumber ?? order.reference}</p>`,
+         <p style="color:#57534e;font-size:13px;line-height:1.6;margin:20px 0 0;">We&apos;ll contact you with dispatch details. For park pickup, this includes the transport or motor park collection information.</p>`,
       ),
     }),
   );
@@ -244,20 +276,21 @@ export async function sendOrderEmails(order: IOrder): Promise<void> {
       resend.emails.send({
         from: fromFor("notifications"),
         to: admin,
-        subject: `New paid order - ${formatNaira(order.amount)} (${order.orderNumber ?? order.reference})`,
+        subject: `New paid order - ${formatNaira(order.amount)} (${reference})`,
         html: shell(
           "New order received 🎉",
           `<p style="color:#57534e;font-size:14px;line-height:1.6;">
-             <strong>${order.customer.name}</strong> just paid for an order.
+             <strong>${customerName}</strong> just paid for an order.
            </p>
            <div style="margin:16px 0;">${itemsTable(order)}</div>
            <table style="width:100%;font-size:13px;color:#57534e;">
-             <tr><td style="padding:2px 0;">Email</td><td style="text-align:right;">${order.email}</td></tr>
-             <tr><td style="padding:2px 0;">Phone</td><td style="text-align:right;">${order.customer.phone}</td></tr>
-             <tr><td style="padding:2px 0;">Deliver to</td><td style="text-align:right;">${shipping}</td></tr>
+             <tr><td style="padding:2px 0;">Email</td><td style="text-align:right;">${escapeHtml(order.email)}</td></tr>
+             <tr><td style="padding:2px 0;">Phone</td><td style="text-align:right;">${escapeHtml(order.customer.phone)}</td></tr>
+             <tr><td style="padding:2px 0;">Deliver to</td><td style="text-align:right;">${deliveryAddress}</td></tr>
              <tr><td style="padding:2px 0;">Fulfilment</td><td style="text-align:right;">${fulfilment}</td></tr>
-             ${timing ? `<tr><td style="padding:2px 0;">Timing</td><td style="text-align:right;">${timing}</td></tr>` : ""}
-             ${order.shipping.note ? `<tr><td style="padding:2px 0;">Note</td><td style="text-align:right;">${order.shipping.note}</td></tr>` : ""}
+             <tr><td style="padding:2px 0;">Preparation</td><td style="text-align:right;">${escapeHtml(preparation)}</td></tr>
+             <tr><td style="padding:2px 0;">Transit</td><td style="text-align:right;">${escapeHtml(transit)}</td></tr>
+             ${deliveryNote ? `<tr><td style="padding:2px 0;">Note</td><td style="text-align:right;">${deliveryNote}</td></tr>` : ""}
            </table>`,
         ),
       }),
