@@ -8,9 +8,13 @@ import Link from "next/link";
 const HeroSection = ({
   foundedYear = "2022",
   eyebrow = null,
+  supportEmail,
+  address,
 }: {
   foundedYear?: string;
   eyebrow?: string | null;
+  supportEmail?: string;
+  address?: string;
 }) => {
   return (
     <>
@@ -46,7 +50,7 @@ const HeroSection = ({
           <div className="absolute inset-0 h-screen w-screen bg-black/50 backdrop-blur-[2px]">
             <div className="absolute top-0 left-0 z-50 w-full">
               {" "}
-              <Header />
+              <Header supportEmail={supportEmail} address={address} />
             </div>
 
             <div className="absolute bottom-[12%] left-6 max-w-[90%] sm:left-10 md:max-w-[60%]">

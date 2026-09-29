@@ -56,7 +56,7 @@ const ContactPageClient = () => {
             </div>
 
             <div className="mt-5">
-              <h2 className="font-apparel text-5xl font-medium">FAQ</h2>
+              <h2 id="faq" className="font-apparel text-5xl font-medium">FAQ</h2>
               <AccordionReuse />
               <p className="mt-5 flex flex-wrap gap-1 text-sm text-gray-700">
                 We didn&apos;t answer your question?{" "}

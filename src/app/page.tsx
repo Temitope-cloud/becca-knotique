@@ -61,6 +61,8 @@ export default async function Home() {
       <HeroSection
         foundedYear={settings.foundedYear}
         eyebrow={heroEyebrowFor(preference)}
+        supportEmail={settings.supportEmail}
+        address={settings.address}
       />
       <ShopByCategories tiles={categoryTiles} />
       <OurStory />

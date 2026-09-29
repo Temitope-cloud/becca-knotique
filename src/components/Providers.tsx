@@ -41,7 +41,7 @@ const Providers = ({ children, settings, preference = null }: providersProps) =>
         <WishlistProvider>
           <CartProvider>
             {!hideChrome && <AnnouncementBanner />}
-            {showChrome && <Header />}
+            {showChrome && <Header supportEmail={settings?.supportEmail} address={settings?.address} />}
             {children}
             {showChrome && !hideCta && <PreFooterCta />}
             {showChrome && (
