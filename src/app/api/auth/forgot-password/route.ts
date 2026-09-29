@@ -30,9 +30,9 @@ export async function POST(request: Request) {
   await connectToDatabase();
   const user = await User.findOne({ email }).select("+password");
 
-  // Only credentials accounts (with a password) can reset here. Google-only
-  // accounts sign in with Google, so there's nothing to reset.
-  if (!user || !user.password) return generic;
+  // The signed link is delivered to the account email, so it can safely create
+  // the first password for a Google-only account as well as reset an existing one.
+  if (!user) return generic;
 
   const rawToken = crypto.randomBytes(32).toString("hex");
   const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
