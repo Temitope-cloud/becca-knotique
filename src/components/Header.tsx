@@ -2,7 +2,7 @@
 
 import { Mail, MapPin, Search, User, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -19,21 +19,24 @@ const MENUS = [
 
 export default function Header({ supportEmail = "beccasknotique@gmail.com", address = "" }: { supportEmail?: string; address?: string }) {
   const [menuClicked, setMenuClicked] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
   const { data: session } = useSession();
   const { count, hydrated } = useCart();
   const closeMenu = () => setMenuClicked(false);
 
-  useEffect(() => { setMenuClicked(false); }, [pathname]);
+  useEffect(() => { setMenuClicked(false); setSearchOpen(false); }, [pathname]);
+  useEffect(() => { if (searchOpen) searchInputRef.current?.focus(); }, [searchOpen]);
   useEffect(() => {
     document.body.style.overflow = menuClicked ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuClicked]);
   useEffect(() => {
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") closeMenu(); };
-    if (menuClicked) window.addEventListener("keydown", onKey);
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") { closeMenu(); setSearchOpen(false); } };
+    if (menuClicked || searchOpen) window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [menuClicked]);
+  }, [menuClicked, searchOpen]);
 
   const desktopLink = "text-[13px] font-medium tracking-wide text-stone-700 transition hover:text-stone-950";
   const mobileLink = "block border-b border-white/10 py-4 text-2xl font-light tracking-wide text-white transition-colors hover:text-emerald-300 sm:text-3xl";
@@ -68,7 +71,7 @@ export default function Header({ supportEmail = "beccasknotique@gmail.com", addr
         </nav>
 
         <div className="hidden shrink-0 items-center gap-5 lg:flex">
-          <Link href="/products" aria-label="Search products" className="text-white transition hover:text-emerald-200"><Search className="size-5" /></Link>
+          <button type="button" onClick={() => setSearchOpen((open) => !open)} aria-label="Search products" aria-expanded={searchOpen} aria-controls="header-search-panel" className="text-white transition hover:text-emerald-200"><Search className="size-5" /></button>
           <Link href="/our-story" className="whitespace-nowrap text-sm font-medium text-white transition hover:text-emerald-200">Our story</Link>
           <CartIcon className="text-white transition hover:text-emerald-200" />
         </div>
@@ -78,6 +81,16 @@ export default function Header({ supportEmail = "beccasknotique@gmail.com", addr
         </button>
       </div>
     </div>
+
+    <motion.div id="header-search-panel" initial={false} animate={searchOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className={`absolute top-full right-0 left-0 border-b border-white/10 bg-neutral-950 shadow-xl ${searchOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+      <form action="/products" className="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-4 sm:px-6 lg:px-8">
+        <Search className="size-5 shrink-0 text-emerald-200" aria-hidden="true" />
+        <label htmlFor="header-search" className="sr-only">Search products</label>
+        <input ref={searchInputRef} id="header-search" name="q" type="search" placeholder="Search dresses, bags, sets and more" className="min-w-0 flex-1 bg-transparent py-2 text-base text-white placeholder:text-white/50 outline-none" />
+        <button type="submit" className="rounded-full bg-white px-5 py-2 text-xs font-semibold tracking-[0.1em] text-stone-950 uppercase transition hover:bg-emerald-100">Search</button>
+        <button type="button" onClick={() => setSearchOpen(false)} className="p-2 text-white/70 transition hover:text-white" aria-label="Close search"><X className="size-5" /></button>
+      </form>
+    </motion.div>
 
     <motion.div id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Site navigation" initial={{ y: "-100%", opacity: 0 }} animate={menuClicked ? { y: "0%", opacity: 1 } : { y: "-100%", opacity: 0 }} transition={{ duration: menuClicked ? 0.55 : 0.45, ease: menuClicked ? [0.16, 1, 0.3, 1] : [0.7, 0, 0.84, 0] }} className={`fixed inset-0 z-40 flex h-dvh w-full flex-col bg-neutral-950 ${menuClicked ? "pointer-events-auto" : "pointer-events-none"}`} onClick={closeMenu}>
       <div className="pointer-events-auto flex min-h-0 flex-1 flex-col px-6 pt-24 pb-10 sm:px-10" onClick={(event) => event.stopPropagation()}>
