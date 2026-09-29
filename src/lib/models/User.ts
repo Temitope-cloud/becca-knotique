@@ -14,6 +14,8 @@ export interface IUser {
   role: UserRole;
   phone?: string;
   wishlist: string[];
+  /** Saved cart for authenticated customers. Guest carts stay temporary in the browser. */
+  cart: unknown[];
   /** store credit balance in NGN */
   storeCredit: number;
   /** Admins can pause a customer account without removing their order history. */
@@ -56,6 +58,7 @@ const UserSchema = new Schema<IUser>(
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
     phone: { type: String },
     wishlist: { type: [String], default: [] },
+    cart: { type: [Schema.Types.Mixed], default: [] },
     storeCredit: { type: Number, default: 0, min: 0 },
     isActive: { type: Boolean, default: true, index: true },
     twoFactorEnabled: { type: Boolean, default: false },

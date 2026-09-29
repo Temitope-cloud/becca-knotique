@@ -6,8 +6,10 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
+import { useSession } from "next-auth/react";
 
 export interface CartItem {
   productId: string;
@@ -96,13 +98,32 @@ function makeKey(
   ].join("::");
 }
 
+function mergeCartItems(saved: CartItem[], local: CartItem[]): CartItem[] {
+  const merged = [...saved];
+  for (const item of local) {
+    const index = merged.findIndex((existing) => makeKey(existing) === makeKey(item));
+    if (index >= 0) merged[index] = { ...merged[index], quantity: Math.min(50, merged[index].quantity + item.quantity) };
+    else merged.push(item);
+  }
+  return merged;
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
   const [couponCode, setCouponCode] = useState<string | null>(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
+  const [databaseReady, setDatabaseReady] = useState(false);
+  const itemsRef = useRef<CartItem[]>([]);
+  const syncedUserRef = useRef<string | null>(null);
+  const wasSignedInRef = useRef(false);
+  const { data: session, status } = useSession();
 
-  // Load from localStorage once on mount.
+  useEffect(() => { itemsRef.current = items; }, [items]);
+
+  // Load a temporary guest cart once on mount. Authenticated carts are loaded
+  // from the database and any guest items are merged after sign-in.
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -118,15 +139,61 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setHydrated(true);
   }, []);
 
-  // Persist on change (after hydration to avoid clobbering saved cart).
+  // Guests keep a temporary cart locally. A signed-in customer's cart lives in
+  // their account so it follows them to another device.
   useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {
-      /* ignore quota errors */
+    if (!hydrated || status === "loading" || status === "authenticated") return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch { /* ignore quota errors */ }
+  }, [items, hydrated, status]);
+
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!hydrated || status !== "authenticated" || !userId || syncedUserRef.current === userId) return;
+    let cancelled = false;
+    fetch("/api/account/cart")
+      .then((response) => {
+        if (!response.ok) throw new Error("Could not load saved cart.");
+        return response.json();
+      })
+      .then(async (data) => {
+        if (cancelled) return;
+        const saved = Array.isArray(data.items) ? data.items as CartItem[] : [];
+        const merged = mergeCartItems(saved, itemsRef.current);
+        itemsRef.current = merged;
+        setItems(merged);
+        syncedUserRef.current = userId;
+        setDatabaseReady(true);
+        localStorage.removeItem(STORAGE_KEY);
+        await fetch("/api/account/cart", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: merged }) });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          // Keep a local fallback if the database is temporarily unavailable.
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(itemsRef.current)); } catch { /* ignore quota errors */ }
+          syncedUserRef.current = userId;
+          setDatabaseReady(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, [hydrated, session?.user?.id, status]);
+
+  useEffect(() => {
+    if (!hydrated || status !== "authenticated" || !databaseReady) return;
+    const timer = window.setTimeout(() => {
+      fetch("/api/account/cart", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items }) }).catch(() => {});
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [items, hydrated, status, databaseReady]);
+
+  useEffect(() => {
+    if (status === "authenticated") { wasSignedInRef.current = true; return; }
+    if (status === "unauthenticated" && wasSignedInRef.current) {
+      wasSignedInRef.current = false;
+      syncedUserRef.current = null;
+      setDatabaseReady(false);
+      setItems([]);
     }
-  }, [items, hydrated]);
+  }, [status]);
 
   const addItem = useCallback(
     (item: Omit<CartItem, "quantity">, quantity = 1) => {
