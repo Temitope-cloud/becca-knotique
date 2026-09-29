@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, MapPin, Search, User } from "lucide-react";
+import { Mail, MapPin, Search, User, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
@@ -77,8 +77,8 @@ export default function Header({ supportEmail = "beccasknotique@gmail.com", addr
           <CartIcon className="text-white transition hover:text-emerald-200" />
         </div>
 
-        <button type="button" onClick={() => setMenuClicked((open) => !open)} aria-expanded={menuClicked} aria-controls="mobile-navigation" aria-label={menuClicked ? "Close menu" : "Open menu"} className="group -mr-2 flex h-11 w-11 shrink-0 items-center justify-center lg:hidden">
-          <span className={`flex flex-col items-end ${menuClicked ? "gap-0" : "gap-2"}`}><span className={`h-0.5 bg-white transition-all duration-300 ${menuClicked ? "w-8" : "w-5 group-hover:w-8"}`} /><span className={`h-0.5 w-8 bg-white transition-all duration-300 ${menuClicked ? "hidden" : "block"}`} /><span className={`h-0.5 bg-white transition-all duration-300 ${menuClicked ? "w-8 rotate-90" : "w-5 group-hover:w-8"}`} /></span>
+        <button type="button" onClick={() => setMenuClicked((open) => !open)} aria-expanded={menuClicked} aria-controls="mobile-navigation" aria-label={menuClicked ? "Close menu" : "Open menu"} className="group relative z-[60] -mr-2 flex h-11 w-11 shrink-0 items-center justify-center lg:hidden">
+          {menuClicked ? <X className="size-7 text-white" aria-hidden="true" /> : <span className="flex flex-col items-end gap-2"><span className="h-0.5 w-5 bg-white transition-all duration-300 group-hover:w-8" /><span className="h-0.5 w-8 bg-white" /><span className="h-0.5 w-5 bg-white transition-all duration-300 group-hover:w-8" /></span>}
         </button>
       </div>
     </div>
