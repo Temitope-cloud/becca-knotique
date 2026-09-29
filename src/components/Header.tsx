@@ -68,11 +68,7 @@ export default function Header({ supportEmail = "beccasknotique@gmail.com", addr
         </nav>
 
         <div className="hidden shrink-0 items-center gap-5 lg:flex">
-          <form action="/products" className="group flex w-44 items-center border-b border-white/35 pb-1.5 transition focus-within:border-white xl:w-52">
-            <label htmlFor="header-search" className="sr-only">Search products</label>
-            <input id="header-search" name="q" type="search" placeholder="Search pieces" className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-white/50 outline-none" />
-            <button type="submit" className="text-white/80 transition hover:text-white" aria-label="Search products"><Search className="size-4" /></button>
-          </form>
+          <Link href="/products" aria-label="Search products" className="text-white transition hover:text-emerald-200"><Search className="size-5" /></Link>
           <Link href="/our-story" className="whitespace-nowrap text-sm font-medium text-white transition hover:text-emerald-200">Our story</Link>
           <CartIcon className="text-white transition hover:text-emerald-200" />
         </div>
